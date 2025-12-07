@@ -8,7 +8,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 @Component({
     selector: 'loginAttemptsModal',
     templateUrl: './login-attempts-modal.component.html',
-    standalone: false
+    standalone: true
 })
 export class LoginAttemptsModalComponent extends AppComponentBase {
 

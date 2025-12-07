@@ -13,7 +13,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
     selector: 'linkedAccountsModal',
     templateUrl: './linked-accounts-modal.component.html',
-    standalone: false
+    standalone: true
 })
 export class LinkedAccountsModalComponent extends AppComponentBase {
 

@@ -1,67 +1,43 @@
-import { NgModule, ApplicationRef } from '@angular/core';
-import { NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterModule } from '@angular/router';
+// src/app/app.routes.ts
+import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
-import { TermsOfUseComponent } from './main/terms-of-use/terms-of-use.component';
 import { AppRouteGuard } from './shared/common/auth/auth-route-guard';
 import { NotificationsComponent } from './shared/layout/notifications/notifications.component';
+import { TermsOfUseComponent } from './main/terms-of-use/terms-of-use.component';
 
-@NgModule({
-    imports: [
-        RouterModule.forChild([
+export const appRoutes: Routes = [
+    {
+        path: 'app',
+        component: AppComponent, // Đây là Layout chính sau khi login
+        canActivate: [AppRouteGuard],
+        canActivateChild: [AppRouteGuard],
+        children: [
             {
-                path: 'app',
-                component: AppComponent,
-                canActivate: [AppRouteGuard],
-                canActivateChild: [AppRouteGuard],
+                path: '',
                 children: [
-                    {
-                        path: '',
-                        children: [
-                            { path: 'notifications', component: NotificationsComponent },
-                            { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-                            { path: 'terms-of-use', component: TermsOfUseComponent },
-                        ]
-                    },
-                    {
-                        path: 'main',
-                        loadChildren: () => import('app/main/main.module').then(m => m.MainModule), //Lazy load main module
-                        data: { preload: true }
-                    },
-                    {
-                        path: 'admin',
-                        loadChildren: () => import('app/admin/admin.module').then(m => m.AdminModule), //Lazy load admin module
-                        data: { preload: true },
-                        canLoad: [AppRouteGuard]
-                    },
-                    {
-                        path: '**', redirectTo: 'notifications'
-                    }
+                    { path: 'notifications', component: NotificationsComponent },
+                    { path: 'terms-of-use', component: TermsOfUseComponent },
+                    { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
                 ]
+            },
+            {
+                path: 'main',
+                // TODO: Sau khi convert MainModule sang Standalone Routes, sửa dòng này thành:
+                // loadChildren: () => import('./main/main.routes').then(m => m.mainRoutes)
+                loadChildren: () => import('./main/main.module').then(m => m.MainModule),
+                data: { preload: true }
+            },
+            {
+                path: 'admin',
+                // TODO: Sau khi convert AdminModule sang Standalone Routes, sửa dòng này thành:
+                // loadChildren: () => import('./admin/admin.routes').then(m => m.adminRoutes)
+                loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
+                data: { preload: true },
+                canLoad: [AppRouteGuard]
+            },
+            {
+                path: '**', redirectTo: 'notifications'
             }
-        ])
-    ],
-    exports: [RouterModule]
-})
-
-export class AppRoutingModule {
-    constructor(
-        private router: Router,
-        private appRef: ApplicationRef
-    ) {
-        router.events.subscribe((event) => {
-            if (event instanceof RouteConfigLoadStart) {
-                abp.ui.setBusy();
-            }
-
-            if (event instanceof RouteConfigLoadEnd) {
-                // appRef.tick();
-                abp.ui.clearBusy();
-            }
-
-            if (event instanceof NavigationEnd) {
-                document.querySelector('meta[property=og\\:url').setAttribute('content', window.location.href);
-                appRef.tick();
-            }
-        });
+        ]
     }
-}
+];

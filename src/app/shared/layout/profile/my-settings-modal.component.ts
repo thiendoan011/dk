@@ -14,7 +14,7 @@ import { AuthStatusConsts } from '@app/admin/core/ultils/consts/AuthStatusConsts
 @Component({
     selector: 'mySettingsModal',
     templateUrl: './my-settings-modal.component.html',
-    standalone: false
+    standalone: true
 })
 export class MySettingsModalComponent extends AppComponentBase {
 

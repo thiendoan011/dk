@@ -1,106 +1,41 @@
-import { Component, Injector, OnInit, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppConsts } from '@shared/AppConsts';
+import { Component, ViewEncapsulation, Injector, OnInit, OnDestroy, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { AppUiCustomizationService } from '@shared/common/ui/app-ui-customization.service';
-import * as _ from 'lodash';
-import moment from 'moment';
 import { LoginService } from './login/login.service';
+import { LanguageSwitchComponent } from './language-switch.component';
+import { TenantChangeComponent } from './shared/tenant-change.component'; // Đảm bảo component này cũng Standalone
 
 @Component({
     templateUrl: './account.component.html',
-    styleUrls: [
-        './account.component.less'
-    ],
+    styleUrls: ['./account.component.less'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    standalone: true,
+    imports: [
+        RouterOutlet,
+        LanguageSwitchComponent,
+        TenantChangeComponent
+    ]
 })
-export class AccountComponent extends AppComponentBase implements OnInit {
+export class AccountComponent extends AppComponentBase implements OnInit, OnDestroy {
+    private _loginService = inject(LoginService);
 
-
-    logoLogin: string;
-
-    private viewContainerRef: ViewContainerRef;
-
-    currentYear: number = moment().year();
-    remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
-    tenantChangeDisabledRoutes: string[] = [
-        'select-edition',
-        'buy',
-        'upgrade',
-        'extend',
-        'register-tenant',
-        'stripe-purchase',
-        'stripe-subscribe',
-        'stripe-update-subscription',
-        'paypal-purchase'
-    ];
-
-    public constructor(
-        injector: Injector,
-        private _router: Router,
-        private _loginService: LoginService,
-        private _uiCustomizationService: AppUiCustomizationService,
-        viewContainerRef: ViewContainerRef
-    ) {
-        super(injector);
-
-        // We need this small hack in order to catch application root view container ref for modals
-        this.viewContainerRef = viewContainerRef;
-
-        this.logoLogin = this.remoteServiceBaseUrl + this.s('gAMSProCore.LogoLogin');
-
-
-        var css = `<style>
-    button.swal2-confirm:before {
-        white-space: pre!important;
-        content: '${this.l('Yes')} \\A'!important;
-        color: white;
-    }
-    
-    button.swal2-cancel:before {
-        white-space: pre!important;
-        content: '${this.l('Cancel')} \\A'!important;
-        color: white;
-    }</style>
-    `
-
-        $('body').prepend(css);
-    }
-
-    showTenantChange(): boolean {
-        if (!this._router.url) {
-            return false;
-        }
-
-        if (_.filter(this.tenantChangeDisabledRoutes, route => this._router.url.indexOf('/account/' + route) >= 0).length) {
-            return false;
-        }
-
-        return abp.multiTenancy.isEnabled && !this.supportsTenancyNameInUrl();
-    }
-
-    useFullWidthLayout(): boolean {
-        return true;
-        return this._router.url.indexOf('/account/select-edition') >= 0;
+    constructor() {
+        super(inject(Injector));
     }
 
     ngOnInit(): void {
-        this._loginService.init(() => {
-            this.updateView();
-        });
-        document.body.className = this._uiCustomizationService.getAccountModuleBodyClass();
+        // FIX: Xóa bỏ this._loginService.init() và getSkin() gây lỗi
+        // Thay bằng logic chuẩn Angular:
+
+        // 1. Gán class cho body để nhận diện trang login (thay cho getSkin cũ)
+        document.body.className = 'header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading';
+
+        // 2. Clear session nếu cần thiết (tùy logic dự án cũ của bạn)
+        // this._loginService.clear(); 
     }
 
-    goToHome(): void {
-        (window as any).location.href = '/';
-    }
-
-    getBgUrl(): string {
-        return 'url(./assets/metronic/assets/demo/' + this.currentTheme.baseSettings.layout.themeColor + '/media/img/bg/bg-4.jpg)';
-    }
-
-    private supportsTenancyNameInUrl() {
-        return (AppConsts.appBaseUrlFormat && AppConsts.appBaseUrlFormat.indexOf(AppConsts.tenancyNamePlaceHolderInUrl) >= 0);
+    ngOnDestroy(): void {
+        // Cleanup class khi rời khỏi trang account
+        document.body.className = '';
     }
 }

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 @Component({
     selector: 'language-switch',
     templateUrl: './language-switch.component.html',
-    standalone: false
+    standalone: true
 })
 export class LanguageSwitchComponent extends AppComponentBase implements OnInit {
 

@@ -14,7 +14,7 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 @Component({
     selector: 'changeProfilePictureModal',
     templateUrl: './change-profile-picture-modal.component.html',
-    standalone: false
+    standalone: true
 })
 export class ChangeProfilePictureModalComponent extends AppComponentBase {
 

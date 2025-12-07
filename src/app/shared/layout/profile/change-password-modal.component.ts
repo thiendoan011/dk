@@ -8,7 +8,7 @@ import { finalize } from 'rxjs/operators';
     selector: 'changePasswordModal',
     templateUrl: './change-password-modal.component.html',
     styleUrls: ['./change-password-modal.component.less'],
-    standalone: false
+    standalone: true
 })
 export class ChangePasswordModalComponent extends AppComponentBase {
 

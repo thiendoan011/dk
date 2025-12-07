@@ -10,7 +10,7 @@ import { TenantChangeModalComponent } from './tenant-change-modal.component';
         {{"CurrentTenant" | localize}}: <span *ngIf="tenancyName" title="{{name}}"><strong>{{tenancyName}}</strong></span> <span *ngIf="!tenancyName">{{"NotSelected" | localize}}</span> (<a href="javascript:;" (click)="showChangeModal()">{{l("Change")}}</a>)
         <tenantChangeModal #tenantChangeModal></tenantChangeModal>
     </span>`,
-    standalone: false
+    standalone: true
 })
 export class TenantChangeComponent extends AppComponentBase implements OnInit {
 

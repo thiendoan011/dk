@@ -5,7 +5,6 @@ import { AppComponentBase } from '@shared/common/app-component-base';
 import { SendTwoFactorAuthCodeModel, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { LoginService } from './login.service';
 import { finalize } from 'rxjs/operators';
-import { Route } from '@angular/router';
 
 @Component({
     templateUrl: './send-two-factor-code.component.html',

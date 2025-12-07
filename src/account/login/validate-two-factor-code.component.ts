@@ -2,7 +2,7 @@ import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { timer } from 'rxjs';
 import { LoginService } from './login.service';
 

@@ -8,7 +8,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
     selector: 'notificationSettingsModal',
     templateUrl: './notification-settings-modal.component.html',
-    standalone: false
+    standalone: true
 })
 export class NotificationSettingsModalComponent extends AppComponentBase {
 
