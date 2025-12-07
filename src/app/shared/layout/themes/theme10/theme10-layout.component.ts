@@ -8,7 +8,7 @@ import { ThemesLayoutBaseComponent } from '@app/shared/layout/themes/themes-layo
     templateUrl: './theme10-layout.component.html',
     selector: 'theme10-layout',
     animations: [appModuleAnimation()],
-    standalone: false
+    standalone: true
 })
 export class Theme10LayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {
 

@@ -1,32 +1,35 @@
-/* tslint:disable:no-unused-variable */
-
-import { APP_BASE_HREF } from '@angular/common';
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { API_BASE_URL } from '@shared/service-proxies/service-proxies';
-import { RootModule } from '../root.module';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { API_BASE_URL } from '@shared/service-proxies/service-proxies';
+import { AppUiCustomizationService } from '@shared/common/ui/app-ui-customization.service';
 
-export function getRemoteServiceBaseUrl(): string {
-    return 'http://localhost:22742/';
-}
+describe('AppComponent', () => {
+    let component: AppComponent;
+    let fixture: ComponentFixture<AppComponent>;
 
-describe('App: gAMSPro', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                RootModule
+                RouterTestingModule,
+                HttpClientTestingModule,
+                AppComponent // Import AppComponent trực tiếp vì nó là Standalone
             ],
             providers: [
-                { provide: API_BASE_URL, useValue: getRemoteServiceBaseUrl() },
-                { provide: APP_BASE_HREF, useValue: '/' }
+                { provide: API_BASE_URL, useValue: 'http://localhost:22742' },
+                AppUiCustomizationService // Mock service này nếu cần
             ]
         }).compileComponents();
     }));
 
-    it('should create the app', waitForAsync(() => {
-        const fixture = TestBed.createComponent(AppComponent);
-        const app = fixture.debugElement.componentInstance;
-        expect(app).toBeTruthy();
-    }));
+    beforeEach(() => {
+        fixture = TestBed.createComponent(AppComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

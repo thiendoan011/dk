@@ -1,16 +1,7 @@
 // src/main.ts
-import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import 'moment-timezone';
-import 'moment/min/locales.min';
-import { environment } from './environments/environment';
-import { AppComponent } from './app/app.component'; // Đảm bảo AppComponent đã là standalone: true
 import { appConfig } from './app/app.config';
+import { RootComponent } from './root.component'; // Dùng RootComponent làm vỏ bọc
 
-if (environment.production) {
-    enableProdMode();
-}
-
-// Modern Bootstrap
-bootstrapApplication(AppComponent, appConfig)
+bootstrapApplication(RootComponent, appConfig)
     .catch((err) => console.error(err));

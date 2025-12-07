@@ -8,7 +8,7 @@ import { UrlHelper } from '@shared/helpers/UrlHelper';
     selector: 'theme5-layout',
     templateUrl: './theme5-layout.component.html',
     animations: [appModuleAnimation()],
-    standalone: false
+    standalone: true
 })
 export class Theme5LayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {
 

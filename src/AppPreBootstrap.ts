@@ -5,6 +5,7 @@ import { AppAuthService } from '@app/shared/common/auth/app-auth.service';
 import { AppConsts } from '@shared/AppConsts';
 import { SubdomainTenancyNameFinder } from '@shared/helpers/SubdomainTenancyNameFinder';
 import moment from 'moment';
+import 'moment-timezone';
 import * as _ from 'lodash';
 import { UrlHelper } from './shared/helpers/UrlHelper';
 import { XmlHttpRequestHelper } from '@shared/helpers/XmlHttpRequestHelper';

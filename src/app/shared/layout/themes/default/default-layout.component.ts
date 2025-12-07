@@ -8,7 +8,7 @@ import { MenuAsideOffcanvasDirective } from '@metronic/app/core/directives/menu-
 @Component({
     templateUrl: './default-layout.component.html',
     selector: 'default-layout',
-    standalone: false,
+    standalone: true,
     animations: [appModuleAnimation()]
 })
 export class DefaultLayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {

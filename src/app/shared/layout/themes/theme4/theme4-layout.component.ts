@@ -7,7 +7,7 @@ import { UrlHelper } from '@shared/helpers/UrlHelper';
 @Component({
     templateUrl: './theme4-layout.component.html',
     selector: 'theme4-layout',
-    standalone: false,
+    standalone: true,
     animations: [appModuleAnimation()]
 })
 export class Theme4LayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {

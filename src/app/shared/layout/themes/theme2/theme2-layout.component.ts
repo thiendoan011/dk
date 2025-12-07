@@ -7,7 +7,7 @@ import { UrlHelper } from '@shared/helpers/UrlHelper';
 @Component({
     templateUrl: './theme2-layout.component.html',
     selector: 'theme2-layout',
-    standalone: false,
+    standalone: true,
     animations: [appModuleAnimation()]
 })
 export class Theme2LayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {

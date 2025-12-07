@@ -10,7 +10,7 @@ import { MenuAsideOffcanvasDirective } from '@metronic/app/core/directives/menu-
     templateUrl: './theme9-layout.component.html',
     selector: 'theme9-layout',
     animations: [appModuleAnimation()],
-    standalone: false
+    standalone: true
 })
 export class Theme9LayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {
 

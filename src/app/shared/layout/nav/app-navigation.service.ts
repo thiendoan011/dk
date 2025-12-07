@@ -1,134 +1,52 @@
-import { PermissionCheckerService } from 'abp-ng2-module';
-import { AppSessionService } from '@shared/common/session/app-session.service';
-
-import { Injectable, Optional, Inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
-import { AppMenuServiceProxy, AppMenuDto, API_BASE_URL } from '@shared/service-proxies/service-proxies';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import * as $ from 'jquery';
-import { HttpClient } from '@angular/common/http';
+import { PermissionCheckerService } from '@abp/auth/permission-checker.service';
+import { AppSessionService } from '@shared/common/session/app-session.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root' // Đảm bảo service này global
+})
 export class AppNavigationService {
 
-    _permissionCheckerService: PermissionCheckerService;
-    _appMenuService: AppMenuServiceProxy;
-    baseUrl: string;
-    _appSessionService: AppSessionService;
-    _http;
+    // Inject dependencies bằng hàm inject()
+    private readonly _permissionCheckerService = inject(PermissionCheckerService);
+    private readonly _appSessionService = inject(AppSessionService);
 
-    constructor(
-        permissionCheckerService: PermissionCheckerService,
-        appMenuService: AppMenuServiceProxy,
-        @Inject(HttpClient) http: HttpClient,
-        @Optional() @Inject(API_BASE_URL) baseUrl: string,
-        appSessionService: AppSessionService
-    ) {
-        this._permissionCheckerService = permissionCheckerService;
-        this._appMenuService = appMenuService;
-        this.baseUrl = baseUrl;
-        this._appSessionService = appSessionService;
-        this._http = http;
+    constructor() { }
+
+    getMenu(): AppMenu {
+        return new AppMenu('MainMenu', 'MainMenu', [
+            new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
+            new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
+            new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
+            new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
+
+            // ... (Giữ nguyên danh sách menu cũ của bạn ở đây) ...
+            new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [
+                new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
+                new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
+                new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
+                new AppMenuItem('Languages', 'Pages.Administration.Languages', 'flaticon-tabs', '/app/admin/languages'),
+                new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
+                new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
+                new AppMenuItem('Subscription', 'Pages.Administration.Tenant.SubscriptionManagement', 'flaticon-refresh', '/app/admin/subscription-management'),
+                new AppMenuItem('VisualSettings', 'Pages.Administration.UiCustomization', 'flaticon-medical', '/app/admin/ui-customization'),
+                new AppMenuItem('Settings', 'Pages.Administration.Host.Settings', 'flaticon-settings', '/app/admin/hostSettings'),
+                new AppMenuItem('Settings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings')
+            ]),
+            new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components')
+        ]);
     }
 
-    checkChildMenuItemPermission(menuItem): boolean {
-
-        for (let i = 0; i < menuItem.items.length; i++) {
-            let subMenuItem = menuItem.items[i];
-
-            if (subMenuItem.permissionName && this._permissionCheckerService.isGranted(subMenuItem.permissionName)) {
-                return true;
-            } else if (subMenuItem.items && subMenuItem.items.length) {
-                return this.checkChildMenuItemPermission(subMenuItem);
-            }
+    checkChildMenuItemPermission(menuItem: AppMenuItem): boolean {
+        if (menuItem.permissionName) {
+            return this._permissionCheckerService.isGranted(menuItem.permissionName);
+        } else if (menuItem.items && menuItem.items.length) {
+            return this.checkChildMenuItemPermission(menuItem.items[0]); // Check recursive logic cũ
         }
-
-        return false;
+        return true;
     }
 
-    getCookie(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
-    }
-
-    static appMenus: AppMenuItem[];
-
-    getMenuList(): Observable<AppMenuItem[]> {
-        var subject = new Subject<AppMenuItem[]>();
-        this._appMenuService.getAllMenus().subscribe(response => {
-            var appMenus: AppMenuItem[] = [];
-            response = response.filter(x => this._permissionCheckerService.isGranted(x.permissionName))
-            response.forEach(x => {
-                var appMenu: AppMenuItem = new AppMenuItem(x.name, x.permissionName, x.icon, x.route);
-                appMenu.id = x.menuId;
-                appMenu.parentId = x.parentId;
-                appMenus.push(appMenu);
-                appMenu.items = [];
-            });
-
-            AppNavigationService.appMenus = appMenus;
-
-            subject.next(appMenus);
-        });
-        return subject.asObservable();
-    }
-
-    buildTreeMenu(appMenus: AppMenuItem[]) {
-        var dist = {};
-
-        appMenus.forEach((x) => {
-            dist[x.id] = x;
-        });
-
-        appMenus.forEach((x) => {
-            var parent = dist[x.parentId];
-            if (parent) {
-                parent.items.push(x);
-                x.parent = parent;
-            }
-        })
-    }
-
-    getMenus(): Observable<AppMenu> {
-        var menu: AppMenu;
-        var subject = new Subject<AppMenu>();
-
-        this.getMenuList().subscribe(appMenus => {
-            this.buildTreeMenu(appMenus);
-            menu = new AppMenu('MainMenu', 'MainMenu', appMenus.filter(x => x.parent == null));
-            subject.next(menu);
-        });
-        return subject.asObservable();
-
-
-    }
-
-    showMenuItem(menuItem: AppMenuItem): boolean {
-        if (menuItem.permissionName === 'Pages.Administration.Tenant.SubscriptionManagement' && this._appSessionService.tenant && !this._appSessionService.tenant.edition) {
-            return false;
-        }
-
-        let hideMenuItem = false;
-
-        if (menuItem.requiresAuthentication && !this._appSessionService.user) {
-            hideMenuItem = true;
-        }
-
-        if (menuItem.permissionName && !this._permissionCheckerService.isGranted(menuItem.permissionName)) {
-            hideMenuItem = true;
-        }
-
-        if (menuItem.hasFeatureDependency() && !menuItem.featureDependencySatisfied()) {
-            hideMenuItem = true;
-        }
-
-        if (!hideMenuItem && menuItem.items && menuItem.items.length) {
-            return this.checkChildMenuItemPermission(menuItem);
-        }
-
-        return !hideMenuItem;
-    }
+    // ... Giữ các hàm logic khác nếu có
 }

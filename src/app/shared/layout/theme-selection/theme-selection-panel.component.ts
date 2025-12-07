@@ -7,7 +7,7 @@ import { UiCustomizationSettingsServiceProxy } from '@shared/service-proxies/ser
     selector: 'theme-selection-panel',
     styleUrls: ['./theme-selection-panel.less'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    standalone: true
 })
 export class ThemeSelectionPanelComponent extends AppComponentBase implements AfterViewInit, OnInit {
 
