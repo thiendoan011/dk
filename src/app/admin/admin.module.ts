@@ -142,13 +142,9 @@ import { VehicleModule } from './vehicle/vehicle.module';
         CCoreModule,
         // Module
         PoMasterModule,
-        ProjectDevelopmentModule,
         ProductModule,
         MaterialStoreModule,
-        TimeTrackingModule,
-        PurchaseModule,
-        FreightModule,
-        VehicleModule
+        PurchaseModule
     ],
     declarations: [
         UsersComponent,
