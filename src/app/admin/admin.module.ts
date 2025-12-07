@@ -78,8 +78,6 @@ import { InvoiceComponent } from './zero-base/subscription-management/invoice/in
 import { SubscriptionManagementComponent } from './zero-base/subscription-management/subscription-management.component';
 import { GridPermissionComponent } from './zero-base/roles/grid-permission.component';
 import { PlanMasterModule } from './plan-masters/plan-master.module';
-import { ReportModule } from './reports/report.module';
-import { ToolModule } from './tools/tool.module';
 import { MaterialStoreModule } from './material-store/material-store.module';
 import { PoMasterModule } from './po-masters/po-master.module';
 import { ProductModule } from './product/product.module';
@@ -111,8 +109,6 @@ import { PurchaseModule } from './purchase/purchase.module';
         EditorModule,
         InputMaskModule,
         NgxChartsModule,
-        // CountoModule, // Temporarily disabled - incompatible with Angular 19
-        // TextMaskModule, // Temporarily disabled - incompatible with Angular 19
         ImageCropperComponent,
         BaseChartDirective,
         CCommonModule,

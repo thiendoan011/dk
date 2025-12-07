@@ -10,12 +10,14 @@ import { LazyLoadEvent } from 'primeng/api';
 import { Paginator } from 'primeng/paginator';
 import { Table } from 'primeng/table';
 import { PrimengTableHelper } from 'shared/helpers/PrimengTableHelper';
+import { LocalizePipe } from "../../../../shared/common/pipes/localize.pipe";
 
 @Component({
     templateUrl: './audit-logs.component.html',
     styleUrls: ['./audit-logs.component.less'],
     encapsulation: ViewEncapsulation.None,
-    animations: [appModuleAnimation()]
+    animations: [appModuleAnimation()],
+    imports: [EntityChangeDetailModalComponent, LocalizePipe]
 })
 export class AuditLogsComponent extends AppComponentBase {
 
