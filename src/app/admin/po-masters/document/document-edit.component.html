@@ -1,0 +1,166 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Văn bản")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-modal
+                                [id]="inputModel.documenT_TYPE_ID"
+                                #po_history_modal
+                                [isShowEnterRejectContent]="true"
+                                [trN_TYPE]="'DOCUMENT'" 
+                                [buttonRejectKT]="true"
+                                [stage] = "'HC'">
+                            </po-history-modal>
+                        </div>
+
+                        <!-- Mã loại văn bản -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã loại văn bản")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="documenT_TYPE_CODE"
+                                    [(ngModel)]="inputModel.documenT_TYPE_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên loại văn bản -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên loại văn bản")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="documenT_TYPE_NAME"
+                                    [(ngModel)]="inputModel.documenT_TYPE_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                        <!-- Đơn vị -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Đơn vị'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.brancH_NAME"
+                                (showModal)="showBranchModal()"
+                                (deleteDisplayText)="deleteBranch()"
+                                name="brancH_NAME">
+                            </input-select>
+                        </div>
+                        <!-- Phòng ban -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Phòng ban'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.deP_NAME"
+                                (showModal)="showDepModal()"
+                                (deleteDisplayText)="deleteDep()"
+                                name="deP_NAME">
+                            </input-select>
+                        </div>
+                        <!-- Nhóm quyền -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Nhóm quyền'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.rolE_NAME"
+                                (showModal)="showRoleModal()"
+                                (deleteDisplayText)="deleteRole()"
+                                name="rolE_NAME">
+                            </input-select>
+                        </div>
+
+                        <!-- Người được xem văn bản -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Người được xem văn bản'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.lisT_USER_VIEW_DOCUMENT"
+                                (showModal)="showListUserModal()"
+                                (deleteDisplayText)="deleteListUser()"
+                                name="rolE_NAME">
+                            </input-select>
+                        </div>
+                        <div class="col-md-8"></div>
+                        
+                        <!-- Loại văn bản 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Loại văn bản")}}</label>
+                                <all-code-select 
+                                    name="documenT_TYPE" 
+                                    [(ngModel)]="inputModel.documenT_TYPE"
+                                    [cdName]="'Document'"
+                                    [cdType]="'PO'">
+                                </all-code-select>
+                            </div>
+                        </div>-->
+
+                        <!-- Ghi chú loại văn bản -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú loại văn bản")}}</label>
+                                <textarea type="text"
+                                    class="form-control"
+                                    name="documenT_TYPE_NOTES"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.documenT_TYPE_NOTES">
+                                </textarea>
+                            </div>
+                        </div>
+                    <div class="col-md-12"></div>
+                </div>
+
+                <!-- Danh sách các file đính kèm -->
+                <document-attach-file #attachFile
+                    (l_req_confirm)="getDetailByid()"
+                    [disableInput]='false'>
+                </document-attach-file>.
+                <!-- Danh sách các file đính kèm -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<branch-modal (onSelect)="onSelectBranch($event)" [multiple]="false"
+    #branchModal></branch-modal>
+<dep-modal (onSelect)="onSelectDep($event)" [multiple]="false" #depModal></dep-modal>
+<tl-role-modal (onSelect)="onSelectRole($event)" [multiple]="false" #roleModal></tl-role-modal>
+<user-modal [removeAllCheckOnShow]="false" (onSelect)="onSelectListUser($event)" [multiple]="true" #userModal></user-modal>

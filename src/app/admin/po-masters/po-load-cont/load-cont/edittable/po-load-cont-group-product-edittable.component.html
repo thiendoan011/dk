@@ -1,0 +1,72 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã hệ hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã hệ hàng")}}</span>
+                </th>
+                <!-- Tên hệ hàng -->
+                <th>
+                    <span style="width: 150px;">{{l("Tên hệ hàng")}}</span>
+                </th>
+                <!-- Màu -->
+                <th>
+                    <span style="width: 100px;">{{l("Màu")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="width: 100px;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã hệ hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('grouP_PRODUCT_CODE',in)}}" 
+                        [(ngModel)]="item.grouP_PRODUCT_CODE"/>
+                </td>
+                <!-- Tên hệ hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('grouP_PRODUCT_NAME',in)}}" 
+                        [(ngModel)]="item.grouP_PRODUCT_NAME"/>
+                </td>
+                <!-- Màu -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('color',in)}}" 
+                        [(ngModel)]="item.color"/>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="disableInput"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes', in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

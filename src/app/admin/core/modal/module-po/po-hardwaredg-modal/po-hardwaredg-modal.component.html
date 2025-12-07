@@ -1,0 +1,139 @@
+<popup-frame [title]="l('Tìm kiếm thông tin vật tư đóng gói')" (onSearchEvent)="buttonSearch()" (onSelectEvent)="accept()" #popupFrame>
+    <div class="horizontal-form filter-form" autocomplete="off">
+        <form class="m-form m-form--label-align-right">
+            <div class="row m--margin-bottom-30">
+<!-- Begin Filter -->
+                <!-- Mã vật tư đóng gói -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Mã vật tư đóng gói")}}</label>
+                        <input class="form-control m-input"
+                            type="text"
+                            name="hardwaredG_CODE"
+                            [(ngModel)]="filterInput.hardwaredG_CODE">
+                    </div>
+                </div>
+
+                <!-- Tên vật tư đóng gói -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Tên vật tư đóng gói")}}</label>
+                        <input class="form-control m-input"
+                            type="text"
+                            name="hardwaredG_NAME"
+                            [(ngModel)]="filterInput.hardwaredG_NAME">
+                    </div>
+                </div>
+
+<!-- End Filter -->
+                <div style="display:none;" class="col-md-12">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-search" (click)="search()"></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div isLoading="dataTable.isLoading" class="primeng-datatable-container">
+            <div class="spinner-border m-5" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <core-table [reloadPageOnInit]="false" #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                <thead>
+                    <tr>
+                        <!-- Begin Table Column -->
+                        <!-- multiple -->
+                        <th class="center" *ngIf="multiple">
+                            <span style="width: 40px">
+                                <checkbox-control #checkAllElement
+                                    (change)="onCheckAll(checkAllElement.inputRef.nativeElement)" [checked]="checkAll">
+                                </checkbox-control>
+                            </span>
+                        </th>
+                        <!-- STT -->
+                        <th class="center">
+                            <span style="width: 40px">{{l("No")}}</span>
+                        </th>
+                        <!-- Mã vật tư đóng gói -->
+                        <th sortField="hardwaredG_CODE">
+                            <span style="width: 150px">{{l("Mã vật tư đóng gói")}}</span>
+                        </th>
+                        <!-- Tên vật tư đóng gói -->
+                        <th sortField="hardwaredG_NAME">
+                            <span style="width: 150px">{{l("Tên vật tư đóng gói")}}</span>
+                        </th>
+                        <!-- Dày -->
+                        <th sortField="heighT">
+                            <span style="width: 100px">{{l("Dày")}}</span>
+                        </th>
+                        <!-- Rộng 1 -->
+                        <th sortField="widtH1">
+                            <span style="width: 100px">{{l("Rộng 2")}}</span>
+                        </th>
+                        <!-- Rộng 2 -->
+                        <th sortField="widtH2">
+                            <span style="width: 100px">{{l("Rộng 2")}}</span>
+                        </th>
+                        <!-- Dài -->
+                        <th sortField="length">
+                            <span style="width: 100px">{{l("Dài")}}</span>
+                        </th>
+                        <!-- Đơn vị tính -->
+                        <th sortField="unit">
+                            <span style="width: 150px">{{l("Đơn vị tính")}}</span>
+                        </th>
+                        <!-- Màu sắc -->
+                        <th sortField="color">
+                            <span style="width: 150px">{{l("Màu sắc")}}</span>
+                        </th>
+                        <!-- Định lượng -->
+                        <th sortField="quantify">
+                            <span style="width: 150px">{{l("Định lượng")}}</span>
+                        </th>
+                        <!-- Ghi chú -->
+                        <th sortField="notes">
+                            <span style="width: 150px">{{l("Ghi chú")}}</span>
+                        </th>
+                        <!-- End Table Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- multiple dblclick -->
+                    <tr *ngFor="let record of dataTable.records; let no = index;" class="selectable" (click)="selectRow($event,record)" (dblclick)="onDoubleClick(record)">
+                        <!-- Begin Table Value -->
+                        <!-- multiple -->
+                        <td class="center" *ngIf="multiple">
+                            <span class="mo-header"></span>
+                            <checkbox-control (onchange)="setChecked($event.target.checked, record)" [checked]="record['isChecked']"></checkbox-control>
+                        </td>
+                        <!-- STT -->
+                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                        </td>
+                        <!-- Mã vật tư đóng gói -->
+                        <td><span class="mo-header"></span>{{record.hardwaredG_CODE}}</td>
+                        <!-- Tên vật tư đóng gói -->
+                        <td><span class="mo-header"></span>{{record.hardwaredG_NAME}}</td>
+                        <!-- Dày -->
+                        <td><span class="mo-header"></span>{{record.height}}</td>
+                        <!-- Rộng 1 -->
+                        <td><span class="mo-header"></span>{{record.widtH1}}</td>
+                        <!-- Rộng 2 -->
+                        <td><span class="mo-header"></span>{{record.widtH2}}</td>
+                        <!-- Dài -->
+                        <td><span class="mo-header"></span>{{record.length}}</td>
+                        <!-- Đơn vị tính -->
+                        <td><span class="mo-header"></span>{{record.unit}}</td>
+                        <!-- Màu sắc -->
+                        <td><span class="mo-header"></span>{{record.color}}</td>
+                        <!-- Định lượng -->
+                        <td><span class="mo-header"></span>{{record.quantify}}</td>
+                        <!-- Ghi chú -->
+                         <td><span class="mo-header"></span>{{record.notes}}</td>
+                        <!-- End Table Value -->
+                    </tr>
+                </tbody>
+            </core-table>
+        </div>
+    </div>
+</popup-frame>

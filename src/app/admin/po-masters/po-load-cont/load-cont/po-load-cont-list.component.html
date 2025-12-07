@@ -1,0 +1,233 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin load cont")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Mã phiếu load cont -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Mã phiếu load cont")}}</label>
+                                        <input  type="text"
+                                            class="form-control m-input" 
+                                            name="pO_LOAD_CONT_CODE"
+                                            [(ngModel)]="filterInput.pO_LOAD_CONT_CODE">
+                                    </div>
+                                </div>
+
+                                <!-- Tên phiếu load cont -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Tên phiếu load cont")}}</label>
+                                        <input type="text"
+                                            class="form-control m-input"
+                                            name="pO_LOAD_CONT_NAME"
+                                            [(ngModel)]="filterInput.pO_LOAD_CONT_NAME" >
+                                    </div>
+                                </div>
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái load cont -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái load cont")}}</label>
+                                        <all-code-select 
+                                            name="pO_LOAD_CONT_STATUS" 
+                                            [(ngModel)]="filterInput.pO_LOAD_CONT_STATUS"
+                                            [emptyText]="l('SelectAll')" 
+                                            [cdName]="'PO_LOAD_CONT'"
+                                            [cdType]="'PO'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày booking")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="frM_BOOKING_DT"
+                                                        [(ngModel)]="filterInput.frM_BOOKING_DT">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="tO_BOOKING_DT"
+                                                        [(ngModel)]="filterInput.tO_BOOKING_DT">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày thực tế load cont")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="frM_LOADCONT_DT"
+                                                        [(ngModel)]="filterInput.frM_LOADCONT_DT">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="tO_LOADCONT_DT"
+                                                        [(ngModel)]="filterInput.tO_LOADCONT_DT">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã phiếu load cont -->
+                                        <th sortField="pO_LOAD_CONT_CODE">
+                                            <span>{{l("Mã phiếu load cont")}}</span>
+                                        </th>
+                                        <!-- Tên phiếu load cont-->
+                                        <th>
+                                            <span>{{l("Tên phiếu load cont")}}</span>
+                                        </th>
+                                        <!-- Mã PO -->
+                                        <th>
+                                            <span style="width: 150px">{{l("Mã PO")}}</span>
+                                        </th>
+                                        <!-- Ngày yêu cầu load cont -->
+                                        <!-- <th>
+                                            <span>{{l("Ngày yêu cầu load cont")}}</span>
+                                        </th> -->
+                                        <!-- SL cont -->
+                                        <th>
+                                            <span>{{l("SL cont")}}</span>
+                                        </th>
+                                        <!-- SL cont đã load -->
+                                        <th>
+                                            <span>{{l("SL cont đã load")}}</span>
+                                        </th>
+                                        <!-- Ngày xuất sau khi khách đồng ý -->
+                                        <th sortField="pO_MODIFIED_DT">
+                                            <span style="width: 120px">{{l("Ngày xuất sau khi khách đồng ý")}}</span>
+                                        </th>
+                                        <!-- Ngày booking -->
+                                        <th sortField="bookinG_DT">
+                                            <span>{{l("Ngày booking")}}</span>
+                                        </th>
+                                        <!-- Ghi chú load-cont -->
+                                        <th>
+                                            <span>{{l("Ghi chú load-cont")}}</span>
+                                        </th>
+                                        <!-- Ghi chú booking -->
+                                        <th>
+                                            <span>{{l("Ghi chú booking")}}</span>
+                                        </th>
+                                        <!-- Ghi chú PO -->
+                                        <th>
+                                            <span>{{l("Ghi chú PO")}}</span>
+                                        </th>
+                                        <!-- Trạng thái -->
+                                        <th>
+                                            <span>{{l("Trạng thái")}}</span>
+                                        </th>
+                                        
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.pO_LOAD_CONT_CODE}}</td>
+                                        <td><span class="mo-header"></span>{{record.pO_LOAD_CONT_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.pO_CODE}}</td>
+                                        <!-- <td><span class="mo-header"></span>{{record.pO_LOAD_CONT_REQUEST_DT | dateFormatPipe}}</td> -->
+                                        <td><span class="mo-header"></span>{{record.qtY_CONT | numberFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.qtY_CONT_PROCESSED | numberFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.pO_MODIFIED_DT | dateFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.bookinG_DT | dateFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.notes}}</td>
+                                        <td><span class="mo-header"></span>{{record.noteS_BOOKING}}</td>
+                                        <td><span class="mo-header"></span>{{record.noteS_PO}}</td>
+                                        <td><span class="mo-header"></span>{{record.pO_LOAD_CONT_STATUS_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

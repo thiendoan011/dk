@@ -1,0 +1,86 @@
+<div [@routerTransition]>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Xác nhận đọc văn bản")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-3 [authStatus]="inputModel.autH_STATUS"></auth-status-3>
+                            </div>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="makeR_FULL_NAME"
+                                    [(ngModel)]="inputModel.makeR_FULL_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Văn bản -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Văn bản")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="documenT_NAME"
+                                    [(ngModel)]="inputModel.documenT_NAME" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12 modal-body">
+                        <!-- Xác nhận  -->
+                        <div class="col-md-2" *ngIf="is_confirm">
+                            <div class="form-group">
+                                <label  (click)="onConfirm()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Xác nhận')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <doc-dc-user-confirm-edittable #docdcuserconfirm
+                        [inputModel]="inputModel"
+                        (l_change)="getDataPages()"
+                        [disableInput]='disableInput'>
+                    </doc-dc-user-confirm-edittable>
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>
+
+<document-modal #docModal [multiple]="false" (onSelect)="onSelectDoc($event)"></document-modal>

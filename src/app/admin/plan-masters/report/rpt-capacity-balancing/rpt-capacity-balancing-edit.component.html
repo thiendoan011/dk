@@ -1,0 +1,715 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Cân đối năng lực")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Nhà máy -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Nhà máy")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="factory"
+                                    [(ngModel)]="inputModel.factory" />
+                            </div>
+                        </div>
+
+                        <!-- Bộ phận -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Bộ phận")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="part"
+                                    [(ngModel)]="inputModel.part" />
+                            </div>
+                        </div>
+
+                        <!-- BQ. N.Sự hiện diện -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("BQ. N.Sự hiện diện")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="numbeR_OF_EMPLOYEE"
+                                    [(ngModel)]="inputModel.numbeR_OF_EMPLOYEE" />
+                            </div>
+                        </div>
+
+                        <!-- M3 hàng tháng cho 1 cont/ tháng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("M3 hàng tháng cho 1 cont/ tháng")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="m3_PER_CONT"
+                                    [(ngModel)]="inputModel.m3_PER_CONT">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <!-- % cần đạt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("% cần đạt")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="percenT_NEED"
+                                    [(ngModel)]="inputModel.percenT_NEED" />
+                            </div>
+                        </div>
+
+                        <!-- Tháng 
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Tháng")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="montH_RATE"
+                                    [(ngModel)]="inputModel.montH_RATE" />
+                            </div>
+                        </div>-->
+
+                        <!-- Năm -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Năm")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="yeaR_RATE"
+                                    [(ngModel)]="inputModel.yeaR_RATE" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Tải mẫu import excel -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class='btn btn-primary'
+                                    (click)="exportToExcel()"
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('DownloadTemplate')}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                        
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 1")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w1"
+                                    [(ngModel)]="inputModel.w1">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 2")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w2"
+                                    [(ngModel)]="inputModel.w2">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 3")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w3"
+                                    [(ngModel)]="inputModel.w3">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 4")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w4"
+                                    [(ngModel)]="inputModel.w4">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 5")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w5"
+                                    [(ngModel)]="inputModel.w5">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 6")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w6"
+                                    [(ngModel)]="inputModel.w6">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 7")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w7"
+                                    [(ngModel)]="inputModel.w7">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 8")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w8"
+                                    [(ngModel)]="inputModel.w8">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 9")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w9"
+                                    [(ngModel)]="inputModel.w9">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 10")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w10"
+                                    [(ngModel)]="inputModel.w10">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 11")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w11"
+                                    [(ngModel)]="inputModel.w11">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 12")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w12"
+                                    [(ngModel)]="inputModel.w12">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 13")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w13"
+                                    [(ngModel)]="inputModel.w13">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 14")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w14"
+                                    [(ngModel)]="inputModel.w14">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 15")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w15"
+                                    [(ngModel)]="inputModel.w15">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 16")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w16"
+                                    [(ngModel)]="inputModel.w16">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 17")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w17"
+                                    [(ngModel)]="inputModel.w17">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 18")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w18"
+                                    [(ngModel)]="inputModel.w18">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 19")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w19"
+                                    [(ngModel)]="inputModel.w19">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 20")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w20"
+                                    [(ngModel)]="inputModel.w20">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 21")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w21"
+                                    [(ngModel)]="inputModel.w22">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 23")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w23"
+                                    [(ngModel)]="inputModel.w23">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 24")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w24"
+                                    [(ngModel)]="inputModel.w24">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 25")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w25"
+                                    [(ngModel)]="inputModel.w25">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 26")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w26"
+                                    [(ngModel)]="inputModel.w26">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 27")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w27"
+                                    [(ngModel)]="inputModel.w27">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 28")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w28"
+                                    [(ngModel)]="inputModel.w28">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 29")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w29"
+                                    [(ngModel)]="inputModel.w29">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 30")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w30"
+                                    [(ngModel)]="inputModel.w30">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 31")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w31"
+                                    [(ngModel)]="inputModel.w31">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 32")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w32"
+                                    [(ngModel)]="inputModel.w32">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 33")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w33"
+                                    [(ngModel)]="inputModel.w33">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 34")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w34"
+                                    [(ngModel)]="inputModel.w34">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 35")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w35"
+                                    [(ngModel)]="inputModel.w35">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 36")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w36"
+                                    [(ngModel)]="inputModel.w36">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 37")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w37"
+                                    [(ngModel)]="inputModel.w37">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 38")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w38"
+                                    [(ngModel)]="inputModel.w38">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 39")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w39"
+                                    [(ngModel)]="inputModel.w39">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 40")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w40"
+                                    [(ngModel)]="inputModel.w40">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 41")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w41"
+                                    [(ngModel)]="inputModel.w41">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 42")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w42"
+                                    [(ngModel)]="inputModel.w42">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 43")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w43"
+                                    [(ngModel)]="inputModel.w43">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 44")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w44"
+                                    [(ngModel)]="inputModel.w44">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 45")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w45"
+                                    [(ngModel)]="inputModel.w45">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 46")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w46"
+                                    [(ngModel)]="inputModel.w46">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 47")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w47"
+                                    [(ngModel)]="inputModel.w47">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 48")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w48"
+                                    [(ngModel)]="inputModel.w48">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 49")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w49"
+                                    [(ngModel)]="inputModel.w49">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 50")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w50"
+                                    [(ngModel)]="inputModel.w50">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 51")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w51"
+                                    [(ngModel)]="inputModel.w51">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 52")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w52"
+                                    [(ngModel)]="inputModel.w52">
+                                </money-input-5>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>{{l("Tuần 53")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="w53"
+                                    [(ngModel)]="inputModel.w53">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

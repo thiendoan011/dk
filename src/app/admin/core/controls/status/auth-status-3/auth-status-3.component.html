@@ -1,0 +1,17 @@
+<!-- Lưu nháp -->
+<div *ngIf="authStatus == 'U'" class="auth-status-input-page">
+    <i class="pi pi-clock request-text"></i>
+    <span>{{l('Lưu nháp')}}</span>
+</div>
+
+<!-- Đã gửi yêu cầu - chờ mọi người xác nhận -->
+<div *ngIf="authStatus == 'P'" class="auth-status-input-page">
+    <i class="pi pi-spinner processing-text"></i>
+    <span>{{l('Đã gửi yêu cầu - chờ mọi người xác nhận')}}</span>
+</div>
+
+<!-- Tất cả mọi người đã xác nhận -->
+<div *ngIf="authStatus == 'A'" class="auth-status-input-page">
+    <i class="pi pi-check success-text"></i>
+    <span>{{l('Tất cả mọi người đã xác nhận')}}</span>
+</div>

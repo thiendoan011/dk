@@ -1,0 +1,46 @@
+<div class="form-group">
+    <label>{{ l(labelTitle) }}</label>
+    <div class="input-group">
+        <input
+            *ngIf="proMode"
+            #control
+            style="width: 80%"
+            class="form-control {{ displayText ? 'plan-style-click' : '' }}"
+            type="text"
+            [(ngModel)]="displayText"
+            [readOnly]="displayText"
+            [disabled]="!displayText"
+            (click)="onClickDisplayText($event)"
+            type="text"
+        />
+        <input
+            *ngIf="!proMode"
+            #control
+            style="width: 80%"
+            class="form-control"
+            type="text"
+            [(ngModel)]="displayText"
+            [disabled]="true"
+            type="text"
+        />
+        <span class="input-group-btn">
+            <button
+                [disabled]="disableInput"
+                type="button"
+                class="btn btn-primary"
+                (click)="openModal($event)"
+            >
+                ...
+            </button>
+
+            <button
+                *ngIf="displayText && !disableInput"
+                type="button"
+                class="btn btn-danger"
+                (click)="onDeleteDisplayText($event)"
+            >
+                <i class="fas fa-trash-alt" style="margin-right: 0"></i>
+            </button>
+        </span>
+    </div>
+</div>

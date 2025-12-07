@@ -1,0 +1,147 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Báo cáo tổng hợp đơn hàng")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Mã R -->
+                                <div class="col-md-3">
+                                    <input-select
+                                        [labelTitle]="'Mã R'"
+                                        [disableInput]="false"
+                                        [displayText]="filterInput.grouP_R_CODE"
+                                        (showModal)="showGroupR()"
+                                        (deleteDisplayText)="deleteGroupR($event)"
+                                        name="grouP_R_CODE">
+                                    </input-select>
+                                </div>
+                                
+                                <!-- Mã lệnh sản xuất -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Mã lệnh sản xuất")}}</label>
+                                        <input  type="text"
+                                            class="form-control m-input" 
+                                            name="r_CODE"
+                                            [(ngModel)]="filterInput.r_CODE">
+                                    </div>
+                                </div>
+                                <div class="col-md-12"></div>
+
+                                <!-- Mã PO -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Mã PO")}}</label>
+                                        <input type="text"
+                                            class="form-control m-input"
+                                            name="pO_CODE"
+                                            [(ngModel)]="filterInput.pO_CODE" >
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái PO -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái PO")}}</label>
+                                        <all-code-select 
+                                            name="pO_PROCESS" 
+                                            [(ngModel)]="filterInput.pO_PROCESS"
+                                            [emptyText]="l('SelectAll')" 
+                                            [cdName]="'PO_PROCESS'"
+                                            [cdType]="'PO'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                
+                                <!-- Đơn vị quản lý PO -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý PO')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Thời gian xuất của PO")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="frmdate"
+                                                        [(ngModel)]="filterInput.frmdate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="todate"
+                                                        [(ngModel)]="filterInput.todate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-12"></div>
+
+                                <div class="form-group" style="padding-left: 15px">
+                                    <label (click)="onExportReport1()" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                        {{this.l('Xuất báo cáo 1')}}
+                                    </label>
+                                </div>
+                                <div class="form-group" style="padding-left: 15px">
+                                    <label (click)="onExportReport2()" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                        {{this.l('Xuất báo cáo 2')}}
+                                    </label>
+                                </div>
+                                <div class="form-group" style="padding-left: 15px">
+                                    <label (click)="onExportReport3()" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                        {{this.l('Xuất báo cáo 3')}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>
+<group-r-modal (onSelect)='onSelectGroupR($event)' [multiple]='false' #groupRModal></group-r-modal>

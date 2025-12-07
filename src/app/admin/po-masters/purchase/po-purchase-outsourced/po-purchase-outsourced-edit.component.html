@@ -1,0 +1,172 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Đơn hàng gia công")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã đơn hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã Đơn hàng")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="purchasE_CODE"
+                                    [(ngModel)]="inputModel.purchasE_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên Đơn hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên Đơn hàng")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control"
+                                    name="purchasE_NAME"
+                                    [(ngModel)]="inputModel.purchasE_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Ngày tạo -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày tạo")}}</label>
+                                <input disabled
+                                    class="form-control"
+                                    name="createD_INFO"
+                                    [(ngModel)]="inputModel.createD_INFO" />
+                            </div>
+                        </div>
+
+                        <!-- Lệnh sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Lệnh sản xuất')}}</label>
+                                <div class='file-input-group'>
+                                    <input
+                                        [disabled]="true"
+                                        class="form-control" 
+                                        name="r_CODE"
+                                        [(ngModel)]="inputModel.r_CODE" />
+                                    <button type="button" class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='disableInput'
+                                        (click)="rModal()">{{l("...")}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái đặt -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái đặt")}}</label>
+                                <all-code-select 
+                                    name="purchasE_PROCESS" 
+                                    [(ngModel)]="inputModel.purchasE_PROCESS"
+                                    [emptyText]="l('SelectAll')" 
+                                    [cdName]="'PURCHASE_PROCESS'"
+                                    [cdType]="'PO'">
+                                </all-code-select>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ngày dự kiến về -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày dự kiến về')}}</label>
+                                <date-control
+                                    [inpCss]="'form-control'"
+                                    [disabled]="disableInput"
+                                    name="expecteD_DT"
+                                    [(ngModel)]="inputModel.expecteD_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Trạng thái hoàn thành -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái hoàn thành")}}</label>
+                                <all-code-select 
+                                    name="completeD_STATUS" 
+                                    [(ngModel)]="inputModel.completeD_STATUS"
+                                    [emptyText]="l('SelectAll')" 
+                                    [cdName]="'OPTION_YN_3'"
+                                    [cdType]="'CM'">
+                                </all-code-select>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l('Ghi chú')}}</label>
+                                <textarea
+                                    class="form-control"
+                                    [disabled]='disableInput'
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+
+                    <po-purchase-outsourced-attach-file #poPurchaseOutsourcedAttachFile
+                        [disableInput]="disableInput"
+                        [inputModel]="inputModel"
+                        [folder_upload]="'PURCHASE_OUTSOURCED'"
+                        [title]="'File đính kèm'">
+                    </po-purchase-outsourced-attach-file>
+
+                    <po-purchase-outsourced-product-editable #poPurchaseOutsourcedProductEditableComponent
+                        [disableInput]="disableInput"
+                        [inputModel]="inputModel"
+                        [title]="'Sản phẩm gia công'">
+                    </po-purchase-outsourced-product-editable>
+
+                    <po-purchase-outsourced-product-receipt-editable
+                        [disableInput]="disableInput"
+                        [inputModel]="inputModel"
+                        (ins_completed)="getPoPurchase()"
+                        [title]="'Biên nhận sản phẩm gia công'">
+                    </po-purchase-outsourced-product-receipt-editable>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<r-modal (onSelect)='onSelectR($event)' #rRModal [multiple]="false"></r-modal>

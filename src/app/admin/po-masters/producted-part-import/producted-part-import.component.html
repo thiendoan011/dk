@@ -1,0 +1,25 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Import tiến độ công đoạn sản xuất")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        
+        <producted-part-import-product-detail
+            [branches]="_branches"
+            [title]="'Import tiến độ công đoạn sản xuất'">
+        </producted-part-import-product-detail>
+        
+    </div>
+</div>

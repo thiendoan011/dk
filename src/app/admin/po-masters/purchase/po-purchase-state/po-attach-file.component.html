@@ -1,0 +1,75 @@
+<!-- Thông tin file đính kèm -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("File đính kèm cấp phát theo lsx")}}</h5>
+    <div class="action-button">
+        <button type="button" (click)='onAddAttachFile()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}</button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTableAttachFile class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="width: 40px">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTableAttachFile.checkAll($event.target.checked)"
+                            [checked]="editTableAttachFile.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="width: 40px">{{l("No")}}</span></th>
+                <!-- File đính kèm -->
+                <th sortField="filE_ATTACHMENT">
+                    <span style="width: 150px">{{l("File đính kèm")}}</span>
+                </th>
+                <!-- Mô tả -->
+                <th style="width:25%" sortField="notes">
+                    <span style="width: 150px">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTableAttachFile.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTableAttachFile.currentPage"
+                (click)="editTableAttachFile.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- File đính kèm -->
+                <td>
+                    <file-picker [multiFile]="false" type="text"
+                        [folderUpload]="'ReqPayment'"
+                        [inpCss]="'form-control'"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['filE_ATTACHMENT']"
+                        [disabled]="disableInput"
+                        name="{{editTableAttachFile.name('filE_ATTACHMENT', in)}}"
+                        [accept]=" '.xlsx,.xls,.doc,.docx,.pdf,.rar,.jpeg,.png,.jpg'">
+                    </file-picker>
+                </td>
+                <!-- Mô tả -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['notes']"
+                        name="{{editTableAttachFile.name('notes',in)}}" />
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+
+
+</div>

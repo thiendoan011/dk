@@ -1,0 +1,86 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã lệnh sản xuất -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã lệnh sản xuất")}}</span>
+                </th>
+                <!-- Ngày triển khai LSX -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày triển khai LSX")}}</span>
+                </th>
+                <!-- Ngày yêu cầu hoàn thành LSX -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày yêu cầu hoàn thành LSX")}}</span>
+                </th>
+                <!-- Ngày yêu cầu hoàn thành -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày yêu cầu hoàn thành")}}</span>
+                </th>
+                <!-- Ngày thực tế hoàn thành 
+                <th>
+                    <span style="width: 120px;">{{l("Ngày thực tế hoàn thành")}}</span>
+                </th>-->
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Lệnh sản xuất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailR(item)"
+                        name="{{editTable.name('r_CODE',in)}}" 
+                        [(ngModel)]="item.r_CODE"/>
+                </td>
+                <!-- Ngày triển khai LSX -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('implemenT_DT',in)}}"
+                        [(ngModel)]="item.implemenT_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày yêu cầu hoàn thành LSX -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('r_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.r_REQUEST_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày yêu cầu hoàn thành -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('requesT_DT',in)}}"
+                        [(ngModel)]="item.requesT_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày thực tế hoàn thành 
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('exacT_DT',in)}}"
+                        [(ngModel)]="item.exacT_DT">
+                    </date-control>
+                </td>-->
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

@@ -1,0 +1,149 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Báo cáo sản xuất tuần")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row">
+                                <!-- Begin Filter -->
+                                <!-- Công đoạn -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Công đoạn')}}</label>
+                                        <all-code-select 
+                                            name="TYPE" 
+                                            [(ngModel)]="filterInput.TYPE"
+                                            [cdName]="'PRODUCTED_PART'"
+                                            [cdType]="'PO'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="_branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+                                <div class="col-md-12"></div>
+                                
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày yêu cầu hoàn thành")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        (focusout)="onchangeFilter()"
+                                                        name="frmdate"
+                                                        [(ngModel)]="filterInput.frmdate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        (focusout)="onchangeFilter()"
+                                                        name="todate"
+                                                        [(ngModel)]="filterInput.todate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <!-- End Filter -->
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-search"
+                                            (click)="exportToExcel()">{{l('In báo cáo')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        
+        
+        <plan-production-year-edittable
+        [branches]="_branches"
+        [title]="'Kế hoạch sản xuất năm'">
+        </plan-production-year-edittable>
+        
+        <plan-production-year-modified-edittable
+        [branches]="_branches"
+        [title]="'Kế hoạch sản xuất năm điều chỉnh(phòng kế hoạch vật tư chủ động điều chỉnh)'">
+        </plan-production-year-modified-edittable>
+
+        <plan-production-year-booking-edittable
+        [branches]="_branches"
+        [title]="'Kế hoạch sản xuất năm điều chỉnh theo booking'">
+        </plan-production-year-booking-edittable>
+
+        <plan-production-year-producted-part-1-edittable
+        [branches]="_branches"
+        [title]="'Kế hoạch sản xuất năm điều chỉnh theo công đoạn phôi'">
+        </plan-production-year-producted-part-1-edittable>
+
+        <plan-production-year-producted-part-2-edittable
+        [branches]="_branches"
+        [title]="'Kế hoạch sản xuất năm điều chỉnh theo công đoạn định hình'">
+        </plan-production-year-producted-part-2-edittable>
+
+        <plan-production-year-producted-part-25-edittable
+        [branches]="_branches"
+        [title]="'Kế hoạch sản xuất năm điều chỉnh theo công đoạn lắp ráp'">
+        </plan-production-year-producted-part-25-edittable>
+
+        <plan-production-year-producted-part-345-edittable
+        [branches]="_branches"
+        [title]="'Kế hoạch sản xuất năm điều chỉnh theo công đoạn sơn'">
+        </plan-production-year-producted-part-345-edittable>
+
+        <plan-production-year-producted-part-6-edittable
+        [branches]="_branches"
+        [title]="'Kế hoạch sản xuất năm điều chỉnh theo công đoạn đóng gói'">
+        </plan-production-year-producted-part-6-edittable>
+
+        <rpt-po-dailykpi-edittable
+        [branches]="_branches"
+        [title]="'Năng suất ngày'">
+        </rpt-po-dailykpi-edittable>
+
+        <rpt-po-delay-edittable
+        [branches]="_branches"
+        [title]="'PO sản xuất không kịp'">
+        </rpt-po-delay-edittable>
+    </div>
+</div>

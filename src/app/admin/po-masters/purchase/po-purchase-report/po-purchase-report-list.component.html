@@ -1,0 +1,93 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Báo cáo đơn hàng")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Mã nhà cung cấp 
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Mã nhà cung cấp")}}</label>
+                                        <input  type="text"
+                                            class="form-control m-input" 
+                                            name="suP_CODE"
+                                            [(ngModel)]="filterInput.suP_CODE">
+                                    </div>
+                                </div>-->
+
+                                <!-- Tên nhà cung cấp 
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Tên nhà cung cấp")}}</label>
+                                        <input type="text"
+                                            class="form-control m-input"
+                                            name="suP_NAME"
+                                            [(ngModel)]="filterInput.suP_NAME" >
+                                    </div>
+                                </div>-->
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Thời gian xuất của PO")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="frmdate"
+                                                        [(ngModel)]="filterInput.frmdate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="todate"
+                                                        [(ngModel)]="filterInput.todate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-search"
+                                            (click)="onExportReport()">{{l('Xuất báo cáo')}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

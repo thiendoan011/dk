@@ -1,0 +1,308 @@
+<!-- Begin -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l('Danh sách vật tư bảng hardware')}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <th class="center">
+                    <span>
+                        <checkbox-control
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã sản phẩm -->
+                <th sortField="producT_CODE">
+                    <span style="width: 120px">{{l("Mã sản phẩm")}}</span>
+                </th>
+                <!-- Mã vật tư hardware -->
+                <th sortField="hardwarevT_CODE">
+                    <span style="width: 120px">{{l("Mã vật tư hardware")}}</span>
+                </th>
+                <!-- Tên vật tư hardware -->
+                <th sortField="hardwarevT_NAME">
+                    <span style="width: 200px">{{l("Tên vật tư hardware")}}</span>
+                </th>
+                <!-- Đơn vị tính -->
+                <th sortField="unit">
+                    <span style="width: 80px">{{l("Đơn vị tính")}}</span>
+                </th>
+                <!-- Màu sắc -->
+                <th sortField="color">
+                    <span style="white-space: nowrap;">{{l("Màu sắc")}}</span>
+                </th>
+                <!-- Bộ phận -->
+                <th sortField="part">
+                    <span style="white-space: nowrap;">{{l("Bộ phận")}}</span>
+                </th>
+                <!-- Số lượng yêu cầu -->
+                <th sortField="quantity">
+                    <span style="width: 80px">{{l("Số lượng yêu cầu")}}</span>
+                </th>
+                <!-- Số lượng mua thực tế -->
+                <th sortField="quantitY_REAL">
+                    <span style="width: 80px">{{l("Số lượng mua thực tế")}}</span>
+                </th>
+                <!-- Số lượng sử dụng -->
+                <th sortField="quantitY_USE">
+                    <span style="width: 80px">{{l("Số lượng sử dụng")}}</span>
+                </th>
+                <!-- Số lượng còn lại -->
+                <th sortField="quantitY_REMAIN">
+                    <span style="width: 80px">{{l("Số lượng còn lại")}}</span>
+                </th>
+                <!-- Vấn đề phát sinh -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Vấn đề phát sinh")}}</span>
+                </th>
+                <!-- Tên bảng hardware -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên bảng hardware")}}</span>
+                </th>
+                <!-- Tiêu chuẩn khách hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tiêu chuẩn khách hàng")}}</span>
+                </th>
+                <!-- Tiêu chuẩn Test -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tiêu chuẩn Test")}}</span>
+                </th>
+                <!-- Mẫu K/H tham chiếu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mẫu K/H tham chiếu")}}</span>
+                </th>
+                <!-- Nhận xét của kỹ thuật -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Nhận xét của kỹ thuật")}}</span>
+                </th>
+                <!-- Ghi chú phiếu yêu cầu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ghi chú phiếu yêu cầu")}}</span>
+                </th>
+                <!-- End Table Column -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                [hidden]="item['page'] != editTable.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTable.selectRow($event,item);updateView()'>
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        [disabled]="disableInput"
+                        name="{{editTable.name('isChecked',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã sản phẩm -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailProduct(item)"
+                        name="{{editTable.name('producT_CODE',in)}}" 
+                        [(ngModel)]="item.producT_CODE"/>
+                </td>
+                <!-- Mã vật tư hardware -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailHardwareVT(item)"
+                        name="{{editTable.name('hardwarevT_CODE',in)}}" 
+                        [(ngModel)]="item.hardwarevT_CODE"/>
+                </td>
+                <!-- Tên vật tư hardware -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('hardwarevT_NAME',in)}}" 
+                        [(ngModel)]="item.hardwarevT_NAME"/>
+                </td>
+                <!-- Đơn vị tính -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('unit',in)}}" 
+                        [(ngModel)]="item.unit"/>
+                </td>
+                <!-- Màu sắc -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('color',in)}}" 
+                        [(ngModel)]="item.color"/>
+                </td>
+                <!-- Bộ phận-->
+                <td>
+                    <all-code-select 
+                        [cdName]="'PO_PRODUCT_HARDWAREVT-PART'"
+                        [cdType]="'PO'"
+                        [disabled]="true"
+                        name="part" 
+                        [(ngModel)]="item.part">
+                    </all-code-select>
+                </td>
+                <!-- Số lượng yêu cầu -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='disableInput || _is_progress'
+                        (focusout)="onChangeQuantity(item)"
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantity">
+                    </money-input>
+                </td>
+                <!-- Số lượng mua thực tế -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='disableInput || _is_request'
+                        (focusout)="onChangeQuantity(item)"
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantitY_REAL">
+                    </money-input>
+                </td>
+                <!-- Số lượng sử dụng -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='disableInput || _is_request'
+                        (focusout)="onChangeQuantity(item)"
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantitY_USE">
+                    </money-input>
+                </td>
+                <!-- Số lượng còn lại -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='true'
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantitY_REMAIN">
+                    </money-input>
+                </td>
+                <!-- Vấn đề phát sinh -->
+                <td>
+                    <textarea [disabled]="disableInput || _is_request"
+                        class="form-control transparent"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('problems',in)}}"
+                        [(ngModel)]="item.problems">
+                    </textarea>
+                </td>
+                <!-- Tên bảng vật tư hardware -->
+                <td>
+                    <textarea [disabled]="disableInput || !_is_request"
+                        class="form-control transparent"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('tablehardwarE_NAME',in)}}"
+                        [(ngModel)]="item.tablehardwarE_NAME">
+                    </textarea>
+                </td>
+                <!-- Tiêu chuẩn K/H -->
+                <td>
+                    <textarea [disabled]="disableInput || !_is_request"
+                        class="form-control transparent"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('customeR_STANDARD',in)}}"
+                        [(ngModel)]="item.customeR_STANDARD">
+                    </textarea>
+                </td>
+                <!-- Tiêu chuẩn Test -->
+                <td>
+                    <textarea [disabled]="disableInput || !_is_request"
+                        class="form-control transparent"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('tesT_STANDARD',in)}}"
+                        [(ngModel)]="item.tesT_STANDARD">
+                    </textarea>
+                </td>
+                <!-- Mẫu K/H tham chiếu -->
+                <td>
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'OPTION_YN'"
+                        [cdType]="'CM'"
+                        name="customeR_TEMPLATE_REF" 
+                        [(ngModel)]="item.customeR_TEMPLATE_REF">
+                    </all-code-select>
+                </td>
+                <!-- Nhận xét của kỹ thuật -->
+                <td>
+                    <textarea [disabled]="disableInput"
+                        class="form-control transparent"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('noteS_TECHNICAL',in)}}"
+                        [(ngModel)]="item.noteS_TECHNICAL">
+                    </textarea>
+                </td>
+                <!-- Ghi chú phiếu yêu cầu -->
+                <td>
+                    <textarea [disabled]="disableInput || !_is_request"
+                        class="form-control transparent"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes',in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+<!-- End -->
+<div class="row">
+    <!-- Tạo bảng vật tư -->
+    <div class="col-md-3" [hidden]="disableInput || !inputModel.grouP_PRODUCT_ID || _is_progress">
+        <div class="form-group">
+            <label (click)="pdE_GROUP_PRODUCT_HARDWARE_Upd()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Tạo bảng vật tư')}}
+            </label>
+        </div>
+    </div>
+    <!-- Lưu thay đổi -->
+    <div class="col-md-3" [hidden]="disableInput || !inputModel.grouP_PRODUCT_ID || _is_progress">
+        <div class="form-group">
+            <label (click)="pdE_GROUP_PRODUCT_HARDWARE_Edit()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu thay đổi')}}
+            </label>
+        </div>
+    </div>
+    <!-- Xuất đơn hàng -->
+    <div class="col-md-3" [hidden]="disableInput || !inputModel.grouP_PRODUCT_ID || _is_progress">
+        <div class="form-group">
+            <label (click)="exportPurchaseOrderExcel()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('DownloadTemplate')}}
+            </label>
+
+        </div>
+    </div>
+</div>
+

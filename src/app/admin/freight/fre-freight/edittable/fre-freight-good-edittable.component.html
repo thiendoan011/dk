@@ -1,0 +1,274 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button type="button" (click)='exportExcel()' title="dowload"
+            class="btn btn-primary"><i class="pi pi-download"></i>{{l('Dowload')}}
+        </button>
+        <button type="button" [hidden]="disableInput || _disableUpdate || _disableSendAppr" class="btn btn-primary"
+            (click)="onShowFREGoodsModal()"><i class="pi pi-plus"></i>{{l("Add")}}
+        </button>
+        <button type="button" [hidden]="disableInput || _disableUpdate || _disableSendAppr" class="btn btn-danger"
+            (click)="editTable.removeAllCheckedItem()"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <th class="center">
+                    <span style="width: 40px">
+                        <checkbox-control [disabled]="_disableInput || _disableUpdate || _disableSendAppr"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- PYC xe -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("PYC xe")}}</span>
+                </th>
+                <!-- Tên hàng hóa -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên hàng hóa")}}</span>
+                </th>
+                <!-- Quy cách -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Quy cách")}}</span>
+                </th>
+                <!-- Đơn vị tính -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Đơn vị tính")}}</span>
+                </th>
+                <!-- Số lượng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số lượng")}}</span>
+                </th>
+                <!-- Số Kg -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số Kg")}}</span>
+                </th>
+                <!-- Tổng số Kg -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tổng số Kg")}}</span>
+                </th>
+                <!-- Số khối -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số khối")}}</span>
+                </th>
+                <!-- Tổng số khối -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tổng số khối")}}</span>
+                </th>
+                <!-- Điểm đi -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Điểm đi")}}</span>
+                </th>
+                <!-- Điểm đến -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Điểm đến")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        name="{{editTable.name('isChecked',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- PYC xe -->
+                <td>
+                    <select2-custom
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        name="{{editTable.name('producT_ID',in)}}"
+                        [(ngModel)]="item.vhE_VEHICLE_REQUEST_ID"
+                        [(list)]="_inputModel.frE_FREIGHT_VEHICLE_REQUESTs"
+                        [valueMember]="'vhE_VEHICLE_REQUEST_ID'"
+                        [displayMember]="'vhE_VEHICLE_REQUEST_CODE'">
+                    </select2-custom>
+                </td>
+                <!-- Tên hàng hóa -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('frE_GOODS_NAME',in)}}" 
+                        [(ngModel)]="item.frE_GOODS_NAME"/>
+                </td>
+                <!-- Quy cách -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('frE_GOODS_SPECIFICATION',in)}}" 
+                        [(ngModel)]="item.frE_GOODS_SPECIFICATION"/>
+                </td>
+                <!-- Đơn vị tính -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('frE_GOODS_UNIT_NAME',in)}}" 
+                        [(ngModel)]="item.frE_GOODS_UNIT_NAME"/>
+                </td>
+                <!-- Số lượng -->
+                <td>
+                    <money-input-5
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        [isDecimal_round5]="true"
+                        (focusout)="onChangeAMT(item)"
+                        name="{{editTable.name('frE_FREIGHT_GOOD_QUANTITY',in)}}" 
+                        [(ngModel)]="item.frE_FREIGHT_GOOD_QUANTITY">
+                    </money-input-5>
+                </td>
+                <!-- Số Kg -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('frE_FREIGHT_GOOD_MASS',in)}}" 
+                        [(ngModel)]="item.frE_FREIGHT_GOOD_MASS">
+                    </money-input-5>
+                </td>
+                <!-- Tổng số Kg -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('totaL_FRE_FREIGHT_GOOD_MASS',in)}}" 
+                        [(ngModel)]="item.totaL_FRE_FREIGHT_GOOD_MASS">
+                    </money-input-5>
+                </td>
+                <!-- Số khối -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('frE_FREIGHT_GOOD_VOLUME',in)}}" 
+                        [(ngModel)]="item.frE_FREIGHT_GOOD_VOLUME">
+                    </money-input-5>
+                </td>
+                <!-- Tổng số khối -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('totaL_FRE_FREIGHT_GOOD_VOLUME',in)}}" 
+                        [(ngModel)]="item.totaL_FRE_FREIGHT_GOOD_VOLUME">
+                    </money-input-5>
+                </td>
+                <!-- Điểm đi -->
+                <td>
+                    <div class="file-input-group">
+                        <input class="form-control transparent"
+                            [disabled]="true" 
+                            name="{{editTable.name('departurE_LOCATION_NAME',in)}}"
+                            [(ngModel)]="item.departurE_LOCATION_NAME"/>
+                        <button class="btn btn-primary ng-star-inserted" type="button" 
+                            [disabled]="disableInput || _disableUpdate || _disableSendAppr" 
+                            (click)="currentDetail= item;
+                            onShowFREDepartureLocationModal()">{{l("...")}}
+                        </button>
+                    </div>
+                </td>
+                <!-- Điểm đến -->
+                <td>
+                    <div class="file-input-group">
+                        <input class="form-control transparent"
+                            [disabled]="true" 
+                            name="{{editTable.name('arrivaL_LOCATION_NAME',in)}}"
+                            [(ngModel)]="item.arrivaL_LOCATION_NAME"/>
+                        <button class="btn btn-primary ng-star-inserted" type="button" 
+                            [disabled]="disableInput || _disableUpdate || _disableSendAppr" 
+                            (click)="currentDetail= item;
+                            onShowFREArrivalLocationModal()">{{l("...")}}
+                        </button>
+                    </div>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<div class='text-right'>
+    <label style="font-weight: 500; margin-top: 10px;
+        font-size: 13px;">
+        {{l('Tổng số Kg')+': '}}
+        {{editTable.getSum("totaL_FRE_FREIGHT_GOOD_MASS") | moneyFormatPipe}} {{l('Kg')}}
+        &nbsp;
+        {{l('Tổng số khối')+': '}}
+        {{editTable.getSum("totaL_FRE_FREIGHT_GOOD_VOLUME") | moneyFormatPipe}} {{l('M3')}}
+    </label>
+</div>
+
+<div class="row">
+    <div class="col-md-3" [hidden]="_disableInput || _disableUpdate || _disableSendAppr">
+        <div class="form-group">
+            <label (click)="onSave()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu')}}
+            </label>
+        </div>
+    </div>
+    <div class="col-md-3" [hidden]="_disableInput || !_disableUpdate || _disableSendAppr">
+        <div class="form-group">
+            <label (click)="onUnLock()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Mở khóa')}}
+            </label>
+        </div>
+    </div>
+    <div class="col-md-3" [hidden]="_disableInput || _disableUpdate || _disableSendAppr">
+        <div class="form-group">
+            <label (click)="onSaveAndLock()"
+                class='btn btn-danger' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu & Khóa')}}
+            </label>
+        </div>
+    </div>
+</div>
+
+<fre-goods-modal #freGoodsModal
+    [multiple]="true"
+    [title]="'Danh sách hàng hóa'"
+    (onSelect)="onSelectFREGoodsModal($event)">
+</fre-goods-modal>
+
+<fre-location-modal #freDepartureLocationModal [multiple]="false"
+    [title]="'Danh sách địa điểm'"
+    (onSelect)="onSelectFREDepartureLocationModal($event)">
+</fre-location-modal>
+
+<fre-location-modal #freArrivalLocationModal [multiple]="false"
+    [title]="'Danh sách địa điểm'"
+    (onSelect)="onSelectFREArrivalLocationModal($event)">
+</fre-location-modal>
+

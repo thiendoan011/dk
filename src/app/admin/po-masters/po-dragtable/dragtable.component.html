@@ -1,0 +1,42 @@
+<div>        
+    <div class="row" style="margin-top:10px;margin-bottom: 10px;">        
+      <div class="col-sm-12 btn btn-success">        
+        Drag and drop table Columns in Angular application  
+      </div>        
+    </div>       
+  <div class="container">  
+    <div class="row">  
+        <div class="col-md-12">  
+            <table class="table" id="table">  
+                <thead class="thead-dark">  
+                    <tr>  
+                        <th>Id</th>  
+                        <th>Name</th>  
+                        <th>Age</th>  
+                        <th>Address</th>  
+                        <th>City</th>  
+                        <th>Salary</th>  
+                        <th>Department</th>  
+                    </tr>  
+                </thead>  
+                <tbody>  
+                    <tr *ngFor="let data of rowData">  
+                        <td>{{data.Id}}</td>  
+                        <td>{{data.Name}}</td>  
+                        <td>{{data.Age}}</td>  
+                        <td>{{data.Address}}</td>  
+                        <td>{{data.City}}</td>  
+                        <td>{{data.Salary}}</td>  
+                        <td>{{data.Department}}</td>  
+                    </tr>  
+                </tbody>  
+            </table>  
+        </div>  
+    </div>  
+  </div>  
+  <br/> 
+
+  
+
+</div>
+

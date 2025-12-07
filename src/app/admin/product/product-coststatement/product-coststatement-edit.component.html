@@ -1,0 +1,164 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Bảng chiết tính")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã bảng chiết tính -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã bảng chiết tính")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="producT_COSTSTATEMENT_CODE"
+                                    [(ngModel)]="inputModel.producT_COSTSTATEMENT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên bảng chiết tính -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên bảng chiết tính")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="producT_COSTSTATEMENT_NAME"
+                                    [(ngModel)]="inputModel.producT_COSTSTATEMENT_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Loại bảng chiết tính -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Loại bảng chiết tính")}}</label>
+                                <all-code-select 
+                                    name="producT_COSTSTATEMENT_TYPE" 
+                                    [disabled]="disableInput"
+                                    [(ngModel)]="inputModel.producT_COSTSTATEMENT_TYPE"
+                                    [cdName]="'TYPE_COSTSTATEMENT'"
+                                    [cdType]="'PRODUCT'">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- M3 nguyên liệu 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("M3 nguyên liệu")}}</label>
+                                <money-input 
+                                    [disabled]="true"
+                                    [isDecimal_round3]="true" 
+                                    name="qtY_CONT1"
+                                    [(ngModel)]="inputModel.taX_NO">
+                                </money-input>
+                            </div>
+                        </div>-->
+
+                        <!-- M2 Veneer 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("M2 Veneer")}}</label>
+                                <money-input 
+                                    [disabled]="true"
+                                    [isDecimal_round3]="true" 
+                                    name="qtY_CONT2"
+                                    [(ngModel)]="inputModel.taX_NO">
+                                </money-input>
+                            </div>
+                        </div>-->
+
+                        <!-- M2 Sơn 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("M2 Sơn")}}</label>
+                                <money-input 
+                                    [disabled]="true"
+                                    [isDecimal_round3]="true" 
+                                    name="qtY_CONT3"
+                                    [(ngModel)]="inputModel.taX_NO">
+                                </money-input>
+                            </div>
+                        </div>-->
+
+                        
+
+                        <!-- Import excel 
+                        <div *ngIf="editPageState != EditPageState.viewDetail || inputModel.autH_STATUS == 'A'" class="col-md-3">
+                            <div class="form-group">
+                                <label class='btn btn-primary' type="button"
+                                    for="file-upload"
+                                    style="margin-top: 6px;color:white!important">
+                                    {{this.l('Import danh sách bảng chiết tính')}}
+                                    <import-excel [id]="'file-upload'"
+                                        [hidden]="true"
+                                        [startPosition]="'A2'"
+                                        [disable]="disableInput"
+                                        (toArrayObject)='onImportExcel($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>-->
+
+                        <!-- Tải mẫu import excel 
+                        <div class="col-md-3" *ngIf="editPageState != EditPageState.viewDetail">
+                            <div class="form-group">
+                                <label class='btn btn-primary'
+                                    (click)="exportExcelTemplate()"
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('DownloadTemplate')}}
+                                </label>
+                            </div>
+                        </div>-->
+                    </div>
+                    <!-- Begin Table-->
+                    <!-- Cụm chi tiết -->
+                    <product-coststatement-pgd-edittable #productPGDEdittable
+                        (emit_select_product_group_detail)="onSelectProductGroupDetail($event)"
+                        (emit_remove_product_group_detail)="onRemoveProductGroupDetail($event)"
+                        [inputModel]="inputModel"
+                        [disableInput]='disableInput'>
+                    </product-coststatement-pgd-edittable>
+                    <!-- Mô tả chi tiết -->
+                    <product-coststatement-pd-edittable #productPDEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]='disableInput'>
+                    </product-coststatement-pd-edittable>
+                    <!-- End Talbe-->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

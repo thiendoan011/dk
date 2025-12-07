@@ -1,0 +1,85 @@
+<!-- Begin Danh sách tiến độ -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l('Chi tiết tiến độ công đoạn sơn 3') + ', hệ hàng ' + group_product_name + ', PO ' + po_name}}</h5>
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTableProductedPartDetail class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th  style="width: 10%" class="center">
+                    <span>
+                        <checkbox-control
+                            (onchange)="editTableProductedPartDetail.checkAll($event.target.checked)"
+                            [checked]="editTableProductedPartDetail.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- STT -->
+                <th style="width: 10%"><span >{{l("STT")}}</span></th>
+                <!-- Ngày cập nhật -->
+                <th sortField="updatE_DT" class="center"style="width: 30%" >
+                    <span style="width: 250px">{{l('Ngày cập nhật')}}</span>
+                </th>
+                <!-- Phần trăm hoàn thành -->
+                <th sortField="percenT_COMPLETED" class="center" style="width: 30%">
+                    <span style="width: 350px">{{l('Phần trăm hoàn thành')}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th sortField="notes" class="center" style="width: 20%">
+                    <span style="width: 150px">{{l('Ghi chú')}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTableProductedPartDetail.dataInPage; let in= index"
+                [hidden]="item['page'] != editTableProductedPartDetail.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTableProductedPartDetail.selectRow($event,item);updateView()'>
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        name="{{editTableProductedPartDetail.name('isChecked',in)}}"
+                        [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        name="{{editTableProductedPartDetail.name('no',in)}}"
+                        [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['no']">
+                </td>
+                <!-- Ngày cập nhật -->
+                <td>
+                    <date-control
+                        [inpCss]="'form-control'"
+                        [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['updatE_DT']"
+                        name="{{editTableProductedPartDetail.name('updatE_DT',in)}}">
+                    </date-control>
+                </td>
+                <!-- Phần trăm hoàn thành -->
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            name="{{editTableProductedPartDetail.name('percenT_COMPLETED',in)}}"
+                            class="form-control transparent" type="text"
+                            [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['percenT_COMPLETED']"/>
+                    </div>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTableProductedPartDetail.name('notes',in)}}"
+                        [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['notes']">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+<!-- End Danh sách tiến độ -->

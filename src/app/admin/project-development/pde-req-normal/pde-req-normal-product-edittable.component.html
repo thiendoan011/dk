@@ -1,0 +1,344 @@
+<!-- Begin -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(_title)}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput || _is_progress" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+        <button [hidden]="disableInput || _is_progress" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+    </div>
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th  style="width: 10%" class="center">
+                    <span>
+                        <checkbox-control
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- STT -->
+                <th><span style="width: 40px">{{l("No")}}</span></th>
+                <!-- Khách hàng -->
+                <th sortField="producT_CODE">
+                    <span style="width: 100px">{{l('Khách hàng')}}</span>
+                </th>
+                <!-- Mã sản phẩm -->
+                <th sortField="producT_CODE">
+                    <span style="width: 100px">{{l('Mã sản phẩm')}}</span>
+                </th>
+                <!-- Tên sản phẩm -->
+                <th sortField="producT_NAME">
+                    <span style="width: 180px">{{l('Tên sản phẩm')}}</span>
+                </th>
+                <!-- Thông tin yêu cầu -->
+                <th sortField="producT_NAME">
+                    <span style="white-space: nowrap;">{{l('Thông tin yêu cầu')}}</span>
+                </th>
+                <!-- Màu sơn 
+                <th sortField="producT_NAME">
+                    <span style="white-space: nowrap;">{{l('Màu sơn')}}</span>
+                </th>-->
+                <!-- Dài -->
+                <th sortField="producT_NAME">
+                    <span style="white-space: nowrap;">{{l('Dài')}}</span>
+                </th>
+                <!-- Rộng -->
+                <th sortField="producT_NAME">
+                    <span style="white-space: nowrap;">{{l('Rộng')}}</span>
+                </th>
+                <!-- Cao -->
+                <th sortField="producT_NAME">
+                    <span style="white-space: nowrap;">{{l('Cao')}}</span>
+                </th>
+                <!-- Số lượng -->
+                <th sortField="quantity">
+                    <span style="width: 80px">{{l('Số lượng')}}</span>
+                </th>
+                <!-- ĐVT -->
+                <th sortField="quantity">
+                    <span style="width: 80px">{{l('ĐVT')}}</span>
+                </th>
+                <!-- Tiêu chuẩn K/H 
+                <th>
+                    <span style="white-space: nowrap;">{{l('Tiêu chuẩn K/H')}}</span>
+                </th>-->
+                <!-- Thời gian hoàn thành 
+                <th sortField="layouT_DT_DESC">
+                    <span style="white-space: nowrap;">{{l("Thời gian hoàn thành")}}</span>
+                </th>-->
+                <!-- Ghi chú -->
+                <th>
+                    <span style="width: 100px">{{l('Ghi chú')}}</span>
+                </th>
+                <!-- Hình ảnh -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Hình ảnh')}}</span>
+                </th>
+                <!-- Tiêu chuẩn Test 
+                <th>
+                    <span style="white-space: nowrap;">{{l('Tiêu chuẩn Test')}}</span>
+                </th>-->
+                <!-- Bảng màu tham chiếu 
+                <th>
+                    <span style="white-space: nowrap;">{{l('Bảng màu tham chiếu')}}</span>
+                </th>-->
+                <!-- Ngày cần -->
+                <th>
+                    <span style="width: 100px">{{l('Ngày cần')}}</span>
+                </th>
+                <!-- Ngày dự kiến về -->
+                <th>
+                    <span style="width: 100px">{{l('Ngày dự kiến về')}}</span>
+                </th>
+                <!-- Ngày thực tế về -->
+                <th>
+                    <span style="width: 100px">{{l('Ngày thực tế về')}}</span>
+                </th>
+                <!-- Nhận xét của kỹ thuật -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Nhận xét của kỹ thuật')}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                [hidden]="item['page'] != editTable.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTable.selectRow($event,item);updateView()'>
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        [disabled]="disableInput"
+                        name="{{editTable.name('isChecked',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        [disabled]="true"
+                        name="{{editTable.name('no',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['no']">
+                </td>
+                <!-- Khách hàng -->
+                <td class="center"><span class="mo-header"></span>
+                    <div class='user-group'>
+                        <input class='form-control'
+                            readonly
+                            style="color: blue; cursor: pointer;"
+                            (click)="onViewDetailCustomer(item)"
+                            name="{{editTable.name('customeR_NAME',in)}}"
+                            [(ngModel)]="item.customeR_NAME">
+                        <button type="button" class="btn btn-primary"
+                            [disabled]='disableInput || _is_progress'
+                            (click)="showCusModal()">{{l("...")}}
+                        </button>
+                    </div>
+                </td>
+                <!-- Mã sản phẩm -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailProduct(item)"
+                        name="{{editTable.name('producT_CODE',in)}}"
+                        [(ngModel)]="item.producT_CODE">
+                </td>
+                <!-- Tên sản phẩm -->
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            [disabled]="true"
+                            name="{{editTable.name('producT_NAME',in)}}"
+                            class="form-control transparent" type="text"
+                            [(ngModel)]="item.producT_NAME"/>
+                    </div>
+                </td>
+                <!-- Thông tin yêu cầu -->
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            [disabled]="disableInput || _is_progress"
+                            class="form-control transparent" type="text"
+                            name="{{editTable.name('requesT_NORMAL',in)}}"
+                            [(ngModel)]="item.requesT_NORMAL"/>
+                    </div>
+                </td>
+                <!-- Màu sơn 
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            [disabled]="disableInput || _is_progress"
+                            class="form-control transparent" type="text"
+                            name="{{editTable.name('painT_COLOR',in)}}"
+                            [(ngModel)]="item.painT_COLOR"/>
+                    </div>
+                </td>-->
+                <!-- Dài -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [disabled]="disableInput || _is_progress"
+                            class="transparent"
+                            name="{{editTable.name('producT_SPECIFI_LENGTH',in)}}"
+                            [(ngModel)]="item.producT_SPECIFI_LENGTH">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- Rộng -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [disabled]="disableInput || _is_progress"
+                            class="transparent"
+                            name="{{editTable.name('producT_SPECIFI_WIDTH',in)}}"
+                            [(ngModel)]="item.producT_SPECIFI_WIDTH">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- Cao -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [disabled]="disableInput || _is_progress"
+                            class="transparent"
+                            name="{{editTable.name('producT_SPECIFI_HEIGHT',in)}}"
+                            [(ngModel)]="item.producT_SPECIFI_HEIGHT">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- Số lượng -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [disabled]="disableInput || _is_progress"
+                            class="transparent"
+                            name="{{editTable.name('quantity',in)}}"
+                            [(ngModel)]="item.quantity">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- Đơn vị tính -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="disableInput || _is_progress"
+                        name="{{editTable.name('unit',in)}}" 
+                        [(ngModel)]="item.unit"/>
+                </td>
+                <!-- Tiêu chuẩn K/H 
+                <td>
+                    <textarea [disabled]="disableInput || _is_progress"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('customeR_STANDARD',in)}}"
+                        [(ngModel)]="item.customeR_STANDARD">
+                    </textarea>
+                </td>-->
+                <!-- Thời gian hoàn thành 
+                <td>
+                    <date-control
+                        [disabled]='disableInput || _is_progress'
+                        name="{{editTable.name('completE_DT',in)}}"
+                        [(ngModel)]="item.completE_DT">
+                    </date-control>
+                </td>-->
+                <!-- Ghi chú -->
+                <td>
+                    <textarea [disabled]="disableInput || _is_progress"
+                        class="form-control transparent"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes',in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+                <!-- Hình ảnh -->
+                <td>
+                    <span class="mo-header"></span>
+                    <a style="cursor: pointer;"  (click)="onViewDetailImage()" [hidden]="item.urls? false: true">
+                        <img height="100" src="{{remoteServiceBaseUrl + item.urls}}"/>
+                    </a>
+                </td>
+                <!-- Tiêu chuẩn Test 
+                <td>
+                    <textarea [disabled]="disableInput || _is_progress"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('tesT_STANDARD',in)}}"
+                        [(ngModel)]="item.tesT_STANDARD">
+                    </textarea>
+                </td>-->
+                <!-- Bảng màu tham chiếu 
+                <td>
+                    <all-code-select 
+                        [disabled]="disableInput || _is_progress"
+                        [cdName]="'OPTION_YN'"
+                        [cdType]="'CM'"
+                        name="normaL_REF" 
+                        [(ngModel)]="item.normaL_REF">
+                    </all-code-select>
+                </td>-->
+                <!-- Ngày cần -->
+                <td>
+                    <date-control
+                        [disabled]='disableInput || _is_progress'
+                        name="{{editTable.name('requesT_NORMAL_DT',in)}}"
+                        [(ngModel)]="item.requesT_NORMAL_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày dự kiến về -->
+                <td>
+                    <date-control
+                        [disabled]='disableInput || _is_request'
+                        name="{{editTable.name('expecT_NORMAL_DT',in)}}"
+                        [(ngModel)]="item.expecT_NORMAL_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày thực tế về -->
+                <td>
+                    <date-control
+                        [disabled]='disableInput || _is_request'
+                        name="{{editTable.name('exacT_NORMAL_DT',in)}}"
+                        [(ngModel)]="item.exacT_NORMAL_DT">
+                    </date-control>
+                </td>
+                <!-- Nhận xét của kỹ thuật -->
+                <td>
+                    <textarea [disabled]="disableInput || _is_request"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('noteS_TECHNICAL',in)}}"
+                        [(ngModel)]="item.noteS_TECHNICAL">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<!-- Lưu thay đổi -->
+<div class="col-md-3" [hidden]="disableInput">
+    <div class="form-group">
+        <label (click)="PDE_GROUP_PRODUCT_NORMAL_Edit()"
+            class='btn btn-primary' 
+            style="margin-top: 6px; color:white!important">
+            {{this.l('Lưu thay đổi')}}
+        </label>
+    </div>
+</div>
+<!-- End -->
+
+<pde-product-with-condition-modal (onSelect)='onSelectPopupAdd($event)' #popupAdd [multiple]="true"></pde-product-with-condition-modal>
+<po-customer-modal (onSelect)='onSelectCustomer($event)' #poCusModal
+    [multiple]="false"></po-customer-modal>
+    

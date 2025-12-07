@@ -1,0 +1,123 @@
+<!-- Thông tin vật tự hardware thuộc sản phẩm -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách vật tư hardware thuộc sản phẩm")}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã vật tư hardware -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã vật tư hardware")}}</span>
+                </th>
+                <!-- Tên vật tư hardware -->
+                <th sortField="producT_NAME">
+                    <span style="white-space: nowrap;">{{l("Tên vật tư hardware")}}</span>
+                </th>
+                <!-- Đơn vị tính -->
+                <th sortField="layouT_DT_DESC">
+                    <span style="white-space: nowrap;">{{l("Đơn vị tính")}}</span>
+                </th>
+                <!-- Màu sắc -->
+                <th sortField="deP_ID">
+                    <span style="white-space: nowrap;">{{l("Màu sắc")}}</span>
+                </th>
+                <!-- Số lượng -->
+                <th sortField="deP_ID">
+                    <span style="white-space: nowrap;">{{l("Số lượng")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã vật tư hardware -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('hardwarevT_CODE',in)}}" 
+                        [(ngModel)]="item.hardwarevT_CODE"/>
+                </td>
+                <!-- Tên vật tư hardware -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('hardwarevT_NAME',in)}}" 
+                        [(ngModel)]="item.hardwarevT_NAME"/>
+                </td>
+                <!-- Đơn vị tính -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('unit',in)}}" 
+                        [(ngModel)]="item.unit"/>
+                </td>
+                <!-- Màu sắc -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('color',in)}}" 
+                        [(ngModel)]="item.color"/>
+                </td>
+                <!-- Số lượng -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='disableInput'
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantity">
+                    </money-input>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

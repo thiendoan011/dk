@@ -1,0 +1,197 @@
+<!-- Thông tin layout thuộc sản phẩm -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách layout thuộc sản phẩm")}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAddAttachFile()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='removeAttachFile()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTableAttachFile class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTableAttachFile.checkAll($event.target.checked)"
+                            [checked]="editTableAttachFile.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Tên khách hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên khách hàng")}}</span>
+                </th>
+                <!-- Tên sản phẩm -->
+                <th sortField="producT_NAME">
+                    <span style="white-space: nowrap;">{{l("Tên sản phẩm")}}</span>
+                </th>
+                <!-- Nội dung layout -->
+                <th sortField="layouT_DT_DESC">
+                    <span style="white-space: nowrap;">{{l("Nội dung layout")}}</span>
+                </th>
+                <!-- Phòng ban ban hành -->
+                <th sortField="deP_ID">
+                    <span style="white-space: nowrap;">{{l("Phòng ban ban hành")}}</span>
+                </th>
+                <!-- Ngày upload layout -->
+                <th sortField="layouT_DT_DT">
+                    <span style="white-space: nowrap;">{{l("Ngày upload layout")}}</span>
+                </th>
+                <!-- File đính kèm layout -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("File đính kèm layout")}}</span>
+                </th>
+                <!-- Trạng thái layout -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Trạng thái layout")}}</span>
+                </th>
+                <!-- Ngày upload file quy cách -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Ngày upload file quy cách")}}</span>
+                </th>
+                <!-- File đính kèm quy cách -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("File đính kèm quy cách")}}</span>
+                </th>
+                <!-- Ghi chú file quy cách -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Ghi chú file quy cách")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTableAttachFile.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTableAttachFile.currentPage"
+                (click)="editTableAttachFile.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Tên khách hàng -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="true"
+                        [(ngModel)]="item.customeR_NAME"
+                        name="{{editTableAttachFile.name('customeR_NAME',in)}}" />
+                </td>
+                <!-- Tên sản phẩm 
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="item.producT_NAME"
+                        name="{{editTableAttachFile.name('producT_NAME',in)}}" />
+                </td>-->
+                <td>
+                    <input class="form-control" [hidden]="!disableInput"
+                        [disabled]='true'
+                        #producT_ID='ngModel'
+                        name="{{editTableAttachFile.name('producT_ID', in)}}"
+                        [(ngModel)]="item.producT_NAME">
+
+                    <select2-custom [hidden]="disableInput"
+                        [disabled]='disableInput'
+                        #producT_ID='ngModel'
+                        name="{{editTableAttachFile.name('producT_ID',in)}}"
+                        [(ngModel)]="item.producT_ID"
+                        [(list)]="listProduct"
+                        [valueMember]="'producT_ID'"
+                        [displayMember]="'producT_NAME'">
+                    </select2-custom>
+                </td>
+                <!-- Nội dung layout -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]='disableInput'
+                        #seller='ngModel'
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        [(ngModel)]="item.layouT_DT_DESC"
+                        name="{{editTableAttachFile.name('layouT_DT_DESC', in)}}">
+                    </textarea>
+                </td>
+                <!-- Phòng ban ban hành -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="item.deP_ID"
+                        name="{{editTableAttachFile.name('deP_ID',in)}}" />
+                </td>
+                <!-- Ngày upload layout -->
+                <td>
+                    <date-control
+                        [disabled]='disableInput'
+                        [(ngModel)]="item.layouT_DT_DT"
+                        name="{{editTableAttachFile.name('layouT_DT_DT', in)}}">
+                    </date-control>
+                </td>
+                <!-- File đính kèm layout -->
+                <td style="min-width: 120px;">
+                    <file-picker [multiFile]="false" type="text"
+                        [folderUpload]="'PoLayout'"
+                        [inpCss]="'form-control'"
+                        (attach_infor_out)="l_UploadFileComplete($event, item)"
+                        [(ngModel)]="item['filE_ATTACHMENT']"
+                        [disabled]="disableInput"
+                        name="{{editTableAttachFile.name('filE_ATTACHMENT', in)}}"
+                        [accept]=" '.xlsx,.xls,.doc,.docx,.pdf,.rar,.jpeg,.png,.jpg'">
+                    </file-picker>
+                </td>
+                <!-- Trạng thái layout -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="item.layouT_DT_STATUS"
+                        name="{{editTableAttachFile.name('layouT_DT_STATUS',in)}}" />
+                </td>
+                <!-- Ngày upload file quy cách -->
+                <td>
+                    <date-control
+                        [disabled]='disableInput'
+                        [(ngModel)]="item.uploaD_LAYOUT_TEMPLATE_DT"
+                        name="{{editTableAttachFile.name('uploaD_LAYOUT_TEMPLATE_DT', in)}}">
+                    </date-control>
+                </td>
+                <!-- File đính kèm quy cách -->
+                <td style="min-width: 120px;">
+                    <file-picker [multiFile]="false" type="text"
+                        [folderUpload]="'TemplatePoLayout'"
+                        [inpCss]="'form-control'"
+                        (attach_infor_out)="l_UploadFileComplete_Template($event, item)"
+                        [(ngModel)]="item['filE_ATTACHMENT_TEMPLATE']"
+                        [disabled]="disableInput"
+                        name="{{editTableAttachFile.name('filE_ATTACHMENT_TEMPLATE', in)}}"
+                        [accept]=" '.xlsx,.xls,.doc,.docx,.pdf,.rar,.jpeg,.png,.jpg'">
+                    </file-picker>
+                </td>
+                <!-- Ghi chú file quy cách -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]='disableInput'
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        [(ngModel)]="item.noteS_TEMPLATE"
+                        name="{{editTableAttachFile.name('noteS_TEMPLATE', in)}}">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

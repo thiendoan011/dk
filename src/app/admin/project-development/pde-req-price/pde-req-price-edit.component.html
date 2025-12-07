@@ -1,0 +1,210 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Phiếu yêu cầu báo giá")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <history-2-modal
+                                #history_modal
+                                [id]="inputModel.grouP_PRODUCT_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'"
+                                [trN_TYPE]="'PRICE'"
+                                [stage]="'mau'">
+                            </history-2-modal>
+                        </div>
+
+                        <!-- Mã hệ hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã hệ hàng")}}</label>
+                                <input class="form-control" type="text"
+                                    readonly
+                                    style="color: blue; cursor: pointer;"
+                                    (click)="onViewDetailGroupProduct()"
+                                    name="suP_CODE"
+                                    [(ngModel)]="inputModel.grouP_PRODUCT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Người gửi yêu cầu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người gửi yêu cầu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="reQ_PRICE_REQ_REQUESTER_NAME"
+                                    [(ngModel)]="inputModel.reQ_PRICE_REQ_REQUESTER_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Phòng ban nhận triển khai -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Phòng ban nhận triển khai")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="reQ_PRICE_REQ_DEP_ID"
+                                    [(ngModel)]="inputModel.reQ_PRICE_REQ_DEP_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu báo giá -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu báo giá")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="reQ_PRICE_REQ_DT"
+                                    [(ngModel)]="inputModel.reQ_PRICE_REQ_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày khách xem mẫu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày khách xem mẫu")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="cuS_VIEW_TEMPLATE_DT"
+                                    [(ngModel)]="inputModel.cuS_VIEW_TEMPLATE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu hoàn thành báo giá -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành báo giá")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="reQ_PRICE_REQ_COMPLETE_DT"
+                                    [(ngModel)]="inputModel.reQ_PRICE_REQ_COMPLETE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái tiếp nhận -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái tiếp nhận")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    name="reQ_PRICE_REQ_STATUS" 
+                                    [(ngModel)]="inputModel.reQ_PRICE_REQ_STATUS"
+                                    [cdName]="'PDE_REQ_PRICE'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12 modal-body">
+                        <!-- Tiếp nhận  -->
+                        <div class="col-md-2" *ngIf="showAcceptButton">
+                            <div class="form-group">
+                                <label (click)="onAccept()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Tiếp nhận')}}
+                                </label>
+                            </div>
+                        </div>
+    
+                        <!-- Không tiếp nhận  -->
+                        <div class="col-md-2" *ngIf="showAcceptButton">
+                            <div class="form-group">
+                                <label (click)="onShowNotAccept()" class='btn btn-danger' style="color:white!important">
+                                    {{this.l('Không tiếp nhận')}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Người đảm nhận -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người đảm nhận")}}</label>
+                                <select2-custom
+                                    [(list)]="users"
+                                    [disabled]="!showSendProgressPrice"
+                                    [emptyText]="l('SelectAll')"
+                                    name="reQ_PRICE_PROGRESS_EXACT_MAKER_ID"
+                                    [(ngModel)]="inputModel.reQ_PRICE_PROGRESS_EXACT_MAKER_ID"
+                                    [valueMember]="'tlnanme'"
+                                    [displayMember]="'tlnanme|tlFullName'">
+                                </select2-custom>
+                            </div>
+                        </div>
+                        <!-- Gửi yêu cầu  -->
+                        <div class="col-md-2" *ngIf="showSendProgressPrice">
+                            <label></label>
+                            <div class="form-group">
+                                <label  (click)="onSendProgressPrice()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Gửi yêu cầu')}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Export Phiếu yêu cầu báo giá -->
+                        <div class="col-md-3" *ngIf="showExportPYC">
+                            <label></label>
+                            <div class="form-group">
+                                <label (click)="onExportPYC()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Export Phiếu yêu cầu báo giá')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Thông tin yêu cầu từ khách -->
+                    <pde-infor-request-cus-attach-file
+                        #pdeInforRequestCusAttachFile
+                        [disableInput]='true'>
+                    </pde-infor-request-cus-attach-file>
+                    <!-- Bản vẽ kỹ thuật từ khách -->
+                    <pde-tech-request-cus-attach-file
+                        #pdeTechRequestCusAttachFile
+                        [disableInput]='true'>
+                    </pde-tech-request-cus-attach-file>
+                    <!-- Thông tin báo giá từ bên bộ phận dự án mẫu gửi -->
+                    <pde-req-price-attach-file
+                        #pdeReqPriceAttachFileEdittable
+                        [disableInput]='true'>
+                    </pde-req-price-attach-file>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<cm-reject-modal #cmRejectModal [title]="'Nhập lý do từ chối tiếp nhận'" (onSelect)="onSelectNotAccept()" (onAcceptEvent)="getRecommendReject()"> </cm-reject-modal>

@@ -1,0 +1,208 @@
+<!-- Thông tin vật tự hardware thuộc sản phẩm -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách vật tư hardware thuộc sản phẩm")}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã vật tư hardware -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã vật tư hardware")}}</span>
+                </th>
+                <!-- Tên vật tư hardware -->
+                <th sortField="hardwarevT_NAME">
+                    <span style="white-space: nowrap;">{{l("Tên vật tư hardware")}}</span>
+                </th>
+                <!-- Đơn vị tính -->
+                <th sortField="unit">
+                    <span style="white-space: nowrap;">{{l("Đơn vị tính")}}</span>
+                </th>
+                <!-- Màu sắc -->
+                <th sortField="color">
+                    <span style="white-space: nowrap;">{{l("Màu sắc")}}</span>
+                </th>
+                <!-- Dài -->
+                <th sortField="hardwarevT_LENGTH">
+                    <span style="white-space: nowrap;">{{l("Dài")}}</span>
+                </th>
+                <!-- Rộng -->
+                <th sortField="hardwarevT_WIDTH">
+                    <span style="white-space: nowrap;">{{l("Rộng")}}</span>
+                </th>
+                <!-- Cao -->
+                <th sortField="hardwarevT_HEIGHT">
+                    <span style="white-space: nowrap;">{{l("Cao")}}</span>
+                </th>
+                <!-- Bộ phận -->
+                <th sortField="part">
+                    <span style="white-space: nowrap;">{{l("Bộ phận")}}</span>
+                </th>
+                <!-- Số lượng -->
+                <th sortField="deP_ID">
+                    <span style="white-space: nowrap;">{{l("Số lượng")}}</span>
+                </th>
+                <!-- Hình ảnh 
+                <th sortField="deP_ID">
+                    <span style="white-space: nowrap;">{{l("Hình ảnh")}}</span>
+                </th>-->
+                <!-- Ghi chú -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã vật tư hardware -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailHardwareVT(item)"
+                        name="{{editTable.name('hardwarevT_CODE',in)}}" 
+                        [(ngModel)]="item.hardwarevT_CODE"/>
+                </td>
+                <!-- Tên vật tư hardware -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('hardwarevT_NAME',in)}}" 
+                        [(ngModel)]="item.hardwarevT_NAME"/>
+                </td>
+                <!-- Đơn vị tính -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('unit',in)}}" 
+                        [(ngModel)]="item.unit"/>
+                </td>
+                <!-- Màu sắc -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('color',in)}}" 
+                        [(ngModel)]="item.color"/>
+                </td>
+                <!-- Dài -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='true'
+                        name="{{editTable.name('hardwarevT_LENGTH',in)}}"
+                        [(ngModel)]="item.hardwarevT_LENGTH">
+                    </money-input>
+                </td>
+                <!-- Rộng -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='true'
+                        name="{{editTable.name('hardwarevT_WIDTH',in)}}"
+                        [(ngModel)]="item.hardwarevT_WIDTH">
+                    </money-input>
+                </td>
+                <!-- Cao -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='true'
+                        name="{{editTable.name('hardwarevT_HEIGHT',in)}}"
+                        [(ngModel)]="item.hardwarevT_HEIGHT">
+                    </money-input>
+                </td>
+                <!-- Bộ phận-->
+                <td>
+                    <all-code-select 
+                        [cdName]="'PO_PRODUCT_HARDWAREVT-PART'"
+                        [cdType]="'PO'"
+                        [disabled]="disableInput"
+                        name="part" 
+                        [(ngModel)]="item.part">
+                    </all-code-select>
+                </td>
+                <!-- Số lượng -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='disableInput'
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantity">
+                    </money-input>
+                </td>
+                <!-- Hình ảnh 
+                <td>
+                    <button (click)="showImageCarousel(item.hardwarevT_ID, 'POP000000001005')" type="button" class="d-block m-auto btn btn-success">
+                        {{"1/5"}}
+                        <svg style="width: 15px;"
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="fas"
+                            data-icon="images"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 576 512"
+                            class="svg-inline--fa fa-images fa-w-18 fa-5x">
+                            <path fill="currentColor"
+                                d="M480 416v16c0 26.51-21.49 48-48 48H48c-26.51 0-48-21.49-48-48V176c0-26.51 21.49-48 48-48h16v208c0 44.112 35.888 80 80 80h336zm96-80V80c0-26.51-21.49-48-48-48H144c-26.51 0-48 21.49-48 48v256c0 26.51 21.49 48 48 48h384c26.51 0 48-21.49 48-48zM256 128c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-96 144l55.515-55.515c4.686-4.686 12.284-4.686 16.971 0L272 256l135.515-135.515c4.686-4.686 12.284-4.686 16.971 0L512 208v112H160v-48z">
+                            </path>
+                        </svg>
+                    </button>
+                </td>-->
+                
+                <!-- Ghi chú -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<po-hardwarevt-modal (onSelect)='onSelectHardwareVT($event)' #poHardwareVTModal [multiple]="true"></po-hardwarevt-modal>
+
+<!-- Hình ảnh 
+<image-carousel
+    (onSelectImage)="onSelectImage($event)"
+    [showButtonOnly]="true"
+    #carousel
+    [disabled]="false">
+</image-carousel>-->

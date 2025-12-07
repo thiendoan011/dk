@@ -1,0 +1,559 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Kế hoạch sản xuất")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <!-- <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày yêu cầu hoàn thành")}}</legend> -->
+                                        <div class='row'>
+                                            <!-- Đơn vị quản lý -->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>{{l('Đơn vị quản lý')}}</label>
+                                                    <select2-custom 
+                                                        name="brancH_ID_DASH_BOARD" 
+                                                        [(ngModel)]="filterInputDashboard.brancH_ID_DASH_BOARD" 
+                                                        [(list)]="branches" 
+                                                        [emptyText]="l('SelectAll')"
+                                                        [valueMember]="'brancH_ID'" 
+                                                        [displayMember]="'brancH_CODE|brancH_NAME'">
+                                                    </select2-custom>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12"></div>
+                                            
+                                            <div class="col-md-8">
+                                                <fieldset>
+                                                    <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày yêu cầu hoàn thành")}}</legend>
+                                                    <div class='row'>
+                                                        <!-- Từ ngày -->
+                                                        <div class='col-sm-6'>
+                                                            <div class='form-group'>
+                                                                <label>{{l('Từ ngày')}}</label>
+                                                                <date-control
+                                                                    name="frmdatE_DASHBOARD"
+                                                                    [(ngModel)]="filterInputDashboard.frmdatE_DASHBOARD">
+                                                                </date-control>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Đến ngày -->
+                                                        <div class='col-sm-6'>
+                                                            <div class='form-group'>
+                                                                <label>{{l('Đến ngày')}}</label>
+                                                                <date-control
+                                                                    name="todatE_DASHBOARD"
+                                                                    [(ngModel)]="filterInputDashboard.todatE_DASHBOARD">
+                                                                </date-control>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <!-- Tìm kiếm -->
+                                            <div class="col-md-3">
+                                                <div class="form-group" style="padding-left: 15px">
+                                                    <label>{{l("")}}</label>
+                                                    <div class="input-group">
+                                                        <label (click)="getDataPages()" class='btn btn-primary' style="color:white!important">
+                                                            {{this.l('Tìm kiếm')}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12"></div>
+                                            <!-- Công đoạn phôi -->
+                                            <div class="col-md-3">
+                                                <p-card  styleClass="ui-card-shadow">
+                                                    <div class="row">
+                                                        <div class="col-md-8" style="font-size: 20px; font-weight: bold;">
+                                                            Công đoạn phôi
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <img src="Card" src="assets/img/PO/wood_embryo.png" alt="Workpiece" style="width:5rem;height:5rem; float: right;">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tổng PO </p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.embryO_TOTAL_PO}}</p> 
+                                                            </div>
+                                                        </div> 
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Sắp tới hạn</p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.embryO_SOON_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tới hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.embryO_DUE_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Quá hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.embryO_EXPIRED_PO}}</p> 
+                                                            </div>
+                                                        </div>  
+                                                    </div>
+                                                    <p-footer>
+                                                        <button (click)="showPopup('EMBRYO')" pButton type="button" label="Xem chi tiết" style="margin-right: .25em; background-color: #248DC1; color: white!important;"></button>
+                                                    </p-footer>
+                                                </p-card>
+                                            </div>
+                                            <!-- Công đoạn định hình -->
+                                            <div class="col-md-3">
+                                                <p-card  styleClass="ui-card-shadow">
+                                                    <div class="row">
+                                                        <div class="col-md-8" style="font-size: 20px; font-weight: bold;">
+                                                            Công đoạn định hình
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <img src="Card" src="assets/img/PO/struct_wood.png" alt="Workpiece" style="width:5rem;height:5rem; float: right;">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tổng PO </p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.strucT_TOTAL_PO}}</p> 
+                                                            </div>
+                                                        </div> 
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Sắp tới hạn</p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.strucT_SOON_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tới hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.strucT_DUE_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Quá hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.strucT_EXPIRED_PO}}</p> 
+                                                            </div>
+                                                        </div>  
+                                                    </div>
+                                                    <p-footer>
+                                                        <button (click)="showPopup('STRUCT')" pButton type="button" label="Xem chi tiết" style="margin-right: .25em; background-color: #248DC1; color: white!important;"></button>
+                                                    </p-footer>
+                                                </p-card>
+                                            </div>
+                                            <!-- Công đoạn lắp ráp -->
+                                            <div class="col-md-3">
+                                                <p-card  styleClass="ui-card-shadow">
+                                                    <div class="row">
+                                                        <div class="col-md-8" style="font-size: 20px; font-weight: bold;">
+                                                            Công đoạn lắp ráp
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <img src="Card" src="assets/img/PO/struct_wood.png" alt="Workpiece" style="width:5rem;height:5rem; float: right;">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tổng PO </p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.assemblY_TOTAL_PO}}</p> 
+                                                            </div>
+                                                        </div> 
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Sắp tới hạn</p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.assemblY_SOON_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tới hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.assemblY_DUE_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Quá hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.assemblY_EXPIRED_PO}}</p> 
+                                                            </div>
+                                                        </div>  
+                                                    </div>
+                                                    <p-footer>
+                                                        <button (click)="showPopup('ASSEMBLY')" pButton type="button" label="Xem chi tiết" style="margin-right: .25em; background-color: #248DC1; color: white!important;"></button>
+                                                    </p-footer>
+                                                </p-card>
+                                            </div>
+                                            <!-- Công đoạn sơn -->
+                                            <div class="col-md-3">
+                                                <p-card  styleClass="ui-card-shadow">
+                                                    <div class="row">
+                                                        <div class="col-md-8" style="font-size: 20px; font-weight: bold;">
+                                                            Công đoạn sơn
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <img src="Card" src="assets/img/PO/paint_wood.png" alt="Workpiece" style="width:5rem;height:5rem; float: right;">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tổng PO </p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.painT_TOTAL_PO}}</p> 
+                                                            </div>
+                                                        </div> 
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Sắp tới hạn</p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.painT_SOON_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tới hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.painT_DUE_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Quá hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.painT_EXPIRED_PO}}</p> 
+                                                            </div>
+                                                        </div>  
+                                                    </div>
+                                                    <p-footer>
+                                                        <button (click)="showPopup('PAINT')" pButton type="button" label="Xem chi tiết" style="margin-right: .25em; background-color: #248DC1; color: white!important;"></button>
+                                                    </p-footer>
+                                                </p-card>
+                                            </div>
+                                            <!-- Công đoạn đóng gói -->
+                                            <div class="col-md-3">
+                                                <p-card  styleClass="ui-card-shadow">
+                                                    <div class="row">
+                                                        <div class="col-md-8" style="font-size: 20px; font-weight: bold;">
+                                                            Công đoạn đóng gói
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <img src="Card" src="assets/img/PO/product_wood.png" alt="Workpiece" style="width:5rem;height:5rem; float: right;">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tổng PO </p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.wraP_TOTAL_PO}}</p> 
+                                                            </div>
+                                                        </div> 
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Sắp tới hạn</p> 
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.wraP_SOON_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Tới hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.wraP_DUE_PO}}</p> 
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <p>Quá hạn</p>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <p>{{inputModel.wraP_EXPIRED_PO}}</p> 
+                                                            </div>
+                                                        </div>  
+                                                    </div>
+                                                    <p-footer>
+                                                        <button (click)="showPopup('WRAP')" pButton type="button" label="Xem chi tiết" style="margin-right: .25em; background-color: #248DC1; color: white!important;"></button>
+                                                    </p-footer>
+                                                </p-card>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <!-- End Filter -->
+
+                                <!-- Begin Filter -->
+                                <div class="col-md-12" style="margin-top: 15px;">
+                                    <fieldset>
+                                        <legend style='font-weight: bold!important; font-size: 15px; text-decoration:  underline'>{{l("Thông tin triển khai kế hoạch sản xuất")}}</legend>
+                                        <div class="row">
+                                            <!-- Công đoạn -->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>{{l('Công đoạn')}}</label>
+                                                    <all-code-select 
+                                                        name="TYPE" 
+                                                        [(ngModel)]="filterInput.TYPE"
+                                                        [cdName]="'PRODUCTED_PART'"
+                                                        [cdType]="'PO'">
+                                                    </all-code-select>
+                                                </div>
+                                            </div>
+                                            <!-- Đơn vị quản lý -->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>{{l('Đơn vị quản lý')}}</label>
+                                                    <select2-custom 
+                                                        name="brancH_ID" 
+                                                        [(ngModel)]="filterInput.brancH_ID" 
+                                                        [(list)]="branches" 
+                                                        [emptyText]="l('SelectAll')"
+                                                        [valueMember]="'brancH_ID'" 
+                                                        [displayMember]="'brancH_CODE|brancH_NAME'">
+                                                    </select2-custom>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12"></div>
+    
+                                            <!-- Từ ngày Đến ngày -->
+                                            <div class="col-md-8">
+                                                <fieldset>
+                                                    <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày hoàn thành")}}</legend>
+                                                    <div class='row'>
+                                                        <!-- Từ ngày -->
+                                                        <div class='col-sm-6'>
+                                                            <div class='form-group'>
+                                                                <label>{{l('Từ ngày')}}</label>
+                                                                <date-control
+                                                                    (focusout)="onchangeFilter()"
+                                                                    name="frmdate"
+                                                                    [(ngModel)]="filterInput.frmdate">
+                                                                </date-control>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Đến ngày -->
+                                                        <div class='col-sm-6'>
+                                                            <div class='form-group'>
+                                                                <label>{{l('Đến ngày')}}</label>
+                                                                <date-control
+                                                                    (focusout)="onchangeFilter()"
+                                                                    name="todate"
+                                                                    [(ngModel)]="filterInput.todate">
+                                                                </date-control>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+
+                                            <!-- In báo cáo -->
+                                            <div class="col-md-12" >
+                                                <div class="form-group">
+                                                    <button class="btn btn-primary btn-search"
+                                                        (click)="exportToExcel()">{{l('In báo cáo')}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <!-- End Filter -->
+
+                                <!-- Begin Filter -->
+                                <div class="col-md-12" style="margin-top: 10px;">
+                                    <fieldset>
+                                        <legend style='font-weight: bold!important; font-size: 15px; text-decoration:  underline'>{{l("Tìm kiếm thông tin kế hoạch sản xuất")}}</legend>
+                                        <div class="row">
+                                            <!-- Số PO -->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>{{l("Số PO")}}</label>
+                                                    <input type="text"
+                                                        class="form-control m-input"
+                                                        name="pO_CODE" 
+                                                        [(ngModel)]="filterInput_search.pO_CODE" >
+                                                </div>
+                                            </div>
+                                            <!-- Hệ hàng -->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>{{l("Hệ hàng")}}</label>
+                                                    <input type="text"
+                                                        class="form-control m-input"
+                                                        name="grouP_PRODUCT_CODE" 
+                                                        [(ngModel)]="filterInput_search.grouP_PRODUCT_CODE">
+                                                </div>
+                                            </div>
+                                            <!-- Đơn vị quản lý -->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>{{l('Đơn vị quản lý')}}</label>
+                                                    <select2-custom 
+                                                        name="brancH_ID" 
+                                                        [(ngModel)]="filterInput_search.brancH_ID" 
+                                                        [(list)]="branches" 
+                                                        [emptyText]="l('SelectAll')"
+                                                        [valueMember]="'brancH_ID'" 
+                                                        [displayMember]="'brancH_CODE|brancH_NAME'">
+                                                    </select2-custom>
+                                                </div>
+                                            </div>
+    
+                                            <!-- Từ ngày Đến ngày -->
+                                            <div class="col-md-8">
+                                                <fieldset>
+                                                    <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày hoàn thành")}}</legend>
+                                                    <div class='row'>
+                                                        <!-- Từ ngày -->
+                                                        <div class='col-sm-6'>
+                                                            <div class='form-group'>
+                                                                <label>{{l('Từ ngày')}}</label>
+                                                                <date-control
+                                                                    name="frmdate"
+                                                                    [(ngModel)]="filterInput_search.frmdate">
+                                                                </date-control>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Đến ngày -->
+                                                        <div class='col-sm-6'>
+                                                            <div class='form-group'>
+                                                                <label>{{l('Đến ngày')}}</label>
+                                                                <date-control
+                                                                    name="todate"
+                                                                    [(ngModel)]="filterInput_search.todate">
+                                                                </date-control>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <!-- Tìm kiếm -->
+                                            <div class="col-md-4" >
+                                                <div class="form-group">
+                                                    <button class="btn btn-primary btn-search"
+                                                        (click)="search_plan()">{{l('Tìm kiếm')}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Thông tin PO theo kế hoạch sản xuất -->
+                                        <dashboard-plan-tbl2-edittable
+                                            #dashboardPlanTbl2Edittable
+                                            [inputModel]="inputModel"
+                                            [title]="'Thông tin PO theo kế hoạch sản xuất'">
+                                        </dashboard-plan-tbl2-edittable>
+                                    </fieldset>
+                                </div>
+                                <!-- End Filter -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Begin Thông tin sản phẩm thay đổi số lượng 
+<report-plan-product-change
+    #reportPlanProductChange
+    [inputModel]="inputModel"
+    [list_branch]="branches"
+    [title]="'Thông tin sản phẩm thay đổi số lượng'">
+</report-plan-product-change>-->
+<!-- End Thông tin sản phẩm thay đổi số lượng -->
+
+<!-- popup -->
+<div bsModal #popupFrameModal="bs-modal" tabindex="-1" role="dialog" aria-hidden="true" 
+    class="modal fade" aria-labelledby="popupFrameModal" [config]="{backdrop: 'static' }">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>{{title_popup}}</span>
+                </h4>
+                <button type="button" class="close" (click)="closePopup()" [attr.aria-label]="l('Close')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Danh sách PO sắp tới hạn -->
+                <dashboard-plan-embryo-tbl1-edittable 
+                    #dashboardPlanEmbryoTbl1Edittable
+                    [inputModel]="inputModel"
+                    [title]="'Danh sách PO sắp tới hạn'">
+                </dashboard-plan-embryo-tbl1-edittable>
+                <!-- Danh sách PO tới hạn -->
+                <dashboard-plan-embryo-tbl1-edittable 
+                    #dashboardPlanEmbryoTbl2Edittable
+                    [inputModel]="inputModel"
+                    [title]="'Danh sách PO tới hạn'">
+                </dashboard-plan-embryo-tbl1-edittable>
+                <!-- Danh sách PO quá hạn -->
+                <dashboard-plan-embryo-tbl1-edittable 
+                    #dashboardPlanEmbryoTbl3Edittable
+                    [inputModel]="inputModel"
+                    [title]="'Danh sách PO quá hạn'">
+                </dashboard-plan-embryo-tbl1-edittable>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="closePopup()"><i class="pi pi-ban" aria-hidden="true"></i>
+                    <span>{{l("Đóng")}}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

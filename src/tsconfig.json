@@ -1,0 +1,47 @@
+{
+	"compilerOptions": {
+		"declaration": false,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"lib": [
+			"es2022",
+			"dom"
+		],
+		"mapRoot": "./",
+		"module": "es2022",
+		"moduleResolution": "node",
+		"outDir": "../dist/out-tsc",
+		"sourceMap": true,
+		"target": "es2022",
+		"useDefineForClassFields": false,
+		"esModuleInterop": true,
+		"baseUrl": ".",
+		"paths": {
+			"@app/*": [
+				"./app/*"
+			],
+			"@account/*": [
+				"./account/*"
+			],
+			"@shared/*": [
+				"./shared/*"
+			],
+			"@node_modules/*": [
+				"../node_modules/*"
+			],
+			"@angular/*": [
+				"../node_modules/@angular/*"
+			],
+			"@metronic/*": [
+				"./assets/metronic/*"
+			]
+		}
+	},
+	"angularCompilerOptions": {
+		"strictTemplates": true,
+		"strictInjectionParameters": true
+	},
+	"exclude": [
+		"node_modules"
+	]
+}

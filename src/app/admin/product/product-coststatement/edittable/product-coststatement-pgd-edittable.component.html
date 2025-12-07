@@ -1,0 +1,100 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách cụm chi tiết")}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã cụm chi tiết -->
+                <th sortField="producT_GROUP_DETAIL_CODE">
+                    <span style="white-space: nowrap;">{{l("Mã cụm chi tiết")}}</span>
+                </th> 
+                <!-- Tên cụm chi tiết -->
+                <th sortField="producT_GROUP_DETAIL_NAME">
+                    <span style="white-space: nowrap;">{{l("Tên cụm chi tiết")}}</span>
+                </th>
+                <!-- Số lượng 
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số lượng")}}</span>
+                </th>-->
+                <!-- Ghi chú 
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>-->
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã cụm chi tiết -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('producT_GROUP_DETAIL_CODE',in)}}" 
+                        [(ngModel)]="item.producT_GROUP_DETAIL_CODE"/>
+                </td>
+                <!-- Tên cụm chi tiết -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('producT_GROUP_DETAIL_NAME',in)}}" 
+                        [(ngModel)]="item.producT_GROUP_DETAIL_NAME"/>
+                </td>
+                <!-- Số lượng 
+                <td>
+                    <money-input
+                        [disabled]='disableInput'
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantity">
+                    </money-input>
+                </td>-->
+                <!-- Ghi chú 
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes"/>
+                </td>-->
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<product-group-detail-modal (onSelect)='onSelectPopup($event)' #popupModal [multiple]="true" [title]="'Tìm kiếm cụm chi tiết'"></product-group-detail-modal>

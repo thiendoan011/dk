@@ -1,0 +1,55 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Báo cáo PO")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        
+        <report-po-export-week-edittable
+        [branches]="_branches"
+        [title]="'Báo cáo tuần - xuất PO theo ngày xuất'">
+        </report-po-export-week-edittable>
+        
+        <report-po-export-month-edittable
+        [branches]="_branches"
+        [title]="'Báo cáo tháng - xuất PO theo ngày xuất'">
+        </report-po-export-month-edittable>
+
+        <report-po-booking-week-edittable
+        [branches]="_branches"
+        [title]="'Báo cáo tuần - xuất PO theo booking'">
+        </report-po-booking-week-edittable>
+        
+        <report-po-booking-month-edittable
+        [branches]="_branches"
+        [title]="'Báo cáo tháng - xuất PO theo booking'">
+        </report-po-booking-month-edittable>
+
+        <report-po-modified-exportdate-week-edittable
+        [branches]="_branches"
+        [title]="'Báo cáo tuần - xuất PO theo ngày xuất sau khi khách đồng ý'">
+        </report-po-modified-exportdate-week-edittable>
+        
+        <report-po-modified-exportdate-month-edittable
+        [branches]="_branches"
+        [title]="'Báo cáo tháng - xuất PO theo ngày xuất sau khi khách đồng ý'">
+        </report-po-modified-exportdate-month-edittable>
+
+        <report-po-unprocess-edittable
+        [branches]="_branches"
+        [title]="'Báo cáo PO chưa bắt đầu công đoạn'">
+        </report-po-unprocess-edittable>
+        
+    </div>
+</div>

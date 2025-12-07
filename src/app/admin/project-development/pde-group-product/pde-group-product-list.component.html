@@ -1,0 +1,219 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin Hệ hàng")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+                <div class="col text-right mt-3 mt-md-0">
+                    <div class="btn-group dropdown mr-2">
+                        <button class=" btn btn-outline-success" (click)="exportExcel()">
+                            <i class="far fa-file-excel"></i>
+                            {{l("ExcelOperations")}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+
+                                <!-- Mã hệ hàng -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Mã hệ hàng")}}</label>
+                                        <input class="form-control m-input" type="text"
+                                            name="grouP_PRODUCT_CODE"
+                                            [(ngModel)]="filterInput.grouP_PRODUCT_CODE" >
+                                    </div>
+                                </div>
+
+                                <!-- Tên hệ hàng -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Tên hệ hàng")}}</label>
+                                        <input class="form-control m-input" type="text"
+                                            name="grouP_PRODUCT_NAME" 
+                                            [(ngModel)]="filterInput.grouP_PRODUCT_NAME">
+                                    </div>
+                                </div>
+                                <!-- Trạng thái hệ hàng -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái hệ hàng")}}</label>
+                                        <all-code-select 
+                                            [emptyText]="l('SelectAll')"
+                                            name="grouP_PRODUCT_STATUS" 
+                                            [(ngModel)]="filterInput.grouP_PRODUCT_STATUS"
+                                            [cdName]="'PDE_GROUP_PRODUCT_STATUS'"
+                                            [cdType]="'PDE'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái tiếp nhận báo giá -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái tiếp nhận báo giá")}}</label>
+                                        <all-code-select 
+                                            [emptyText]="l('SelectAll')"
+                                            name="reQ_PRICE_REQ_STATUS" 
+                                            [(ngModel)]="filterInput.reQ_PRICE_REQ_STATUS"
+                                            [cdName]="'PDE_REQ_PRICE'"
+                                            [cdType]="'PDE'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Trạng thái tiếp nhận làm mẫu -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái tiếp nhận làm mẫu")}}</label>
+                                        <all-code-select 
+                                            name="reQ_TEMPLATE_REQ_STATUS" 
+                                            [(ngModel)]="filterInput.reQ_TEMPLATE_REQ_STATUS"
+                                            [emptyText]="l('SelectAll')"
+                                            [cdName]="'PDE_REQ_TEMPLATE'"
+                                            [cdType]="'PDE'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Trạng thái tiếp nhận bảng hardware -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái tiếp nhận bảng hardware")}}</label>
+                                        <all-code-select 
+                                            name="reQ_TABLEHARDWARE_REQ_STATUS" 
+                                            [(ngModel)]="filterInput.reQ_TABLEHARDWARE_REQ_STATUS"
+                                            [emptyText]="l('SelectAll')"
+                                            [cdName]="'PDE_REQ_PRICE'"
+                                            [cdType]="'PDE'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Trạng thái tiếp nhận bảng màu -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái tiếp nhận bảng màu")}}</label>
+                                        <all-code-select 
+                                            name="reQ_TABLECOLOR_REQ_STATUS" 
+                                            [(ngModel)]="filterInput.reQ_TABLECOLOR_REQ_STATUS"
+                                            [emptyText]="l('SelectAll')"
+                                            [cdName]="'PDE_REQ_PRICE'"
+                                            [cdType]="'PDE'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Trạng thái tiếp nhận mua hardware -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái tiếp nhận mua hardware")}}</label>
+                                        <all-code-select 
+                                            name="reQ_HARDWARE_REQ_STATUS" 
+                                            [(ngModel)]="filterInput.reQ_HARDWARE_REQ_STATUS"
+                                            [emptyText]="l('SelectAll')"
+                                            [cdName]="'PDE_REQ_PRICE'"
+                                            [cdType]="'PDE'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+
+                                <div style="display:none;" class="col-md-12">
+                                    <div class="form-group">
+                                        <button *ngIf="appToolbar.buttonSearchEnable" 
+                                            class="btn btn-primary btn-search"
+                                            (click)="onSearch()">{{l('Search')}}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã hệ hàng -->
+                                        <th sortField="grouP_PRODUCT_CODE">
+                                            <span style="width: 120px">{{l("Mã hệ hàng")}}</span>
+                                        </th>
+                                        <!-- Tên hệ hàng-->
+                                        <th sortField="grouP_PRODUCT_NAME">
+                                            <span style="width: 250px">{{l("Tên hệ hàng")}}</span>
+                                        </th>
+                                        <!-- Trạng thái duyệt -->
+                                        <th sortField="AUTH_STATUS_NAME">
+                                            <span>{{l("Trạng thái duyệt")}}</span>
+                                        </th>
+                                        <!-- Trạng thái tiếp nhận báo giá -->
+                                        <th sortField="reQ_PRICE_REQ_STATUS_NAME">
+                                            <span>{{l("Trạng thái tiếp nhận báo giá")}}</span>
+                                        </th>
+                                        <!-- Trạng thái tiếp nhận làm mẫu -->
+                                        <th sortField="reQ_TEMPLATE_REQ_STATUS_NAME">
+                                            <span>{{l("Trạng thái tiếp nhận làm mẫu")}}</span>
+                                        </th>
+                                        <!-- Trạng thái tiếp nhận bảng hardware -->
+                                        <th sortField="reQ_TABLEHARDWARE_REQ_STATUS_NAME">
+                                            <span>{{l("Trạng thái tiếp nhận bảng hardware")}}</span>
+                                        </th>
+                                        <!-- Trạng thái tiếp nhận bảng màu -->
+                                        <th sortField="reQ_TABLECOLOR_REQ_STATUS_NAME">
+                                            <span>{{l("Trạng thái tiếp nhận bảng màu")}}</span>
+                                        </th>
+                                        <!-- Trạng thái tiếp nhận mua hardware -->
+                                        <th sortField="reQ_HARDWARE_REQ_STATUS_NAME">
+                                            <span>{{l("Trạng thái tiếp nhận mua hardware")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable"
+                                        (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span
+                                                class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                        </td>
+                                        <td><span class="mo-header"></span>{{record.grouP_PRODUCT_CODE}}</td>
+                                        <td><span class="mo-header"></span>{{record.grouP_PRODUCT_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_PRICE_REQ_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_REQ_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TABLEHARDWARE_REQ_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TABLECOLOR_REQ_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_HARDWARE_REQ_STATUS_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

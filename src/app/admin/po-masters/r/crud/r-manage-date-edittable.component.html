@@ -1,0 +1,568 @@
+<div>
+    <div class="accordion md-accordion form-group" id="accordionFilter_r_manage_date" role="tablist">
+        <div class="card">
+            <div class="card-header black lighten-3 z-depth-1" style="padding: 1px 5px !important" role="tab">
+                <a aria-controls="viewProcess2" href="#viewProcess_r_manage_date" class="white-text font-weight-bold" data-toggle="collapse" aria-expanded="true" >
+                    <h6 class="mb-0 py-1">
+                        <i class="fas fa-angle-right" style="padding-right: 5px"></i>
+                        {{ this.l('Bấm vào đây để thay đổi ngày yêu cầu hoàn thành') }}
+                    </h6>
+                </a>
+            </div>
+            <div id="viewProcess_r_manage_date" data-parent="#accordionFilter_r_manage_date" class="collapse" role="tabpanel" aria-labelledby="heading">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <!-- Số ngày YCHT P.DAPT cung cấp hồ sơ sản phẩm cho PKT-->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT P.DAPT")}}</label>
+                                <label>{{l("cung cấp hồ sơ sản phẩm cho PKT")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="pdE_PRODUCT_PROFILE_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.pdE_PRODUCT_PROFILE_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT PKT triên khai PPS -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("")}}</label>
+                                <label>{{l("Số ngày YCHT PKT triên khai PPS")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="tecH_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.tecH_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT Hồ sơ sản phẩm cho các phòng liên quan -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Hồ sơ sản phẩm")}}</label>
+                                <label>{{l("cho các phòng liên quan")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="tecH_PRODUCT_PROFILE_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.tecH_PRODUCT_PROFILE_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT Vật tư cung cấp nguyên liệu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Vật tư")}}</label>
+                                <label>{{l("cung cấp nguyên liệu")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="warehousE_MATERIAL_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.warehousE_MATERIAL_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+
+                        <!-- Số ngày YCHT Phôi -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Phôi")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    (change)="onChangeNBDay()"
+                                    name="embryO_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.embryO_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT Vật tư định hình -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Vật tư định hình")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="true"
+                                    name="warehousE_STRUCTURE_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.warehousE_STRUCTURE_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT Định hình-->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Định hình")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    (change)="onChangeNBDay()"
+                                    name="structurE_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.structurE_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT Vật tư lắp ráp -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Vật tư lắp ráp")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="true"
+                                    name="warehousE_ASSEMBLY_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.warehousE_ASSEMBLY_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+
+                        <!-- Số ngày YCHT Lắp ráp -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Lắp ráp")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    (change)="onChangeNBDay()"
+                                    name="assemblY_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.assemblY_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT Cung cấp VT Sơn+Đóng gói-->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Cung cấp VT Sơn+Đóng gói")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="true"
+                                    name="warehousE_PAINT_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.warehousE_PAINT_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT Sơn -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Sơn")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="painT_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.painT_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+                        <!-- Số ngày YCHT Đóng gói -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số ngày YCHT Đóng gói")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput"
+                                    name="wraP_REQUEST_NBDAY"
+                                    [(ngModel)]="inputModel.wraP_REQUEST_NBDAY" />
+                            </div>
+                        </div>
+
+                        <!-- Test -->
+                        <div class="form-group" style="padding-left: 15px" *ngIf="inputModel.r_ID">
+                            <label (click)="onTest()" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                {{this.l('Test')}}
+                            </label>
+                        </div>
+
+
+
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("")}}</label>
+                            </div>
+                        </div>
+
+
+
+
+                        <!-- Ngày YCHT P.DAPT cung cấp hồ sơ sản phẩm cho PKT -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT P.DAPT")}}</label>
+                                <label>{{l("cung cấp hồ sơ sản phẩm cho PKT")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="pdE_PRODUCT_PROFILE_REQUEST_DT"
+                                    [(ngModel)]="inputModel.pdE_PRODUCT_PROFILE_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT PKT triên khai PPS -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("")}}</label>
+                                <label>{{l("Ngày YCHT PKT triên khai PPS")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="tecH_REQUEST_DT"
+                                    [(ngModel)]="inputModel.tecH_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Hồ sơ sản phẩm cho các phòng liên quan -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Hồ sơ sản phẩm")}}</label>
+                                <label>{{l("cho các phòng liên quan")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="tecH_PRODUCT_PROFILE_REQUEST_DT"
+                                    [(ngModel)]="inputModel.tecH_PRODUCT_PROFILE_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Vật tư cung cấp nguyên liệu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Vật tư")}}</label>
+                                <label>{{l("cung cấp nguyên liệu")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="warehousE_MATERIAL_REQUEST_DT"
+                                    [(ngModel)]="inputModel.warehousE_MATERIAL_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        
+                        <!-- Ngày YCHT Phôi -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Phôi")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="embryO_REQUEST_DT"
+                                    [(ngModel)]="inputModel.embryO_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Vật tư định hình -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Vật tư định hình")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="warehousE_STRUCTURE_REQUEST_DT"
+                                    [(ngModel)]="inputModel.warehousE_STRUCTURE_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Định hình -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Định hình")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="structurE_REQUEST_DT"
+                                    [(ngModel)]="inputModel.structurE_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Vật tư lắp ráp -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Vật tư lắp ráp")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="warehousE_ASSEMBLY_REQUEST_DT"
+                                    [(ngModel)]="inputModel.warehousE_ASSEMBLY_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        
+                        <!-- Ngày YCHT Lắp ráp -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Lắp ráp")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="assemblY_REQUEST_DT"
+                                    [(ngModel)]="inputModel.assemblY_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Cung cấp VT Sơn+Đóng gói -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Cung cấp VT Sơn+Đóng gói")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="warehousE_PAINT_REQUEST_DT"
+                                    [(ngModel)]="inputModel.warehousE_PAINT_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Sơn -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Sơn")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="painT_REQUEST_DT"
+                                    [(ngModel)]="inputModel.painT_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Đóng gói -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Đóng gói")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="wraP_REQUEST_DT"
+                                    [(ngModel)]="inputModel.wraP_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        
+
+
+
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("")}}</label>
+                                <label style="color: red!important; font-size: 20px; font-weight: bold;">{{l("Kết quả test")}}</label>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!-- Ngày YCHT P.DAPT cung cấp hồ sơ sản phẩm cho PKT -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT P.DAPT")}}</label>
+                                <label>{{l("cung cấp hồ sơ sản phẩm cho PKT")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_PDE_PRODUCT_PROFILE_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_PDE_PRODUCT_PROFILE_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_PDE_PRODUCT_PROFILE_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_PDE_PRODUCT_PROFILE_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT PKT triên khai PPS -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("")}}</label>
+                                <label>{{l("Ngày YCHT PKT triên khai PPS")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_TECH_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_TECH_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_TECH_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_TECH_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Hồ sơ sản phẩm cho các phòng liên quan -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Hồ sơ sản phẩm")}}</label>
+                                <label>{{l("cho các phòng liên quan")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_TECH_PRODUCT_PROFILE_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_TECH_PRODUCT_PROFILE_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_TECH_PRODUCT_PROFILE_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_TECH_PRODUCT_PROFILE_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Vật tư cung cấp nguyên liệu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Vật tư")}}</label>
+                                <label>{{l("cung cấp nguyên liệu")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_WAREHOUSE_MATERIAL_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_WAREHOUSE_MATERIAL_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_WAREHOUSE_MATERIAL_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_WAREHOUSE_MATERIAL_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ngày YCHT Phôi -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Phôi")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_EMBRYO_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_EMBRYO_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_EMBRYO_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_EMBRYO_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Vật tư định hình -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Vật tư định hình")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_WAREHOUSE_STRUCTURE_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_WAREHOUSE_STRUCTURE_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_WAREHOUSE_STRUCTURE_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_WAREHOUSE_STRUCTURE_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Định hình -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Định hình")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_STRUCTURE_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_STRUCTURE_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_STRUCTURE_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_STRUCTURE_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Vật tư lắp ráp -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Vật tư lắp ráp")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_WAREHOUSE_ASSEMBLY_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_WAREHOUSE_ASSEMBLY_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_WAREHOUSE_ASSEMBLY_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_WAREHOUSE_ASSEMBLY_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ngày YCHT Lắp ráp -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Lắp ráp")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_ASSEMBLY_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_ASSEMBLY_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_ASSEMBLY_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_ASSEMBLY_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Cung cấp VT Sơn+Đóng gói -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Cung cấp VT Sơn+Đóng gói")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_WAREHOUSE_PAINT_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_WAREHOUSE_PAINT_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_WAREHOUSE_PAINT_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_WAREHOUSE_PAINT_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Sơn -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Sơn")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_PAINT_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_PAINT_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_PAINT_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_PAINT_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày YCHT Đóng gói -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Ngày YCHT Đóng gói")}}</label>
+                                <div class="input-group">
+                                    <date-control
+                                        style="width: 85%;"
+                                        [disabled]="true"
+                                        name="tesT_WRAP_REQUEST_DT"
+                                        [(ngModel)]="inputModel.tesT_WRAP_REQUEST_DT">
+                                    </date-control>
+                                    <input class="form-control" type="number"
+                                        style="width: 15%;"
+                                        [disabled]="true"
+                                        name="tesT_WRAP_REQUEST_NBDAY"
+                                        [(ngModel)]="inputModel.tesT_WRAP_REQUEST_NBDAY" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .collapse:not(.in) {
+        display: none !important;
+    }
+
+    .collapse:not(.show) {
+        display: initial;
+    }
+</style>

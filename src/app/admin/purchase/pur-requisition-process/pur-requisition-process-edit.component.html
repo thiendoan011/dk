@@ -1,0 +1,202 @@
+<div [@routerTransition]>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Xử lý yêu cầu mua hàng")}}</span>
+                    <!-- End Title -->
+                </h3>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Nhập nội dung xử lý -->
+                        <div class="col-md-12">
+                            <po-history-create-modal
+                                [type]="'PO_BOOKING_INF'"
+                                [id]="inputModel.puR_REQUISITION_ID"
+                                [page]="'PO_BOOKING_INF'"
+                                [stage]="'HC'"
+                                [process]="'INF'"
+                                [process_desc]="'Người tạo thêm nội dung xử lý phiếu'"
+                                [title]="'Bấm vào đây để nhập nội dung xử lý'"
+                                (complete)="getDataPages()">
+                            </po-history-create-modal>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-2-modal
+                                #history_modal
+                                [id]="inputModel.puR_REQUISITION_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </po-history-2-modal>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Người duyệt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="checkeR_NAME"
+                                    [(ngModel)]="inputModel.checkeR_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- ID phiếu yêu cầu mua hàng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("ID phiếu yêu cầu mua hàng")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="puR_REQUISITION_ID"
+                                    [(ngModel)]="inputModel.puR_REQUISITION_ID" />
+                            </div>
+                        </div>
+
+                        <!-- Tên phiếu yêu cầu mua hàng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Tên phiếu yêu cầu mua hàng")}}</label>
+                                <input class="form-control"
+                                    [disabled]="true"
+                                    name="puR_REQUISITION_NAME"
+                                    [(ngModel)]="inputModel.puR_REQUISITION_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái phiếu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái phiếu")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'AUTH_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="autH_STATUS" 
+                                    [(ngModel)]="inputModel.autH_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái xử lý -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái xử lý")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'PURCHASE_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="procesS_STATUS" 
+                                    [(ngModel)]="inputModel.procesS_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]="true"
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Tiếp nhận -->
+                        <div class="col-md-3" *ngIf="inputModel.procesS_STATUS == 'U'">
+                            <div class="form-group">
+                                <label (click)="onAccept()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Tiếp nhận')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <pur-requisition-r-edittable
+                        #purRequisitionREdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="true"
+                        [title]="'Danh sách lệnh sản xuất'">
+                    </pur-requisition-r-edittable>
+
+                    <!-- <pur-requisition-material-summary-edittable
+                        #purRequisitionMaterialSummaryEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        (onUpdate)="onUpdateMaterialSummaryEdittable()"
+                        [title]="'Danh sách tổng hợp vật tư'">
+                    </pur-requisition-material-summary-edittable> -->
+
+                    <pur-requisition-material-summary-not-purchase-edittable
+                        #purRequisitionMaterialSummaryNotPurchaseEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        (onUpdate)="onUpdateMaterialSummaryEdittable('NOT_PURCHASE')"
+                        [title]="'Danh sách tổng hợp vật tư chưa mua'">
+                    </pur-requisition-material-summary-not-purchase-edittable>
+
+                    <pur-requisition-material-summary-purchasing-edittable
+                        #purRequisitionMaterialSummaryPurchasingEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        (onUpdate)="onUpdateMaterialSummaryEdittable('PURCHASING')"
+                        [title]="'Danh sách tổng hợp vật tư đang mua'">
+                    </pur-requisition-material-summary-purchasing-edittable>
+
+                    <pur-requisition-material-summary-purchased-edittable
+                        #purRequisitionMaterialSummaryPurchasedEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        (onUpdate)="onUpdateMaterialSummaryEdittable('PURCHASED')"
+                        [title]="'Danh sách tổng hợp vật tư đã mua xong'">
+                    </pur-requisition-material-summary-purchased-edittable>
+
+                    <pur-inventory-receipt-multi-edittable
+                        #purInventoryReceiptMultiEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="false"
+                        (onSearchReceiptMulti)="onSearchReceiptMulti($event)"
+                        (onUpdate)="getDataPages()"
+                        [title]="'Import biên nhận'">
+                    </pur-inventory-receipt-multi-edittable>
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

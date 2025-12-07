@@ -1,0 +1,150 @@
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- STT -->
+                <th><span style="width: 40px">{{l("No")}}</span></th>
+                <!-- Khách hàng -->
+                <th>
+                    <span style="width: 150px">{{l('Khách hàng')}}</span>
+                </th>
+                <!-- Hệ hàng -->
+                <th>
+                    <span style="width: 150px">{{l('Hệ hàng')}}</span>
+                </th>
+                <!-- Tên phiếu yêu cầu -->
+                <th>
+                    <span style="width: 180px">{{l('Tên phiếu yêu cầu')}}</span>
+                </th>
+                <!-- Người gửi yêu cầu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Người gửi yêu cầu')}}</span>
+                </th>
+                <!-- Người dự kiến triển khai -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Người dự kiến triển khai')}}</span>
+                </th>
+                <!-- Người nhận triển khai -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Người nhận triển khai')}}</span>
+                </th>
+                <!-- Ngày yêu cầu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Ngày yêu cầu')}}</span>
+                </th>
+                <!-- Ngày dự kiến hoàn thành -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Ngày dự kiến hoàn thành')}}</span>
+                </th>
+                <!-- Ngày thực tế hoàn thành -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Ngày thực tế hoàn thành')}}</span>
+                </th>
+                <!-- Trạng thái tiếp nhận -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái tiếp nhận")}}</span>
+                </th>
+                <!-- Trạng thái hoàn thành -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái hoàn thành")}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                [hidden]="item['page'] != editTable.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTable.selectRow($event,item);updateView()'>
+
+                <!-- STT -->
+                <td class="center">
+                    <input class="label" [disabled]="true" name="{{editTable.name('no',in)}}" [(ngModel)]="editTable.dataInPage[in]['no']">
+                </td>
+                <!-- Khách hàng -->
+                <td>
+                    <input readonly [(ngModel)]="item.customeR_NAME" name="{{editTable.name('customeR_NAME',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Hệ hàng -->
+                <td>
+                    <input readonly [(ngModel)]="item.grouP_PRODUCT_NAME" name="{{editTable.name('grouP_PRODUCT_NAME',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Tên phiếu yêu cầu -->
+                <td>
+                    <input readonly [(ngModel)]="item.reQ_NAME" name="{{editTable.name('reQ_NAME',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Người gửi yêu cầu -->
+                <td>
+                    <input readonly [(ngModel)]="item.reQ_REQUESTER_NAME" name="{{editTable.name('reQ_REQUESTER_NAME',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Người dự kiến triển khai -->
+                <td>
+                    <input readonly [(ngModel)]="item.reQ_PROGRESS_EXPECT_NAME" name="{{editTable.name('reQ_PROGRESS_EXPECT_NAME',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Người nhận triển khai -->
+                <td>
+                    <input readonly [(ngModel)]="item.reQ_PROGRESS_EXACT_NAME" name="{{editTable.name('reQ_PROGRESS_EXACT_NAME',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Ngày yêu cầu -->
+                <td>
+                    <input readonly [(ngModel)]="item.reQ_DT" name="{{editTable.name('reQ_DT',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Ngày dự kiến hoàn thành -->
+                <td>
+                    <input readonly [(ngModel)]="item.expecT_DT" name="{{editTable.name('expecT_DT',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Ngày thực tế hoàn thành -->
+                <td>
+                    <input readonly [(ngModel)]="item.completE_DT" name="{{editTable.name('completE_DT',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Trạng thái tiếp nhận -->
+                <td>
+                    <input readonly [(ngModel)]="item.reQ_STATUS" name="{{editTable.name('reQ_STATUS',in)}}" class="form-control transparent" type="text"/>
+                </td>
+                <!-- Trạng thái hoàn thành -->
+                <td>
+                    <input readonly [(ngModel)]="item.progresS_STATUS" name="{{editTable.name('progresS_STATUS',in)}}" class="form-control transparent" type="text"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+    <div class="row">
+        <!-- Mã hệ hàng -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>{{l('Mã Hệ hàng')}}</label>
+                <input
+                    class="form-control" type="text"
+                    name="grouP_PRODUCT_CODE"
+                    [(ngModel)]="_filterInput.grouP_PRODUCT_CODE" />
+            </div>
+        </div>
+
+        <!-- Tên Hệ hàng 
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>{{l('Tên Hệ hàng')}}</label>
+                <input
+                    class="form-control" type="text"
+                    name="grouP_PRODUCT_NAME"
+                    [(ngModel)]="_filterInput.grouP_PRODUCT_NAME" />
+            </div>
+        </div>-->
+        <div class="col-md-12"></div>
+
+        <!-- Tìm kiếm -->
+        <div class="col-md-3">
+            <div class="form-group">
+                <label (click)="PDE_REQ_OF_GROUP_PRODUCT_Search()"
+                    class='btn btn-primary' 
+                    style="margin-top: 6px; color:white!important">
+                    {{this.l('Tìm kiếm')}}
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- End -->
+

@@ -1,0 +1,52 @@
+<!-- Nhập nội dung trả về -->
+<ng-container>
+    <div>
+        <div id="accordionFilter" class="accordion md-accordion form-group" role="tablist">
+            <div class="card">
+                <div id="heading-kiemke" role="tab" class="card-header black lighten-3 z-depth-1">
+                    <a  href="#createReject" class="white-text font-weight-bold" data-toggle="collapse" aria-expanded="true" aria-controls="createReject">
+                        <h6 class="mb-0 py-1">
+                            <i class="fas fa-angle-right" style="padding-right: 5px"> </i>
+                            {{ this.l(title) }}
+                        </h6>
+                    </a>
+                </div>
+                <div id="createReject" role="tabpanel" class="collapse" data-parent="#accordionFilter" aria-labelledby="heading" >
+                    <div class="card-body">
+                        <form id="rejectForm" #rejectForm="ngForm" class="horizontal-form" autocomplete="off" >
+                            <!-- Nội dung xử lý -->
+                            <div class="col-md-12">
+                                <div class="form-group required">
+                                    <label>{{ l("Nội dung xử lý") }}</label>
+                                    <textarea type="text" class="form-control"
+                                        required
+                                        maxlength="4000"
+                                        name="reason"
+                                        [(ngModel)]="inputModel.reason">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <!-- Gửi tin -->
+                            <div class="col-md-8 form-group">
+                                <button class="btn btn-primary"
+                                        (click)="onIns()">
+                                    {{this.l("Gửi")}}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<style>
+    .collapse:not(.in) {
+        display: none !important;
+    }
+
+    .collapse:not(.show) {
+        display: initial;
+    }
+</style>

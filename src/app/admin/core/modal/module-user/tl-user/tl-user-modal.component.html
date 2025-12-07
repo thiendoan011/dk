@@ -1,0 +1,85 @@
+<popup-frame [title]="l(_title)" (onSearchEvent)="buttonSearch()" (onSelectEvent)="accept()" #popupFrame>
+    <div class="horizontal-form filter-form" autocomplete="off">
+        <form class="m-form m-form--label-align-right">
+            <div class="row m--margin-bottom-30">
+<!-- Begin Filter -->
+                <!-- Username -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Username")}}</label>
+                        <input class="form-control m-input"
+                            name="tlnanme"
+                            [(ngModel)]="filterInput.tlnanme" >
+                    </div>
+                </div>
+<!-- End Filter -->
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div isLoading="dataTable.isLoading" class="primeng-datatable-container">
+            <div class="spinner-border m-5" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <core-table [reloadPageOnInit]="false" #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                <thead>
+                    <tr>
+                        <!-- Begin Table Column -->
+                        <!-- multiple -->
+                        <th class="center" *ngIf="multiple">
+                            <span style="width: 40px">
+                                <checkbox-control #checkAllElement
+                                    (change)="onCheckAll(checkAllElement.inputRef.nativeElement)" [checked]="checkAll">
+                                </checkbox-control>
+                            </span>
+                        </th>
+                        <!-- STT -->
+                        <th class="center">
+                            <span style="width: 40px">{{l("No")}}</span>
+                        </th>
+                        <!-- Username -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Username")}}</span>
+                        </th>
+                        <!-- Tên -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Tên")}}</span>
+                        </th>
+                        <!-- Đơn vị -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Đơn vị")}}</span>
+                        </th>
+                        <!-- Phòng ban -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Phòng ban")}}</span>
+                        </th>
+                        <!-- End Table Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- multiple dblclick -->
+                    <tr *ngFor="let record of dataTable.records; let no = index;" class="selectable" (click)="selectRow($event,record)" (dblclick)="onDoubleClick(record)">
+                        <!-- Begin Table Value -->
+                        <!-- multiple -->
+                        <td class="center" *ngIf="multiple">
+                            <span class="mo-header"></span>
+                            <checkbox-control (onchange)="setChecked($event.target.checked, record)" [checked]="record['isChecked']"></checkbox-control>
+                        </td>
+                        <!-- STT -->
+                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                        </td>
+                        <!-- Username -->
+                        <td><span class="mo-header"></span>{{record.tlnanme}}</td>
+                        <!-- Tên -->
+                        <td><span class="mo-header"></span>{{record.tlFullName}}</td>
+                        <!-- Đơn vị -->
+                        <td><span class="mo-header"></span>{{record.brancH_NAME}}</td>
+                        <!-- Phòng ban -->
+                        <td><span class="mo-header"></span>{{record.deP_NAME}}</td>
+                        <!-- End Table Value -->
+                    </tr>
+                </tbody>
+            </core-table>
+        </div>
+    </div>
+</popup-frame>

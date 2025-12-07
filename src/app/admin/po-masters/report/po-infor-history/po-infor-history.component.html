@@ -1,0 +1,180 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin phát sinh của PO")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Mã PO -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Mã PO")}}</label>
+                                        <input class="form-control" 
+                                            name="pO_CODE"
+                                            [(ngModel)]="filterInput.pO_CODE">
+                                    </div>
+                                </div>
+
+                                <!-- Tên PO -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Tên PO")}}</label>
+                                        <input class="form-control" 
+                                            name="pO_NAME"
+                                            [(ngModel)]="filterInput.pO_NAME">
+                                    </div>
+                                </div>
+                                
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày tạo xử lý")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="frM_DATE"
+                                                        [(ngModel)]="filterInput.frM_DATE">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="tO_DATE"
+                                                        [(ngModel)]="filterInput.tO_DATE">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-12" ></div>
+                                <div class="col-md-12 row" >
+                                    <!-- Tìm kiếm -->
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <div class="input-group">
+                                            <button class="btn btn-primary btn-search"
+                                                (click)="onSearch()">{{l('Tìm kiếm')}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- Xuất file excel -->
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <div class="input-group">
+                                            <button class="btn btn-primary btn-search"
+                                                (click)="exportToExcel()">{{l('Xuất file excel')}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã PO -->
+                                        <th sortField="pO_CODE">
+                                            <span>{{l("Mã PO")}}</span>
+                                        </th>
+                                        <!-- Tên PO -->
+                                        <th>
+                                            <span>{{l("Tên PO")}}</span>
+                                        </th>
+                                        <!-- Người tạo -->
+                                        <th>
+                                            <span>{{l("Người tạo")}}</span>
+                                        </th>
+                                        <!-- Ngày tạo -->
+                                        <th sortField="creatE_DT">
+                                            <span>{{l("Ngày tạo")}}</span>
+                                        </th>
+                                        <!-- Phòng ban -->
+                                        <th>
+                                            <span>{{l("Phòng ban")}}</span>
+                                        </th>
+                                        <!-- Nội dung -->
+                                        <th>
+                                            <span>{{l("Nội dung")}}</span>
+                                        </th>
+                                        
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.pO_CODE}}</td>
+                                        <td><span class="mo-header"></span>{{record.pO_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.makeR_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.creatE_DT | dateTimeFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.deP_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.desc}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

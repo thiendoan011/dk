@@ -1,0 +1,255 @@
+<div id="content" class="m-content">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <div class="m-form m-form--label-align-right">
+                <div class="row m--margin-bottom-30">
+                    <!-- Begin -->
+                    <div class="col-md-12" style="margin-top: 10px;">
+                        <fieldset>
+                            <legend style='font-weight: bold!important; font-size: 15px; text-decoration:  underline'>{{_title}}</legend>
+                            <div class="row">
+                                <!-- Danh sách PO cách nhau bởi dấu phẩy -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Danh sách PO cách nhau bởi dấu phẩy")}}</label>
+                                        <input class="form-control"
+                                            name="pO_CODEs"
+                                            [(ngModel)]="filterInput.pO_CODEs" />
+                                    </div>
+                                </div>
+
+                                <!-- Tuần xuất 
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l("Tuần xuất")}}</label>
+                                        <input type="text"
+                                            class="form-control m-input"
+                                            name="week" 
+                                            [(ngModel)]="filterInput.exporT_WEEK" >
+                                    </div>
+                                </div>-->
+
+                                <!-- Năm 
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l("Năm")}}</label>
+                                        <input type="text"
+                                            class="form-control m-input"
+                                            name="year" 
+                                            [(ngModel)]="filterInput.year">
+                                    </div>
+                                </div>-->
+
+                                <div class="col-md-4">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày xuất PO đã điều chỉnh")}}</legend>
+                                        <div class='row'>
+
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="FRM_DATE"
+                                                        [(ngModel)]="filterInput.frmdate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="TO_DATE"
+                                                        [(ngModel)]="filterInput.todate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <!-- Tìm kiếm -->
+                                <div class="col-md-4" >
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-search"
+                                            (click)="onSearch()">{{l('Tìm kiếm')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Begin Table-->
+                            <div class="editable-title-group">
+                                <h5 class="popup-title col-md-12">{{l(_title)}}</h5>
+
+                                <div class="action-button">
+                                    <button type="button" (click)="exportToExcel()" class="btn btn-primary">
+                                        <i class="pi pi-download"></i>{{l("Add")}}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="primeng-datatable-container">
+                                <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                    <thead>
+                                        <tr>
+                                            <!-- Begin Table Column -->
+                                            <!-- STT -->
+                                            <th style="width: 40px"><span >{{l("No")}}</span></th>
+                                            <!-- Khách hàng -->
+                                            <th>
+                                                <span style="width: 150px">{{l('Khách hàng')}}</span>
+                                            </th>
+                                            <!-- PO -->
+                                            <th>
+                                                <span style="width: 150px">{{l('PO')}}</span>
+                                            </th>
+                                            <!-- Hệ hàng -->
+                                            <th>
+                                                <span style="width: 150px">{{l('Hệ hàng')}}</span>
+                                            </th>
+                                            <!-- Sản phẩm -->
+                                            <th>
+                                                <span style="width: 150px">{{l('Sản phẩm')}}</span>
+                                            </th>
+                                            <!-- Load cont -->
+                                            <th>
+                                                <span style="width: 150px">{{l('Load cont')}}</span>
+                                            </th>
+                                            <!-- Ngày load cont -->
+                                            <th sortField="pO_LOAD_CONT_EXACT_DT">
+                                                <span style="width: 150px">{{l('Ngày load cont')}}</span>
+                                            </th>
+                                            <!-- Ngày xuất điều chỉnh -->
+                                            <th sortField="pO_MODIFIED_DT">
+                                                <span style="width: 150px">{{l('Ngày xuất điều chỉnh')}}</span>
+                                            </th>
+                                            <!-- Tuần xuất 
+                                            <th>
+                                                <span style="width: 120px">{{l('Tuần xuất')}}</span>
+                                            </th>-->
+                                            <!-- Năm xuất
+                                            <th>
+                                                <span style="width: 120px">{{l('Năm xuất')}}</span>
+                                            </th> -->
+                                            <!-- Số lượng -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('Số lượng')}}</span>
+                                            </th>
+                                            <!-- SLHT Phôi -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('SLHT Phôi')}}</span>
+                                            </th>
+                                            <!-- Ghi chú Phôi -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('Ghi chú Phôi')}}</span>
+                                            </th>
+                                            <!-- SLHTGC LRHT -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('SLHTGC LRHT')}}</span>
+                                            </th>
+                                            <!-- Ghi chú SLHTGC LRHT -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('Ghi chú SLHTGC LRHT')}}</span>
+                                            </th>
+                                            <!-- SLHT Định hình -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('SLHT Định hình')}}</span>
+                                            </th>
+                                            <!-- Ghi chú định hình -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('Ghi chú định hình')}}</span>
+                                            </th>
+                                            <!-- SLHT Lắp ráp -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('SLHT Lắp ráp')}}</span>
+                                            </th>
+                                            <!-- Ghi chú lắp ráp -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('Ghi chú lắp ráp')}}</span>
+                                            </th>
+                                            <!-- SLHT Sơn -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('SLHT Sơn')}}</span>
+                                            </th>
+                                            <!-- Ghi chú sơn -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('Ghi chú sơn')}}</span>
+                                            </th>
+                                            <!-- SLHT Đóng gói -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('SLHT Đóng gói')}}</span>
+                                            </th>
+                                            <!-- Ghi chú đóng gói -->
+                                            <th>
+                                                <span style="width: 120px;">{{l('Ghi chú đóng gói')}}</span>
+                                            </th>
+                                            <!-- End Table Column -->
+                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let record of dataTable.records" class="selectable"
+                                            (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                            <!-- STT -->
+                                            <td class="center"><span class="mo-header"></span>
+                                                {{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                            </td>
+                                            <!-- Mã khách hàng -->
+                                            <td>{{record.customeR_CODE}}</td>
+                                            <!-- Mã PO -->
+                                            <td>{{record.pO_CODE}}</td>
+                                            <!-- Mã hệ hàng -->
+                                            <td>{{record.grouP_PRODUCT_CODE}}</td>
+                                            <!-- Mã sản phẩm -->
+                                            <td>{{record.producT_CODE}}</td>
+                                            <!-- Load cont -->
+                                            <td>{{record.pO_LOAD_CONT_STATUS_NAME}}</td>
+                                            <!-- Ngày load cont -->
+                                            <td>{{record.pO_LOAD_CONT_EXACT_DT | dateFormatPipe}}</td>
+                                            <!-- Ngày xuất điều chỉnh -->
+                                            <td>{{record.pO_MODIFIED_DT | dateFormatPipe}}</td>
+                                            <!-- Tuần xuất 
+                                            <td>{{record.exporT_WEEK}}</td>-->
+                                            <!-- Năm xuất 
+                                            <td>{{record.exporT_YEAR}}</td>-->
+                                            <!-- Số lượng -->
+                                            <td>{{record.quantity}}</td>
+                                            <!-- SLHT phôi -->
+                                            <td>{{record.quantitY_COMPLETED_EMBRYO}}</td>
+                                            <!-- Ghi chú phôi -->
+                                            <td>{{record.noteS_COMPLETED_EMBRYO}}</td>
+                                            <!-- SLHTGC LRHT -->
+                                            <td>{{record.quantitY_OUTSOURCE_COMPLETED_PART_25}}</td>
+                                            <!-- Ghi chú SLHTGC LRHT -->
+                                            <td>{{record.noteS_OUTSOURCE_COMPLETED_PART_25}}</td>
+                                            <!-- SLHT định hình -->
+                                            <td>{{record.quantitY_COMPLETED_PART_2}}</td>
+                                            <!-- Ghi chú định hình -->
+                                            <td>{{record.noteS_COMPLETED_PART_2}}</td>
+                                            <!-- SLHT lắp ráp -->
+                                            <td>{{record.quantitY_COMPLETED_PART_25}}</td>
+                                            <!-- Ghi chú lắp ráp -->
+                                            <td>{{record.noteS_COMPLETED_PART_25}}</td>
+                                            <!-- SLHT sơn -->
+                                            <td>{{record.quantitY_COMPLETED_PART_3}}</td>
+                                            <!-- Ghi chú sơn -->
+                                            <td>{{record.noteS_COMPLETED_PART_3}}</td>
+                                            <!-- SLHT đóng gói -->
+                                            <td>{{record.quantitY_COMPLETED_PART_6}}</td>
+                                            <!-- Ghi chú đóng gói -->
+                                            <td>{{record.noteS_COMPLETED_PART_6}}</td>
+                                        </tr>
+                                    </tbody>
+                                </core-table>
+                            </div>
+                            <!-- End Table-->
+                        </fieldset>
+                    </div>
+                    <!-- End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

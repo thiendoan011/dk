@@ -1,0 +1,32 @@
+<div>
+    <div class="accordion md-accordion form-group" id="accordionFilter2" role="tablist">
+        <div class="card">
+            <div class="card-header black lighten-3 z-depth-1" style="padding: 1px 5px !important" role="tab">
+                <a class="white-text font-weight-bold" data-toggle="collapse" href="#viewProcess2" aria-expanded="true" aria-controls="viewProcess2">
+                    <h6 class="mb-0 py-1">
+                        <i class="fas fa-angle-right" style="padding-right: 5px"></i>
+                        {{ this.l('Bấm vào đây để xem lịch sử yêu cầu') }}
+                    </h6>
+                </a>
+            </div>
+            <div id="viewProcess2"  class="collapse" role="tabpanel" aria-labelledby="heading" data-parent="#accordionFilter2">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <!-- Begin Table-->
+                        <!-- End Table-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .collapse:not(.in) {
+        display: none !important;
+    }
+
+    .collapse:not(.show) {
+        display: initial;
+    }
+</style>

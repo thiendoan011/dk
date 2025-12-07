@@ -1,0 +1,186 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Đơn hàng")}}</span>
+                    <!-- End Title -->
+                </h3>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Nhập nội dung xử lý -->
+                        <div class="col-md-12">
+                            <po-history-create-modal
+                                [type]="'PO_BOOKING_INF'"
+                                [id]="inputModel.puR_ORDER_ID"
+                                [page]="'PO_BOOKING_INF'"
+                                [stage]="'HC'"
+                                [process]="'INF'"
+                                [process_desc]="'Người tạo thêm nội dung xử lý phiếu'"
+                                [title]="'Bấm vào đây để nhập nội dung xử lý'"
+                                (complete)="getDataPages()">
+                            </po-history-create-modal>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-2-modal
+                                #history_modal
+                                [id]="inputModel.puR_ORDER_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </po-history-2-modal>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Người duyệt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="checkeR_NAME"
+                                    [(ngModel)]="inputModel.checkeR_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái phiếu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái phiếu")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'AUTH_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="autH_STATUS" 
+                                    [(ngModel)]="inputModel.autH_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái xử lý -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái xử lý")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'PURCHASE_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="procesS_STATUS" 
+                                    [(ngModel)]="inputModel.procesS_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- ID đơn hàng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("ID đơn hàng")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="puR_ORDER_ID"
+                                    [(ngModel)]="inputModel.puR_ORDER_ID" />
+                            </div>
+                        </div>
+
+                        <!-- Tên đơn hàng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Tên đơn hàng")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="puR_ORDER_NAME"
+                                    [(ngModel)]="inputModel.puR_ORDER_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Đợt mua hàng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l('Đợt mua hàng')}}</label>
+                                <div class='file-input-group'>
+                                    <input class="form-control"
+                                        readonly 
+                                        name="puR_BATCH_ID"
+                                        [(ngModel)]="inputModel.puR_BATCH_ID" />
+                                    <!-- <button type="button" class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='disableChance'
+                                        (click)="showRequisitionModal()">{{l("...")}}
+                                    </button> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]="disableInput"
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <pur-order-detail-edittable
+                        #purOrderDetailEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [title]="'Danh sách vật tư'">
+                    </pur-order-detail-edittable>
+
+                    <pur-receipt-edittable
+                        #purReceiptEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="false"
+                        (onUpdate)="getDataPages()"
+                        [title]="'Danh sách biên nhận'">
+                    </pur-receipt-edittable>
+
+                    <pur-receipt-multi-edittable
+                        #purReceiptMultiEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="false"
+                        (onSearchReceiptMulti)="onSearchReceiptMulti($event)"
+                        (onUpdate)="getDataPages()"
+                        [title]="'Import nhiều biên nhận'">
+                    </pur-receipt-multi-edittable>
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

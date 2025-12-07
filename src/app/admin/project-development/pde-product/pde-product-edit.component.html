@@ -1,0 +1,457 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Sản phẩm")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã sản phẩm -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã Sản phẩm")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="disableInput"
+                                    name="producT_CODE"
+                                    [(ngModel)]="inputModel.producT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên Sản phẩm -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên Sản phẩm")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="disableInput"
+                                    name="producT_NAME"
+                                    [(ngModel)]="inputModel.producT_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Mã sản phẩm sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã sản phẩm sản xuất")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="true"
+                                    name="sX_PRODUCT_CODE"
+                                    [(ngModel)]="inputModel.sX_PRODUCT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên sản phẩm sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên sản phẩm sản xuất")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="true"
+                                    name="sX_PRODUCT_NAME"
+                                    [(ngModel)]="inputModel.sX_PRODUCT_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Quy cách sản phẩm(MM) -->
+                        <div class="col-md-4">
+                            <label style="font-weight: bold;">{{l("Quy cách sản phẩm(MM)")}}</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Dài")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChaneNumber()"
+                                            name="producT_SPECIFI_LENGTH"
+                                            [(ngModel)]="inputModel.producT_SPECIFI_LENGTH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Rộng")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChaneNumber()"
+                                            name="producT_SPECIFI_WIDTH"
+                                            [(ngModel)]="inputModel.producT_SPECIFI_WIDTH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Cao")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChaneNumber()"
+                                            name="producT_SPECIFI_HEIGHT"
+                                            [(ngModel)]="inputModel.producT_SPECIFI_HEIGHT">
+                                        </money-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Quy cách sản phẩm(INCH) -->
+                        <div class="col-md-4">
+                            <label style="font-weight: bold;">{{l("Quy cách sản phẩm(INCH)")}}</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Dài")}}</label>
+                                        <money-input
+                                            [disabled]='true'
+                                            name="producT_SPECIFI_LENGTH_INCH"
+                                            [(ngModel)]="inputModel.producT_SPECIFI_LENGTH_INCH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Rộng")}}</label>
+                                        <money-input
+                                            [disabled]='true'
+                                            name="producT_SPECIFI_WIDTH_INCH"
+                                            [(ngModel)]="inputModel.producT_SPECIFI_WIDTH_INCH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Cao")}}</label>
+                                        <money-input
+                                            [disabled]='true'
+                                            name="producT_SPECIFI_HEIGHT_INCH"
+                                            [(ngModel)]="inputModel.producT_SPECIFI_HEIGHT_INCH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Quy cách thùng carton(MM) -->
+                        <div class="col-md-4">
+                            <label style="font-weight: bold;">{{l("Quy cách thùng carton(MM)")}}</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Dài")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChaneNumber()"
+                                            name="cartoN_SPECIFI_LENGTH"
+                                            [(ngModel)]="inputModel.cartoN_SPECIFI_LENGTH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Rộng")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChaneNumber()"
+                                            name="cartoN_SPECIFI_WIDTH"
+                                            [(ngModel)]="inputModel.cartoN_SPECIFI_WIDTH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Cao")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChaneNumber()"
+                                            name="cartoN_SPECIFI_HEIGHT"
+                                            [(ngModel)]="inputModel.cartoN_SPECIFI_HEIGHT">
+                                        </money-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Quy cách thùng carton(INCH) -->
+                        <div class="col-md-4">
+                            <label style="font-weight: bold;">{{l("Quy cách thùng carton(INCH)")}}</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Dài")}}</label>
+                                        <money-input
+                                            [disabled]='true'
+                                            name="cartoN_SPECIFI_LENGTH_INCH"
+                                            [(ngModel)]="inputModel.cartoN_SPECIFI_LENGTH_INCH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Rộng")}}</label>
+                                        <money-input
+                                            [disabled]='true'
+                                            name="cartoN_SPECIFI_WIDTH_INCH"
+                                            [(ngModel)]="inputModel.cartoN_SPECIFI_WIDTH_INCH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Cao")}}</label>
+                                        <money-input
+                                            [disabled]='true'
+                                            name="cartoN_SPECIFI_HEIGHT_INCH"
+                                            [(ngModel)]="inputModel.cartoN_SPECIFI_HEIGHT_INCH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Số khối sản phẩm -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Số khối sản phẩm")}}</label>
+                                <money-input
+                                    [disabled]='disableInput'
+                                    [isDecimal_round3]="true" 
+                                    name="producT_CUBE"
+                                    [(ngModel)]="inputModel.producT_CUBE">
+                                </money-input>
+                            </div>
+                        </div>
+                        <!-- Số khối thùng carton -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Số khối thùng carton")}}</label>
+                                <money-input
+                                    [disabled]='disableInput'
+                                    [isDecimal_round3]="true" 
+                                    name="cartoN_CUBE"
+                                    [(ngModel)]="inputModel.cartoN_CUBE">
+                                </money-input>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Nguyên liệu gỗ 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Nguyên liệu gỗ")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    name="materiaL_WOOD" 
+                                    [(ngModel)]="inputModel.materiaL_WOOD"
+                                    [cdName]="'PDE_PRODUCT__MATERIAL_WOOD'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>-->
+                        <!-- Nguyên liệu gỗ -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Nguyên liệu gỗ")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="disableInput"
+                                    name="materiaL_WOOD"
+                                    [(ngModel)]="inputModel.materiaL_WOOD" />
+                            </div>
+                        </div>
+                        <!-- Nguyên liệu ván 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Nguyên liệu ván")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    name="materiaL_PLANK" 
+                                    [(ngModel)]="inputModel.materiaL_PLANK"
+                                    [cdName]="'PDE_PRODUCT__MATERIAL_PLANK'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>-->
+                        <!-- Nguyên liệu ván -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Nguyên liệu ván")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="disableInput"
+                                    name="materiaL_PLANK"
+                                    [(ngModel)]="inputModel.materiaL_PLANK" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Nguyên liệu Veneer 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Nguyên liệu Veneer")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    name="materiaL_VENEER" 
+                                    [(ngModel)]="inputModel.materiaL_VENEER"
+                                    [cdName]="'PDE_PRODUCT__MATERIAL_VENEER'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>-->
+                        <!-- Nguyên liệu Veneer -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Nguyên liệu Veneer")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="disableInput"
+                                    name="materiaL_VENEER"
+                                    [(ngModel)]="inputModel.materiaL_VENEER" />
+                            </div>
+                        </div>
+                        <!-- Kết cấu khi đóng gói -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Kết cấu khi đóng gói")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    name="packinG_TEXTURE" 
+                                    [(ngModel)]="inputModel.packinG_TEXTURE"
+                                    [cdName]="'PDE_PRODUCT__PACKING_TEXTURE'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Hiệu ứng bề mặt -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Hiệu ứng bề mặt")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="disableInput"
+                                    name="surfacE_EFFECT"
+                                    [(ngModel)]="inputModel.surfacE_EFFECT" />
+                            </div>
+                        </div>
+                        <!-- Đơn vị tính -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Đơn vị tính")}}</label>
+                                <input type="text"
+                                    class="form-control" 
+                                    [disabled]="disableInput"
+                                    name="unit"
+                                    [(ngModel)]="inputModel.unit" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea type="text"
+                                    class="form-control" 
+                                    [disabled]='disableInput'
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Import excel -->
+                        <div *ngIf="editPageState != EditPageState.viewDetail || inputModel.autH_STATUS == 'A'" class="col-md-3">
+                            <div class="form-group">
+                                <label type="button"
+                                    class='btn btn-primary' for="file-upload"
+                                    style="margin-top: 6px;color:white!important">
+                                    {{this.l('Import danh sách sản phẩm')}}
+                                    <import-excel [id]="'file-upload'"
+                                        [hidden]="true"
+                                        [startPosition]="'A2'"
+                                        [disable]="disableInput"
+                                        (toArrayObject)='onImportExcel($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Tải mẫu import excel -->
+                        <div class="col-md-3" *ngIf="editPageState != EditPageState.viewDetail">
+                            <div class="form-group">
+                                <label (click)="exportExcelTemplate()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('DownloadTemplate')}}
+                                </label>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Begin Table-->
+                    <!-- Thông tin yêu cầu từ khách cho từng sản phẩm -->
+                        <pde-request-customer-attach-file
+                            #pdeRequestCustomerAttachFileEdittable
+                            [disableInput]='disableInput'>
+                        </pde-request-customer-attach-file>
+                    <!-- Bản vẽ kỹ thuật và thông tin yêu cầu từ khách -->
+                        <pde-tech-draw-from-cus-attach-file
+                            #pdeTechDrawFromCusAttachFileEdittable
+                            [disableInput]='disableInput'>
+                        </pde-tech-draw-from-cus-attach-file>
+                    <!-- Bản vẽ kỹ thuật dũng khanh -->
+                        <pde-tech-draw-attach-file
+                            #pdeTechDrawAttachFileEdittable
+                            [disableInput]='disableInput'>
+                        </pde-tech-draw-attach-file>
+                    <!-- Danh sách vật tư hardware -->
+                        <pde-hardwarevt-edittable 
+                            #pdeHardwareVTEdittable
+                            [disableInput]='disableInput'>
+                        </pde-hardwarevt-edittable>
+                    <!-- Danh sách vật tư đóng gói -->
+                        <pde-hardwaredg-edittable 
+                            #pdeHardwareDGEdittable
+                            [disableInput]='disableInput'>
+                        </pde-hardwaredg-edittable>
+                    <!-- End Talbe-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

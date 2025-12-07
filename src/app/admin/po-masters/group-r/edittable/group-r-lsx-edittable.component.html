@@ -1,0 +1,114 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput && disableEditColumn" type="button" (click)='onAdd()'
+            [disabled]="disableInput && disableEditColumn" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput && disableEditColumn" type="button" (click)='onRemove()'
+            [disabled]="disableInput && disableEditColumn" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput && disableEditColumn"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Khách hàng 
+                <th>
+                    <span style="white-space: nowrap;">{{l("Khách hàng")}}</span>
+                </th>-->
+                <!-- Mã lệnh sản xuất -->
+                <th>
+                    <span style="width: 150px;">{{l("Mã lệnh sản xuất")}}</span>
+                </th>
+                <!-- Tên lệnh sản xuất -->
+                <th>
+                    <span style="width: 150px;">{{l("Tên lệnh sản xuất")}}</span>
+                </th>
+                <!-- Loại lệnh sản xuất -->
+                <th>
+                    <span style="width: 150px;">{{l("Loại lệnh sản xuất")}}</span>
+                </th>
+                <!-- Ngày triển khai -->
+                <th>
+                    <span style="width: 150px;">{{l("Ngày triển khai")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput && disableEditColumn"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Khách hàng 
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CUSTOMER_NAME',in)}}" 
+                        [(ngModel)]="item.pO_CUSTOMER_NAME"/>
+                </td>-->
+                <!-- Mã lệnh sản xuất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailR(item)"
+                        name="{{editTable.name('r_CODE',in)}}" 
+                        [(ngModel)]="item.r_CODE"/>
+                </td>
+                <!-- Tên lệnh sản xuất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('r_NAME',in)}}" 
+                        [(ngModel)]="item.r_NAME"/>
+                </td>
+                <!-- Loại lệnh sản xuất -->
+                <td>
+                    <all-code-select 
+                        [disabled]="true"
+                        [cdName]="'R_TYPE'"
+                        [cdType]="'R'"
+                        name="{{editTable.name('r_TYPE',in)}}" 
+                        [(ngModel)]="item.r_TYPE">
+                    </all-code-select>
+                </td>
+                <!-- Ngày triển khai -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('implemenT_DT', in)}}"
+                        [(ngModel)]="item.implemenT_DT">
+                    </date-control>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+
+<r-modal (onSelect)='onSelectPopup($event)' #popupModal [multiple]="true"></r-modal>

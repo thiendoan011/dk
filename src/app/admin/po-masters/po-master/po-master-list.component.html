@@ -1,0 +1,295 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row align-items-center">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+
+                        <!-- Begin Title -->
+                        <span>Thông tin PO</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+                <div class="col text-right mt-3 mt-md-0">
+                    <div class="btn-group dropdown mr-2">
+                        <button class=" btn btn-outline-success" (click)="exportExcel()">
+                            <i class="far fa-file-excel"></i>
+                            {{l("ExcelOperations")}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row align-items-center m--margin-bottom-30">
+                                <!-- Begin Filter -->
+
+                                <!-- Số PO -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Số PO</label>
+                                        <input [(ngModel)]="filterInput.pO_CODE" name="pO_CODE"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+
+                                <!-- Tên PO -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Tên PO</label>
+                                        <input [(ngModel)]="filterInput.pO_NAME" name="pO_NAME"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+                                
+                                <!-- Đơn vị quản lý PO -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý PO')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+
+                                <!-- Mã hệ hàng -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Mã hệ hàng</label>
+                                        <input [(ngModel)]="filterInput.grouP_PRODUCT_CODE" 
+                                            name="grouP_PRODUCT_CODE"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+
+                                <!-- Tuần xuất -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>Tuần xuất</label>
+                                        <input [(ngModel)]="filterInput.exporT_WEEK" 
+                                            name="exporT_WEEK"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="number">
+                                    </div>
+                                </div>
+                                <!-- Năm xuất -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('Năm xuất')}}</label>
+                                        <input [(ngModel)]="filterInput.exporT_YEAR"
+                                            name="exporT_YEAR"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="number">
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái")}}</label>
+                                        <all-code-select 
+                                            name="pO_PROCESS" 
+                                            [(ngModel)]="filterInput.pO_PROCESS"
+                                            [emptyText]="l('SelectAll')" 
+                                            [cdName]="'PO_PROCESS'"
+                                            [cdType]="'PO'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <div class='col-md-12'></div>
+                    
+
+                                <!-- Ngày xuất -->
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend style='font-weight: bold;
+                                            text-decoration: underline'>{{l("Ngày xuất")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        [inpCss]="'form-control'"
+                                                        name="frmdate"
+                                                        [(ngModel)]="filterInput.frmdate"
+                                                        autoFocus>
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        [inpCss]="'form-control'"
+                                                        name="todate"
+                                                        [(ngModel)]="filterInput.todate"
+                                                        autoFocus>
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-6">
+                                    <fieldset>
+                                        <legend style='font-weight: bold;
+                                            text-decoration: underline'>{{l("Ngày booking")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        [inpCss]="'form-control'"
+                                                        name="frmdatE_BOOKING"
+                                                        [(ngModel)]="filterInput.frmdatE_BOOKING"
+                                                        autoFocus>
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        [inpCss]="'form-control'"
+                                                        name="todatE_BOOKING"
+                                                        [(ngModel)]="filterInput.todatE_BOOKING"
+                                                        autoFocus>
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class='col-md-12'></div>
+                                <!-- End Filter -->
+
+                                <div style="display:none;" class="col-md-12">
+                                    <div class="form-group">
+                                        <button *ngIf="appToolbar.buttonSearchEnable" class="btn btn-primary btn-search"
+                                            (click)="onSearch()">{{l('Search')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <th>
+                                            <span style="width: 30px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Khách hàng -->
+                                        <th sortField="customeR_NAME">
+                                            <span style="width: 100px">{{l("Khách hàng")}}</span>
+                                        </th>
+                                        <!-- Số PO -->
+                                        <th sortField="pO_CODE">
+                                            <span style="width: 100px">{{l("Số PO")}}</span>
+                                        </th>
+                                        <!-- Tên PO-->
+                                        <th sortField="pO_NAME">
+                                            <span style="width: 130px">{{l("Tên PO")}}</span>
+                                        </th>
+                                        <!-- Ngày tạo -->
+                                        <th sortField="creatE_DATE">
+                                            <span style="width: 100px">{{l("Ngày tạo")}}</span>
+                                        </th>
+                                        <!-- Ngày xuất -->
+                                        <th sortField="exporT_DATE">
+                                            <span style="width: 100px">{{l("Ngày xuất")}}</span>
+                                        </th>
+                                        <!-- Ngày Booking -->
+                                        <th sortField="bookinG_DT">
+                                            <span style="width: 100px">{{l("Ngày Booking")}}</span>
+                                        </th>
+                                        <!-- Mã lệnh sản xuất -->
+                                        <th sortField="r_CODE">
+                                            <span style="width: 120px">{{l("Mã lệnh sản xuất")}}</span>
+                                        </th>
+                                        <!-- Số lượng cont -->
+                                        <th>
+                                            <span>{{l("Số lượng cont")}}</span>
+                                        </th>
+                                        <!-- Ngày xuất sau khi khách đồng ý -->
+                                        <th sortField="pO_MODIFIED_DT">
+                                            <span style="width: 120px">{{l("Ngày xuất sau khi khách đồng ý")}}</span>
+                                        </th>
+                                        <!-- Trạng thái -->
+                                        <th sortField="pO_PROCESS_NAME">
+                                            <span style="width: 120px">{{l("Trạng thái")}}</span>
+                                        </th>
+                                        <!-- Ghi chú PO -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Ghi chú PO")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable"
+                                        (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center">
+                                            {{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                        </td>
+                                        <!-- Khách hàng -->
+                                        <td>{{record.customeR_NAME}}</td>
+                                        <!-- Số PO -->
+                                        <td>{{record.pO_CODE}}</td>
+                                        <!-- Tên PO -->
+                                        <td>{{record.pO_NAME}}</td>
+                                        <!-- Ngày tạo -->
+                                        <td>{{record.creatE_DATE | dateFormatPipe}}</td>
+                                        <!-- Ngày xuất -->
+                                        <td>{{record.exporT_DATE | dateFormatPipe}}</td>
+                                        <!-- Booking -->
+                                        <td>{{record.bookinG_DT | dateFormatPipe}}</td>
+                                        <!-- Mã lệnh sản xuất -->
+                                        <td>{{record.r_CODE}}</td>
+                                        <td>{{record.qtY_CONT | numberFormatPipe}}</td>
+                                        <td>{{record.pO_MODIFIED_DT | dateFormatPipe}}</td>
+                                        <!-- Trạng thái -->
+                                        <!-- <td>{{record.pO_PROCESS_NAME}}</td> -->
+                                        <td><span style="font-size: 13px;" class="{{ getBadgeClass(record.pO_PROCESS_NAME) }}">{{ record.pO_PROCESS_NAME }}</span></td>
+                                        <!-- Ghi chú PO -->
+                                        <td>{{record.notes}}</td>
+                                        <!-- <td><span class="{{ getBadgeClass(record.autH_STATUS_NAME) }}">{{ record.autH_STATUS_NAME }}</span></td> -->
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

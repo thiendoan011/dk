@@ -1,0 +1,252 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Đơn xin nghỉ")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+
+                        <!-- Lịch sử trả về -->
+                        <div class="col-md-12">
+                            <tt-reject-modal
+                                [id]="inputModel.leavE_ID"
+                                #reject_modal
+                                [page]="'LEAVE'"
+                                [stage]="'HC'"
+                                [process]="'REJECT'"
+                                [showEnterRejectLog]="rejectInput"
+                                [showRejectLog]="true"
+                                (reject_out)="onReject($event)">
+                            </tt-reject-modal>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <tt-history-modal
+                                #history_modal
+                                [id]="inputModel.leavE_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </tt-history-modal>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH2_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+
+                        <!-- ID phiếu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("ID phiếu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="leavE_ID"
+                                    [(ngModel)]="inputModel.leavE_ID" />
+                            </div>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="makeR_ID"
+                                    [(ngModel)]="inputModel.makeR_ID" />
+                            </div>
+                        </div>
+
+                        <!-- Ngày tạo -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày tạo")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="creatE_DT"
+                                    [(ngModel)]="inputModel.creatE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Người nộp đơn -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người nộp đơn")}}</label>
+                                <select2-custom
+                                    [(list)]="users"
+                                    [disabled]="disableInput"
+                                    name="useR_LEAVE_ID"
+                                    [(ngModel)]="inputModel.useR_LEAVE_ID"
+                                    [valueMember]="'tlnanme'"
+                                    [displayMember]="'tlnanme|tlFullName'">
+                                </select2-custom>
+                            </div>
+                        </div>
+
+                        <!-- Người duyệt -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <select2-custom
+                                    [(list)]="users"
+                                    [disabled]="disableInput"
+                                    name="checkeR_ID"
+                                    [(ngModel)]="inputModel.checkeR_ID"
+                                    [valueMember]="'tlnanme'"
+                                    [displayMember]="'tlnanme|tlFullName'">
+                                </select2-custom>
+                            </div>
+                        </div>
+
+                        <!-- Đơn vị -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Đơn vị")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="brancH_NAME"
+                                    [(ngModel)]="inputModel.brancH_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Loại nghỉ -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Loại nghỉ")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    name="leavE_TYPE" 
+                                    [(ngModel)]="inputModel.leavE_TYPE"
+                                    [cdName]="'LEAVE_TYPE'"
+                                    [cdType]="'TIMETRACKING'">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Ngày nộp đơn -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày nộp đơn")}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="leavE_DT"
+                                    [(ngModel)]="inputModel.leavE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Phòng ban -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Phòng ban")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="deP_NAME"
+                                    [(ngModel)]="inputModel.deP_NAME" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <fieldset>
+                                <legend style='font-weight: bold; text-decoration:  underline'>{{l("Thời gian nghỉ")}}</legend>
+                                <div class='row'>
+                                    <!-- Từ ngày -->
+                                    <div class='col-sm-4'>
+                                        <div class='form-group'>
+                                            <label>{{l('Từ ngày')}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                [hasTime]="true"
+                                                (onChangeEvent)="onChangeDate(inputModel.froM_LEAVE_DT, inputModel.tO_LEAVE_DT)"
+                                                name="froM_LEAVE_DT"
+                                                [(ngModel)]="inputModel.froM_LEAVE_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                    <!-- Đến ngày -->
+                                    <div class='col-sm-4'>
+                                        <div class='form-group'>
+                                            <label>{{l('Đến ngày')}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                [hasTime]="true"
+                                                (onChangeEvent)="onChangeDate(inputModel.froM_LEAVE_DT, inputModel.tO_LEAVE_DT)"
+                                                name="tO_LEAVE_DT"
+                                                [(ngModel)]="inputModel.tO_LEAVE_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                    <!-- Số ngày nghỉ -->
+                                    <div class='col-sm-4'>
+                                        <div class='form-group'>
+                                            <label>{{l('Số ngày nghỉ')}}</label>
+                                            <money-input
+                                                [isDecimal_round2]="true"
+                                                [disabled]="disableInput"
+                                                name="numbeR_OF_DAY_LEAVE"
+                                                [(ngModel)]="inputModel.numbeR_OF_DAY_LEAVE">
+                                            </money-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!-- Lý do -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("Lý do")}}</label>
+                                <textarea type="text"
+                                    class="form-control" 
+                                    [disabled]='disableInput'
+                                    name="leavE_REASON"
+                                    [(ngModel)]="inputModel.leavE_REASON">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Gửi phê duyệt -->
+                        <div class="col-md-4" *ngIf="!disableInput && inputModel.leavE_ID">
+                            <div class="form-group">
+                                <label (click)="onSendAppr()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi phê duyệt')}}
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

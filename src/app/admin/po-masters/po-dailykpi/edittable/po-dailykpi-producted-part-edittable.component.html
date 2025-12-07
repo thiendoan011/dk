@@ -1,0 +1,256 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <!-- <button [hidden]="!disableInput" type="button" (click)='exportExcel()' title="dowload"
+            [disabled]="!disableInput" class="btn btn-primary"><i class="pi pi-download"></i>{{l('Add')}}
+        </button> -->
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <!-- <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button> -->
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Công đoạn -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Công đoạn")}}</span>
+                </th>
+                <!-- Định mức -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Định mức")}}</span>
+                </th>
+                <!-- Lao động thực tế -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Lao động thực tế")}}</span>
+                </th>
+                <!-- Lao động tăng ca -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Lao động tăng ca")}}</span>
+                </th>
+                <!-- Tổng giờ tăng ca -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tổng giờ tăng ca")}}</span>
+                </th>
+                <!-- Quy về công lao động -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Quy về công lao động")}}</span>
+                </th>
+                <!-- Định mức M3/cont -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Định mức M3/cont")}}</span>
+                </th>
+                <!-- M3 theo dịnh mức -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("M3 theo dịnh mức")}}</span>
+                </th>
+                <!-- Số cont theo định mức -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số cont theo định mức")}}</span>
+                </th>
+                <!-- Số cont thực tế(Hệ thống tự tính sau khi lưu) -->
+                <th>
+                    <span style="width: 150px;">{{l("Số cont thực tế(Hệ thống tự tính sau khi lưu)")}}</span>
+                </th>
+                <!-- Tỉ lệ đạt(%)(Hệ thống tự tính sau khi lưu) -->
+                <th>
+                    <span style="width: 150px;">{{l("Tỉ lệ đạt(%)(Hệ thống tự tính sau khi lưu)")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Công đoạn -->
+                <td>
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PRODUCTED_PART_CODE'"
+                        [cdType]="'PO'"
+                        name="{{editTable.name('producteD_PART_CODE',in)}}" 
+                        [(ngModel)]="item.producteD_PART_CODE">
+                    </all-code-select>
+                </td>
+                <!-- Định mức -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="disableInput"
+                            (focusout)="onChangeValue(item)"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('target',in)}}"
+                            [(ngModel)]="item.target">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- chuyền -->
+                <!-- <td>
+                    <input class="form-control transparent" 
+                        [disabled]="disableInput"
+                        (focusout)="onChangeValue(item)"
+                        name="{{editTable.name('target',in)}}" 
+                        [(ngModel)]="item.target"/>
+                </td> -->
+                <!-- Lao động thực tế -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="disableInput"
+                            (focusout)="onChangeValue(item)"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('workeR_ACTUAL',in)}}"
+                            [(ngModel)]="item.workeR_ACTUAL">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- Lao động tăng ca -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="disableInput"
+                            (focusout)="onChangeValue(item)"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('workeR_OT',in)}}"
+                            [(ngModel)]="item.workeR_OT">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- Tổng giờ tăng ca -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="disableInput"
+                            (focusout)="onChangeValue(item)"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('totaL_OT',in)}}"
+                            [(ngModel)]="item.totaL_OT">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- Quy về công lao động -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="true"
+                            (focusout)="onChangeValue(item)"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('workeR_COST',in)}}"
+                            [(ngModel)]="item.workeR_COST">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- Định mức M3/cont -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="disableInput"
+                            (focusout)="onChangeValue(item)"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('targeT_M3_PER_CONT',in)}}"
+                            [(ngModel)]="item.targeT_M3_PER_CONT">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- M3 theo định mức -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="true"
+                            (focusout)="onChangeValue(item)"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('targeT_M3',in)}}"
+                            [(ngModel)]="item.targeT_M3">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- Số cont theo định mức -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="true"
+                            (focusout)="onChangeValue(item)"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('targeT_CONT',in)}}"
+                            [(ngModel)]="item.targeT_CONT">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- Số cont thực tế(Hệ thống tự tính sau khi lưu) -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="true"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('actuaL_CONT',in)}}"
+                            [(ngModel)]="item.actuaL_CONT">
+                        </money-input-5>
+                    </div>
+                </td>
+                <!-- Tỉ lệ đạt(%)(Hệ thống tự tính sau khi lưu) -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input-5
+                            [disabled]="true"
+                            [isDecimal_round5]="true"
+                            class="transparent"
+                            name="{{editTable.name('actuaL_CONT_PER_TARGET_CONT',in)}}"
+                            [(ngModel)]="item.actuaL_CONT_PER_TARGET_CONT">
+                        </money-input-5>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<div class="row">
+    <!-- Mở chỉnh sửa -->
+    <div class="col-md-3" [hidden]="isHiddenEditButton">
+        <div class="form-group">
+            <label (click)="onOpenEditColumn()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Mở chỉnh sửa')}}
+            </label>
+        </div>
+    </div>
+</div>

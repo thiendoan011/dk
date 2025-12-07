@@ -1,0 +1,185 @@
+<div [@routerTransition]>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Yêu cầu xử lý")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-2 [authStatus]="inputModel.autH_STATUS"></auth-status-2>
+                            </div>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="makeR_FULL_NAME"
+                                    [(ngModel)]="inputModel.makeR_FULL_NAME" />
+                            </div>
+                        </div>
+                        <!-- Người phụ trách phiếu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người phụ trách phiếu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="checkeR_FULL_NAME"
+                                    [(ngModel)]="inputModel.checkeR_FULL_NAME" />
+                            </div>
+                        </div>
+                        <!-- Người chịu trách nhiệm -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người chịu trách nhiệm")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="transfeR_FULL_NAME"
+                                    [(ngModel)]="inputModel.transfeR_FULL_NAME" />
+                            </div>
+                        </div>
+                        <!-- Người gửi yêu cầu gần nhất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người gửi yêu cầu gần nhất")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="creatE_LATEST_FULL_NAME"
+                                    [(ngModel)]="inputModel.creatE_LATEST_FULL_NAME" />
+                            </div>
+                        </div>
+                        <!-- Người nhận thông tin -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người nhận thông tin")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="receiveR_FULL_NAME"
+                                    [(ngModel)]="inputModel.receiveR_FULL_NAME" />
+                            </div>
+                        </div>
+                        <!-- Người xử lý phiếu gần nhất 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người xử lý phiếu gần nhất")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="checkeR_LATEST_FULL_NAME"
+                                    [(ngModel)]="inputModel.checkeR_LATEST_FULL_NAME" />
+                            </div>
+                        </div>-->
+                        <div class="col-md-4"></div>
+
+                        <!-- ID -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("ID")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="coststatemenT_HISTORY_ID"
+                                    [(ngModel)]="inputModel.coststatemenT_HISTORY_ID" />
+                            </div>
+                        </div>
+
+                        <!-- Bảng chiết tính -->
+                        <div class="col-md-4" *ngIf="isNullOrEmpty(inputModel.coststatemenT_HISTORY_ID)">
+                            <div class="form-group">
+                                <label>{{l("Bảng chiết tính")}}</label>
+                                <div class='file-input-group'>
+                                    <input readonly
+                                        class="form-control"
+                                        style="color: blue; cursor: pointer;"
+                                        (click)="onViewDetailCostStatement()"
+                                        name="coststatemenT_CODE"
+                                        [(ngModel)]="inputModel.coststatemenT_CODE">
+                                    <button type="button" class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='disableInput'
+                                        (click)="showCostStatement()">{{l("...")}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Bảng chiết tính -->
+                        <div class="col-md-4" *ngIf="!isNullOrEmpty(inputModel.coststatemenT_HISTORY_ID)">
+                            <div class="form-group">
+                                <label>{{l("Bảng chiết tính")}}</label>
+                                <input readonly
+                                    class="form-control"
+                                    style="color: blue; cursor: pointer;"
+                                    (click)="onViewDetailCostStatement()"
+                                    name="coststatemenT_CODE"
+                                    [(ngModel)]="inputModel.coststatemenT_CODE">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <pcp-history-edittable #pcphistoryedittable
+                        [inputModel]="inputModel"
+                        [type_upd]="'request'"
+                        [disableInput]='disableInput'>
+                    </pcp-history-edittable>
+
+                    <div class="row col-md-12 modal-body">
+                        <!-- Gửi yêu cầu  -->
+                        <div class="col-md-2" *ngIf="true">
+                            <label></label>
+                            <div class="form-group">
+                                <label (click)="onSend()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Gửi yêu cầu')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Đóng yêu cầu  
+                        <div class="col-md-2" *ngIf="!isNullOrEmpty(inputModel.coststatemenT_HISTORY_ID)">
+                            <label></label>
+                            <div class="form-group">
+                                <label  (click)="onClose()" class='btn btn-danger' style="color:white!important">
+                                    {{this.l('Đóng yêu cầu')}}
+                                </label>
+                            </div>
+                        </div>-->
+                    </div>
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>
+<!-- Hệ hàng
+<po-group-product-modal (onSelect)='onSelectGroupProduct($event)' #poGroupProductModal
+    [multiple]="false"></po-group-product-modal>-->
+
+<po-coststatement-modal (onSelect)='onSelectCoststatement($event)' #poCoststatementModal
+[multiple]="false"></po-coststatement-modal>

@@ -1,0 +1,104 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(_title)}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Tên bảng hardware -->
+                <th sortField="attacH_DESC">
+                    <span style="white-space: nowrap;">{{l("Tên bảng hardware")}}</span>
+                </th>
+                <!-- Ngày gửi file bảng hardware -->
+                <th sortField="attacH_DT">
+                    <span style="white-space: nowrap;">{{l("Ngày gửi file bảng hardware")}}</span>
+                </th>
+                <!-- File đính kèm -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("File đính kèm")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <checkbox-control 
+                        [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Tên bản vẽ hoặc tên thông tin yêu cầu -->
+                <td>
+                    <input type="text"
+                        class="form-control transparent"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('attacH_DESC',in)}}" 
+                        [(ngModel)]="item.attacH_DESC"/>
+                </td>
+                <!-- Ngày gửi file bảng hardware -->
+                <td>
+                    <date-control
+                        [disabled]='true'
+                        name="{{editTable.name('attacH_DT', in)}}"
+                        [(ngModel)]="item.attacH_DT">
+                    </date-control>
+                </td>
+                <!-- File đính kèm -->
+                <td style="min-width: 120px;">
+                    <file-picker type="text"
+                        [multiFile]="false"
+                        [folderUpload]="'ProjectDevelopment/GroupProduct/ProgressTablehardware'"
+                        (attach_infor_out)="l_UploadFileComplete($event, item)"
+                        [accept]=" '.xlsx,.xls,.doc,.docx,.pdf,.rar,.jpeg,.png,.jpg'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('filE_ATTACHMENT', in)}}"
+                        [(ngModel)]="item['filE_ATTACHMENT']">
+                    </file-picker>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]='disableInput'
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes', in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

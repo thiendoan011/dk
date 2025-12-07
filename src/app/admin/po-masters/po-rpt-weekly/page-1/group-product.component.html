@@ -1,0 +1,105 @@
+<!-- Begin Danh sách sản phẩm -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l('Danh sách sản phẩm thuộc hệ hàng ') + group_product_name + ', PO ' + po_name}}</h5>
+    </div>
+
+    <div class="primeng-datatable-container">
+    <editable-table
+        [requiredFields]=""
+        #editTableProduct class="custom-table ui-table">
+        <thead>
+            <tr>
+                <th class="center">
+                    <span style="width: 40px">
+                        <checkbox-control
+                            (onchange)="editTableProduct.checkAll($event.target.checked)"
+                            [checked]="editTableProduct.isCheckAll">
+                        </checkbox-control>
+
+                    </span>
+                </th>
+
+                <th class="center"><span style="width:
+                        40px">{{l("No")}}</span></th>
+
+                <!-- Mã sản phẩm -->
+                <th  class="center"  sortField="producT_CODE">
+                    <span style="width: 150px">{{l('Mã sản phẩm')}}</span>
+                </th>
+                <!-- Tên sản phẩm -->
+                <th sortField="producT_NAME" class="center" >
+                    <span style="width: 250px">{{l('Tên sản phẩm')}}</span>
+                </th>
+                    <!-- Số lượng -->
+                    <th sortField="quantity" class="center" >
+                    <span style="width: 100px">{{l('Số lượng')}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th sortField="notes" class="center"  >
+                    <span style="width: 150px">{{l('Ghi chú')}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTableProduct.dataInPage; let in= index"
+                [hidden]="item['page'] != editTableProduct.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTableProduct.selectRow($event,item);updateView()'>
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        name="{{editTableProduct.name('isChecked',in)}}"
+                        [(ngModel)]="editTableProduct.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        name="{{editTableProduct.name('no',in)}}"
+                        [(ngModel)]="editTableProduct.dataInPage[in]['no']">
+                </td>
+                <!-- Mã sản phẩm -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        [disabled]="true"
+                        name="{{editTableProduct.name('producT_CODE',in)}}"
+                        [(ngModel)]="editTableProduct.dataInPage[in]['producT_CODE']">
+                </td>
+                <!-- Tên sản phẩm -->
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            [disabled]="true"
+                            class="form-control transparent" type="text"
+                            name="{{editTableProduct.name('producT_NAME',in)}}"
+                            [(ngModel)]="editTableProduct.dataInPage[in]['producT_NAME']"/>
+                    </div>
+                </td>
+                <!-- Số lượng -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [isDecimal_round3]="true"
+                            class="transparent"
+                            name="{{editTableProduct.name('quantity',in)}}"
+                            [(ngModel)]="editTableProduct.dataInPage[in]['quantity']">
+                        </money-input>
+                    </div>
+                </td>
+                
+                <!-- Ghi chú -->
+                <td>
+                    <textarea 
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTableProduct.name('notes_product',in)}}"
+                        [(ngModel)]="editTableProduct.dataInPage[in]['notes']">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+    </div>
+<!-- Begin Danh sách sản phẩm -->

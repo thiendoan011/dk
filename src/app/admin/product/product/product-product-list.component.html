@@ -1,0 +1,186 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin Sản phẩm")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+                <div class="col text-right mt-3 mt-md-0">
+                    <div class="btn-group dropdown mr-2">
+                        <button class=" btn btn-outline-success" (click)="exportExcel()">
+                            <i class="far fa-file-excel"></i>
+                            {{l("ExcelOperations")}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+
+                                <!-- Mã sản phẩm -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Mã Sản phẩm")}}</label>
+                                        <input class="form-control m-input"
+                                        name="producT_CODE"
+                                        [(ngModel)]="filterInput.producT_CODE" >
+                                    </div>
+                                </div>
+
+                                <!-- Tên sản phẩm -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Tên Sản phẩm")}}</label>
+                                        <input class="form-control m-input"
+                                            name="producT_NAME"
+                                            [(ngModel)]="filterInput.producT_NAME" >
+                                    </div>
+                                </div>
+                                <!-- Loại sản phẩm -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Loại sản phẩm")}}</label>
+                                        <all-code-select 
+                                            [cdName]="'PRODUCT_TYPE'"
+                                            [cdType]="'PRODUCT'"
+                                            name="producT_TYPE" 
+                                            [(ngModel)]="filterInput.producT_TYPE">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+
+                                <div style="display:none;" class="col-md-12">
+                                    <div class="form-group">
+                                        <button *ngIf="appToolbar.buttonSearchEnable" class="btn btn-primary btn-search"
+                                            (click)="onSearch()">{{l('Search')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <th colspan="7">{{l("")}}</th>
+                                        <th colspan="3">{{l("Quy cách sản phẩm mm")}}</th>
+                                        <th colspan="3">{{l("Quy cách sản phẩm inch")}}</th>
+                                        <th colspan="2">{{l("")}}</th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã sản phẩm -->
+                                        <th sortField="producT_CODE">
+                                            <span style="width: 100px">{{l("Mã sản phẩm")}}</span>
+                                        </th>
+                                        <!-- Tên sản phẩm-->
+                                        <th sortField="producT_NAME">
+                                            <span style="width: 120px">{{l("Tên sản phẩm")}}</span>
+                                        </th>
+                                        <!-- Loại sản phẩm -->
+                                        <th>
+                                            <span style="white-space: nowrap;">{{l("Loại sản phẩm")}}</span>
+                                        </th>
+                                        <!-- Nguyên liệu gỗ -->
+                                        <th>
+                                            <span style="width: 120px">{{l("Nguyên liệu gỗ")}}</span>
+                                        </th>
+                                        <!-- Nguyên liệu ván -->
+                                        <th>
+                                            <span style="width: 120px">{{l("Nguyên liệu ván")}}</span>
+                                        </th>
+                                        <!-- Nguyên liệu veneer -->
+                                        <th>
+                                            <span style="width: 120px">{{l("Nguyên liệu veneer")}}</span>
+                                        </th>
+                                        <!-- Dài -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Dài")}}</span>
+                                        </th>
+                                        <!-- Rộng -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Rộng")}}</span>
+                                        </th>
+                                        <!-- Cao -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Cao")}}</span>
+                                        </th>
+                                        <!-- Dài -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Dài")}}</span>
+                                        </th>
+                                        <!-- Rộng -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Rộng")}}</span>
+                                        </th>
+                                        <!-- Cao -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Cao")}}</span>
+                                        </th>
+                                        <!-- Số khối -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Số khối")}}</span>
+                                        </th>
+                                        <!-- Trạng thái duyệt -->
+                                        <th>
+                                            <span style="width: 100px">{{l("Trạng thái duyệt")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable"
+                                        (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_CODE}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_TYPE_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.materiaL_WOOD}}</td>
+                                        <td><span class="mo-header"></span>{{record.materiaL_PLANK}}</td>
+                                        <td><span class="mo-header"></span>{{record.materiaL_VENEER}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_SPECIFI_LENGTH}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_SPECIFI_WIDTH}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_SPECIFI_HEIGHT}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_SPECIFI_LENGTH_INCH}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_SPECIFI_WIDTH_INCH}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_SPECIFI_HEIGHT_INCH}}</td>
+                                        <td><span class="mo-header"></span>{{record.producT_CUBE}}</td>
+                                        <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>c
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

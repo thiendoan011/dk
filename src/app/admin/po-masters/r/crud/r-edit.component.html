@@ -1,0 +1,304 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Lệnh sản xuất")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Nhập nội dung xử lý -->
+                        <div class="col-md-12">
+                            <po-history-create-modal
+                                #history_create_modal
+                                [type]="'R'"
+                                [id]="inputModel.r_ID"
+                                [page]="'R'"
+                                [stage]="'HC'"
+                                [process]="'INF'"
+                                [process_desc]="'Người tạo thêm nội dung xử lý phiếu'"
+                                [title]="'Bấm vào đây để nhập nội dung xử lý'"
+                                (complete)="getDataPages()">
+                            </po-history-create-modal>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-2-modal
+                                #history_modal
+                                [id]="inputModel.r_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </po-history-2-modal>
+                        </div>
+                        <!-- Mã lệnh sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã lệnh sản xuất")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="r_CODE"
+                                    [(ngModel)]="inputModel.r_CODE" />
+                            </div>
+                        </div>
+                        <!-- Tên lệnh sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên lệnh sản xuất")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="r_NAME"
+                                    [(ngModel)]="inputModel.r_NAME" />
+                            </div>
+                        </div>
+                        <!-- Loại lệnh sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Loại lệnh sản xuất")}}</label>
+                                <all-code-select 
+                                    name="r_TYPE" 
+                                    [(ngModel)]="inputModel.r_TYPE"
+                                    [disabled]="disableInput"
+                                    [cdName]="'R_TYPE'"
+                                    [cdType]="'R'">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- R -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'R'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.grouP_R_CODE"
+                                (showModal)="showGroupR()"
+                                (deleteDisplayText)="deleteGroupR($event)"
+                                name="grouP_R_CODE">
+                            </input-select>
+                        </div>
+
+
+                        <!-- Ngày hiệu lực -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày hiệu lực")}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="effectivE_DT"
+                                    [(ngModel)]="inputModel.effectivE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Số hiệu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Số hiệu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="r_REF"
+                                    [(ngModel)]="inputModel.r_REF" />
+                            </div>
+                        </div>
+                        <!-- Lần ban hành -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Lần ban hành")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="r_VERSION"
+                                    [(ngModel)]="inputModel.r_VERSION" />
+                            </div>
+                        </div>
+
+                        <!-- Ngày triển khai -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày triển khai")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="implemenT_DT"
+                                    [(ngModel)]="inputModel.implemenT_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Đơn vị thực hiện -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Đơn vị thực hiện'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.brancH_NAME"
+                                (showModal)="showBranchModal()"
+                                (deleteDisplayText)="deleteBranch()"
+                                name="brancH_NAME">
+                            </input-select>
+                        </div>
+                        <!-- Khách hàng -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Khách hàng'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.customeR_NAME"
+                                (showModal)="showCusModal()"
+                                (deleteDisplayText)="onDeleteCustomer()"
+                                name="customeR_NAME">
+                            </input-select>
+                        </div>
+                        
+                        <!-- Ngày yêu cầu hoàn thành -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành")}}</label>
+                                <date-control
+                                    [disabled]="disableInput || inputModel.r_CODE"
+                                    (change)="onChangeIns()"
+                                    name="r_REQUEST_DT"
+                                    [(ngModel)]="inputModel.r_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Ngày yêu cầu hoàn thành thực tế -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành thực tế")}}</label>
+                                <date-control
+                                    [disabled]="disableInput || !inputModel.r_CODE"
+                                    (change)="onChangeUpd()"
+                                    name="requesT_DT"
+                                    [(ngModel)]="inputModel.requesT_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <!-- Số ngày yêu cầu hoàn thành -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Số ngày yêu cầu hoàn thành")}}</label>
+                                <input class="form-control" type="number"
+                                    [disabled]="disableInput || inputModel.r_CODE"
+                                    (change)="onChangeIns()"
+                                    name="numbeR_OF_DAY_REQUEST"
+                                    [(ngModel)]="inputModel.numbeR_OF_DAY_REQUEST" />
+                            </div>
+                        </div>
+                        
+                        <!-- Trạng thái hoàn thành -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{ l("Trạng thái hoàn thành") }}</label>
+                                <all-code-select
+                                    [disabled]='true'
+                                    [cdName]="'OPTION_YN_3'"
+                                    [cdType]="'CM'"
+                                    name="r_STATUS"
+                                    [(ngModel)]="inputModel.r_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu hoàn thành -->
+                        <div class="col-md-12">
+                            <r-manage-date-edittable #rManageDateEdittable
+                                [inputModel]="inputModel"
+                                [editPageState]="editPageState"
+                                (edit_history)="onRefreshPage()"
+                                [disableInput]='disableInput'>
+                            </r-manage-date-edittable>
+                        </div>
+
+                        <!-- Xuất lệnh sản xuất -->
+                        <div class="form-group" style="padding-left: 15px">
+                            <label (click)="onExportReport()" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                {{this.l('Xuất lệnh sản xuất')}}
+                            </label>
+                        </div>
+                    </div>
+                    <!-- End Master -->
+                    <div class="row col-md-12 modal-body">
+                        <!-- File đính kèm -->
+                        <div class="col-md-12">
+                            <r-attach-file #rAttachFile
+                                [disableInput]="false"
+                                [hiddenEditButton]="!disableInput"
+                                (o_updateViewParent)="onRefreshPage()"
+                                [inputModel]="inputModel"
+                                [folder_upload]="'PO_MASTER/R'"
+                                [title]="'File đính kèm kế hoạch đặt hàng theo LSX'">
+                            </r-attach-file>
+                        </div>
+                        <!-- Danh sách PO -->
+                        <div class="col-md-12">
+                            <r-po-edittable #rPOEdittable
+                                [inputModel]="inputModel"
+                                [disableInput]='disableInput'>
+                            </r-po-edittable>
+                        </div>
+                        <!-- File đính kèm đơn hàng 
+                        <div class="col-md-12">
+                            <r-purchase-attach-file #rPurchaseAttachFile
+                                [disableInput]='true'
+                                [inputModel]="inputModel"
+                                [folder_upload]="'PO_MASTER/R'"
+                                [title]="'File đính kèm kế hoạch đặt hàng và đơn hàng sếp ký'">
+                            </r-purchase-attach-file>
+                        </div>-->
+                        <!-- Ngày yêu cầu hoàn thành -->
+                        <div class="col-md-12">
+                            <r-request-dt-edittable #rRequestDTEdittable
+                                [inputModel]="inputModel"
+                                [disableInput]='disableInput'>
+                            </r-request-dt-edittable>
+                        </div>
+                        <!-- Danh sách hệ hàng -->
+                        <div class="col-md-12">
+                            <r-group-product-edittable #rGroupProductEdittable
+                                [inputModel]="inputModel"
+                                [disableInput]='disableInput'>
+                            </r-group-product-edittable>
+                        </div>
+                        <!-- Danh sách đơn hàng -->
+                        <div class="col-md-12">
+                            <r-order-edittable #rOrderEdittable
+                                [title]="'Danh sách đơn hàng'"
+                                [inputModel]="inputModel"
+                                [disableInput]='disableInput'>
+                            </r-order-edittable>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>
+
+<branch-modal (onSelect)="onSelectBranch($event)" [multiple]="false"
+    #branchModal></branch-modal>
+<po-customer-modal (onSelect)='onSelectCustomer($event)' #poCusModal
+[multiple]="false"></po-customer-modal>    
+<group-r-modal (onSelect)='onSelectGroupR($event)' [multiple]='false' #groupRModal></group-r-modal>

@@ -1,0 +1,74 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Thay đổi ngày yêu cầu hoàn thành")}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Ngày yêu cầu hoàn thành -->
+                <th sortField="requesT_DT">
+                    <span style="white-space: nowrap;">{{l("Ngày yêu cầu hoàn thành")}}</span>
+                </th> 
+                <!-- Ngày hiệu lực -->
+                <th sortField="creatE_DT">
+                    <span style="white-space: nowrap;">{{l("Ngày hiệu lực")}}</span>
+                </th>
+                <!-- Người thay đổi -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Người thay đổi")}}</span>
+                </th>
+                <!-- Trạng thái -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Ngày yêu cầu hoàn thành -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('requesT_DT',in)}}" 
+                        [(ngModel)]="item.requesT_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày hiệu lực -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('creatE_DT',in)}}" 
+                        [(ngModel)]="item.creatE_DT">
+                    </date-control>
+                </td>
+                <!-- Người thay đổi -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('makeR_ID',in)}}" 
+                        [(ngModel)]="item.makeR_ID"/>
+                </td>
+                <td>
+                    <all-code-select
+                        [disabled]='true'
+                        [cdName]="'AUTH_STATUS_2'"
+                        [cdType]="'CM'"
+                        name="{{editTable.name('iS_ACTIVE',in)}}" 
+                        [(ngModel)]="item.iS_ACTIVE">
+                    </all-code-select>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

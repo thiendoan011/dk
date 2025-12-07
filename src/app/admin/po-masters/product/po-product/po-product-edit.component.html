@@ -1,0 +1,113 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Sản phẩm")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã sản phẩm -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã Sản phẩm")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="producT_CODE"
+                                    [(ngModel)]="inputModel.producT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên Sản phẩm -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên Sản phẩm")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="producT_NAME"
+                                    [(ngModel)]="inputModel.producT_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                        
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="notes"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Import excel -->
+                        <div *ngIf="editPageState != EditPageState.viewDetail || inputModel.autH_STATUS == 'A'" class="col-md-3">
+                            <div class="form-group">
+                                <label type="button"
+                                    class='btn btn-primary' for="file-upload"
+                                    style="margin-top: 6px;color:white!important">
+                                    {{this.l('Import danh sách sản phẩm')}}
+                                    <import-excel [id]="'file-upload'"
+                                        [hidden]="true"
+                                        [startPosition]="'A2'"
+                                        [disable]="disableInput"
+                                        (toArrayObject)='onImportExcel($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Tải mẫu import excel -->
+                        <div class="col-md-3" *ngIf="editPageState != EditPageState.viewDetail">
+                            <div class="form-group">
+                                <label (click)="exportExcelTemplate()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('DownloadTemplate')}}
+                                </label>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Begin Table-->
+                    <!-- End Talbe-->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

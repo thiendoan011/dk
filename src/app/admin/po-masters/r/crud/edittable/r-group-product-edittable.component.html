@@ -1,0 +1,126 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách hệ hàng")}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã PO -->
+                <th sortField="requesT_DT">
+                    <span style="white-space: nowrap;">{{l("Mã PO")}}</span>
+                </th> 
+                <!-- Mã hệ hàng -->
+                <th sortField="creatE_DT">
+                    <span style="white-space: nowrap;">{{l("Mã hệ hàng")}}</span>
+                </th>
+                <!-- %HT Phôi -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("%HT Phôi")}}</span>
+                </th>
+                <!-- %HT Định hình -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("%HT Định hình")}}</span>
+                </th>
+                <!-- %HT Lắp ráp -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("%HT Lắp ráp")}}</span>
+                </th>
+                <!-- %HT Sơn 1 -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("%HT Sơn 1")}}</span>
+                </th>
+                <!-- %HT Sơn 2 -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("%HT Sơn 2")}}</span>
+                </th>
+                <!-- %HT Sơn 3 -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("%HT Sơn 3")}}</span>
+                </th>
+                <!-- %HT Đóng gói -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("%HT Đóng gói")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã PO -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailPO(item)"
+                        name="{{editTable.name('pO_CODE',in)}}"
+                        [(ngModel)]="item.pO_CODE">
+                </td>
+                <!-- Mã hệ hàng -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('grouP_PRODUCT_CODE',in)}}"
+                        [(ngModel)]="item.grouP_PRODUCT_CODE">
+                </td>
+                <!-- % hoàn thành Phôi -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('percenT_COMPLETED_CD1',in)}}"
+                        [(ngModel)]="item.percenT_COMPLETED_CD1">
+                </td>
+                <!-- % hoàn thành định hình -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('percenT_COMPLETED_CD2',in)}}"s
+                        [(ngModel)]="item.percenT_COMPLETED_CD2">
+                </td>
+                <!-- % hoàn thành lắp ráp -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('percenT_COMPLETED_CD25',in)}}"s
+                        [(ngModel)]="item.percenT_COMPLETED_CD25">
+                </td>
+                <!-- % hoàn thành Sơn 1 -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('percenT_COMPLETED_CD3',in)}}"
+                        [(ngModel)]="item.percenT_COMPLETED_CD3">
+                </td>
+                <!-- % hoàn thành Sơn 2 -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('percenT_COMPLETED_CD4',in)}}"
+                        [(ngModel)]="item.percenT_COMPLETED_CD4">
+                </td>
+                <!-- % hoàn thành Sơn 3 -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('percenT_COMPLETED_CD5',in)}}"
+                        [(ngModel)]="item.percenT_COMPLETED_CD5">
+                </td>
+                <!-- % hoàn thành Đóng gói -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('percenT_COMPLETED_CD6',in)}}"
+                        [(ngModel)]="item.percenT_COMPLETED_CD6">
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

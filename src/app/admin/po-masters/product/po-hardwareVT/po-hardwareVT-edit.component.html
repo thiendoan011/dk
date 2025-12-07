@@ -1,0 +1,209 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Vật tư Harware")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã vật tư hardware -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã vật tư hardware")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="hardwarevT_CODE"
+                                    [(ngModel)]="inputModel.hardwarevT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên vật tư hardware -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên vật tư hardware")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="hardwarevT_NAME"
+                                    [(ngModel)]="inputModel.hardwarevT_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Đơn vị tính -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Đơn vị tính")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="unit"
+                                    [(ngModel)]="inputModel.unit" />
+                            </div>
+                        </div>
+
+                        <!-- Màu sắc -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Màu sắc")}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="color"
+                                    [(ngModel)]="inputModel.color" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Quy cách vật tư hardware(MM) -->
+                        <div class="col-md-4">
+                            <label style="font-weight: bold;">{{l("Quy cách vật tư hardware(MM)")}}</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Dài")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            name="hardwarevT_LENGTH"
+                                            [(ngModel)]="inputModel.hardwarevT_LENGTH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Rộng")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            name="hardwarevT_WIDTH"
+                                            [(ngModel)]="inputModel.hardwarevT_WIDTH">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Cao")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            name="hardwarevT_HEIGHT"
+                                            [(ngModel)]="inputModel.hardwarevT_HEIGHT">
+                                        </money-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Hình ảnh -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Hình ảnh")}}</label>
+                                <img name="urls" height="150" src="{{inputModel.urls ? remoteServiceBaseUrl + inputModel.urls : remoteServiceBaseUrl + '/Common/Images/PO/HardwareVT/add-image.png'}}" />
+                                <span *ngIf="!disableInput" class="input-group-btn">
+                                    <button type="button" 
+                                        class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='disableInput'
+                                        (click)="showPOImageModal()">
+                                        <i class="pi pi-plus"></i>
+                                    </button>
+                                    <button *ngIf="inputModel.urls && !disableInput"  
+                                        type="button"
+                                        class="btn btn-danger"
+                                        style="margin-right:0px;"
+                                        [disabled]='disableInput'
+                                        (click)="deletePOImageModal($event)">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12"></div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="notes"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Đính kèm file -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{l("FileAttachment")}}</label>
+                                <file-picker [disabled]="disableInput"
+                                    [folderUpload]="'PoHardware'"
+                                    name="filE_ATTACHMENT"
+                                    [inpCss]="'form-control'"
+                                    [accept]="'.xlsx,.xls,.doc,.docx,.pdf,.jpeg,.png,.jpg,.txt'"
+                                    [(ngModel)]="inputModel['filE_ATTACHMENT']"
+                                    name="filE_ATTACHMENT">
+                                </file-picker>
+                            </div>
+                        </div>
+                        <div class="col-md-6"></div>
+
+                        <!-- Import excel -->
+                        <div *ngIf="editPageState != EditPageState.viewDetail || inputModel.autH_STATUS == 'A'" class="col-md-3">
+                            <div class="form-group">
+                                <label type="button"
+                                    class='btn btn-primary' for="file-upload"
+                                    style="margin-top: 6px;color:white!important">
+                                    {{this.l('Import danh sách vật tư hardware')}}
+                                    <import-excel [id]="'file-upload'"
+                                        [hidden]="true"
+                                        [startPosition]="'A2'"
+                                        [disable]="disableInput"
+                                        (toArrayObject)='onImportExcel($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Tải mẫu import excel -->
+                        <div class="col-md-3" *ngIf="editPageState != EditPageState.viewDetail">
+                            <div class="form-group">
+                                <label (click)="exportExcelTemplate()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('DownloadTemplate')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<po-image-modal (onSelect)='onSelectPOImage($event)' #poImageModal [multiple]="false"></po-image-modal>

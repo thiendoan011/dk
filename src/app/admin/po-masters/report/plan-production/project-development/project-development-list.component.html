@@ -1,0 +1,187 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Báo cáo kế hoạch sản xuất")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Mã lệnh sản xuất -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Mã lệnh sản xuất")}}</label>
+                                        <input  type="text"
+                                            class="form-control m-input" 
+                                            name="r_CODE"
+                                            [(ngModel)]="filterInput.r_CODE">
+                                    </div>
+                                </div>
+
+                                <!-- Tên lệnh sản xuất -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Tên lệnh sản xuất")}}</label>
+                                        <input type="text"
+                                            class="form-control m-input"
+                                            name="r_NAME"
+                                            [(ngModel)]="filterInput.r_NAME" >
+                                    </div>
+                                </div>
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày yêu cầu hoàn thành")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="r_REQUEST_DT_FRMDATE"
+                                                        [(ngModel)]="filterInput.r_REQUEST_DT_FRMDATE">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="r_REQUEST_DT_TODATE"
+                                                        [(ngModel)]="filterInput.r_REQUEST_DT_TODATE">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Import Excel -->
+                    <div class="m-form m-form--label-align-right">
+                        <div class="row m--margin-bottom-30">
+                            <!-- In Template chỉnh sửa -->
+                            <div class="form-group">
+                                <label (click)="onExportTemplate('PDE')" class='btn btn-primary' style=" color:white!important">
+                                    {{this.l('In Template chỉnh sửa')}}
+                                </label>
+                            </div>
+                            <!-- Import chỉnh sửa -->
+                            <div class="form-group">
+                                <label class='btn btn-primary' type="button"
+                                    for="file-upload-update"
+                                    style="color:white!important">
+                                    {{this.l('Import chỉnh sửa')}}
+                                    <import-excel [id]="'file-upload-update'"
+                                        [hidden]="true"
+                                        [startPosition]="'A3'"
+                                        (toArrayObject)='onUpdateImport($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Import Excel -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã lệnh sản xuất -->
+                                        <th sortField="r_CODE">
+                                            <span>{{l("Mã lệnh sản xuất")}}</span>
+                                        </th>
+                                        <!-- Tên lệnh sản xuất-->
+                                        <th sortField="r_NAME">
+                                            <span>{{l("Tên lệnh sản xuất")}}</span>
+                                        </th>
+                                        <!-- Ngày yêu cầu hoàn thành -->
+                                        <th>
+                                            <span style="width: 170px;">{{l("Ngày yêu cầu hoàn thành")}}</span>
+                                        </th>
+                                        <!-- Ngày thực tế hoàn thành -->
+                                        <th>
+                                            <span style="width: 170px;">{{l("Ngày thực tế hoàn thành")}}</span>
+                                        </th>
+                                        <!-- Trạng thái hoàn thành -->
+                                        <th>
+                                            <span style="width: 180px;">{{l("Trạng thái hoàn thành")}}</span>
+                                        </th>
+                                        <!-- Trạng thái duyệt -->
+                                        <th sortField="AUTH_STATUS_NAME">
+                                            <span>{{l("Trạng thái duyệt")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.r_CODE}}</td>
+                                        <td><span class="mo-header"></span>{{record.r_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.r_REQUEST_DT_ALL}}</td>
+                                        <td><span class="mo-header"></span>{{record.r_EXACT_DT_ALL}}</td>
+                                        <td><span class="mo-header"></span>{{record.r_STATUS_ALL}}</td>
+                                        <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

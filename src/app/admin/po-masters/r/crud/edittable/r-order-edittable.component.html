@@ -1,0 +1,94 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(_title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Khách hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Khách hàng")}}</span>
+                </th>
+                <!-- Mã đơn hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã đơn hàng")}}</span>
+                </th> 
+                <!-- Tên đơn hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên đơn hàng")}}</span>
+                </th> 
+                <!-- Trạng thái -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái")}}</span>
+                </th> 
+                <!-- Trạng thái duyệt -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái duyệt")}}</span>
+                </th> 
+                <!-- Ghi chú đơn hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ghi chú đơn hàng")}}</span>
+                </th> 
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Khách hàng -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('customeR_NAME',in)}}"
+                        [(ngModel)]="item.customeR_NAME">
+                </td>
+                <!-- Mã đơn hàng -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailPurchase(item)"
+                        name="{{editTable.name('purchasE_CODE',in)}}"
+                        [(ngModel)]="item.purchasE_CODE">
+                </td>
+                <!-- Tên đơn hàng -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('purchasE_NAME',in)}}"
+                        [(ngModel)]="item.purchasE_NAME">
+                </td>
+                <!-- Trạng thái -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('purchasE_PROCESS_NAME',in)}}"
+                        [(ngModel)]="item.purchasE_PROCESS_NAME">
+                </td>
+                <!-- Trạng thái duyệt -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('autH_STATUS_NAME',in)}}"
+                        [(ngModel)]="item.autH_STATUS_NAME">
+                </td>
+                <!-- Ghi chú đơn hàng -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        name="{{editTable.name('notes',in)}}"
+                        [(ngModel)]="item.notes">
+                </td>
+                
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

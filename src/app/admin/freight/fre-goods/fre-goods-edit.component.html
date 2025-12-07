@@ -1,0 +1,194 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Hàng hóa")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <vhe-history-modal
+                                #history_modal
+                                [id]="inputModel.frE_GOODS_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </vhe-history-modal>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Mã hàng hóa -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Mã hàng hóa")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="frE_GOODS_CODE"
+                                    [(ngModel)]="inputModel.frE_GOODS_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên hàng hóa -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Tên hàng hóa")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="frE_GOODS_NAME"
+                                    [(ngModel)]="inputModel.frE_GOODS_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Quy cách -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Quy cách")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="frE_GOODS_SPECIFICATION"
+                                    [(ngModel)]="inputModel.frE_GOODS_SPECIFICATION" />
+                            </div>
+                        </div>
+
+                        <!-- Đơn vị tính -->
+                        <div class="col-md-3">
+                            <div class="form-group required">
+                                <label>{{l("Đơn vị tính")}}</label>
+                                <select2-custom 
+                                    [disabled]="disableInput"
+                                    [(list)]="units"
+                                    name="uniT_ID"
+                                    [(ngModel)]="inputModel.frE_GOODS_UNIT"
+                                    [valueMember]="'uniT_ID'"
+                                    [displayMember]="'uniT_CODE|uniT_NAME'"
+                                    (onChangeSelect2)='onSelectMWGroup($event)'>
+                                </select2-custom>
+                            </div>
+                        </div>
+
+                        <!-- Khối lượng(Kg) -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Khối lượng(Kg)")}}</label>
+                                <money-input-5
+                                    [disabled]="disableInput"
+                                    [isDecimal_round5]="true" 
+                                    name="frE_GOODS_MASS"
+                                    [(ngModel)]="inputModel.frE_GOODS_MASS">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <!-- Số khối -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số khối")}}</label>
+                                <money-input-5
+                                    [disabled]="disableInput"
+                                    [isDecimal_round5]="true" 
+                                    name="frE_GOODS_VOLUME"
+                                    [(ngModel)]="inputModel.frE_GOODS_VOLUME">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <!-- Loại hàng hóa -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Loại hàng hóa")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="frE_GOODS_TYPE"
+                                    [(ngModel)]="inputModel.frE_GOODS_TYPE" />
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]="disableInput"
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <!-- In Template thêm mới -->
+                            <div class="form-group">
+                                <label (click)="onExportTemplate('INSERT')" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                    {{this.l('In template hàng hóa')}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <!-- Import thêm mới -->
+                            <div class="form-group">
+                                <label class='btn btn-primary' type="button"
+                                    for="file-upload-insert"
+                                    style="margin-top: 6px;color:white!important">
+                                    {{this.l('Import hàng hóa')}}
+                                    <import-excel [id]="'file-upload-insert'"
+                                        [hidden]="true"
+                                        [startPosition]="'A2'"
+                                        (toArrayObject)='onImport($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

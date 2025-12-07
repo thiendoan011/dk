@@ -1,0 +1,144 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã PO -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã PO")}}</span>
+                </th>
+                <!-- Ngày xuất PO theo khách -->
+                <th>
+                    <span style="width: 150px;">{{l("Ngày xuất PO theo khách")}}</span>
+                </th>
+                <!-- Ngày thông báo -->
+                <th>
+                    <span style="width: 150px;">{{l("Ngày thông báo")}}</span>
+                </th>
+                <!-- Ngày dự kiến hoàn thành -->
+                <th>
+                    <span style="width: 150px;">{{l("Ngày dự kiến hoàn thành")}}</span>
+                </th>
+                <!-- Số lần delay -->
+                <th>
+                    <span style="width: 150px;">{{l("Số lần delay")}}</span>
+                </th>
+                <!-- Lý do -->
+                <th>
+                    <span style="width: 150px;">{{l("Lý do")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="width: 150px;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã PO -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.pO_CODE"/>
+                </td>
+                <!-- Ngày xuất PO theo khách -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('pO_CUSTOMER_DT', in)}}"
+                        [(ngModel)]="item.pO_CUSTOMER_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày thông báo -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('creatE_DT', in)}}"
+                        [(ngModel)]="item.creatE_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày dự kiến hoàn thành -->
+                <td>
+                    <date-control
+                        [disabled]="disableInput"
+                        (focusout)="onChangePODelayDT(item)"
+                        name="{{editTable.name('pO_EXPECTED_DT', in)}}"
+                        [(ngModel)]="item.pO_EXPECTED_DT">
+                    </date-control>
+                </td>
+                <!-- Số lần delay -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [disabled]="true"
+                            class="transparent"
+                            name="{{editTable.name('pO_DELAY_NBE',in)}}"
+                            [(ngModel)]="item.pO_DELAY_NBE">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- Lý do -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="disableInput"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('reason', in)}}"
+                        [(ngModel)]="item.reason">
+                    </textarea>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="disableInput"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes', in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+
+<po-po-modal (onSelect)='onSelectPopup($event)' #popupModal [multiple]="true"></po-po-modal>

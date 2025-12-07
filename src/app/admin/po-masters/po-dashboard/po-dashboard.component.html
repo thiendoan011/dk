@@ -1,0 +1,730 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+
+                        <!-- Begin Title -->
+                        <span>{{l('Bảng thông tin')}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+                <div class="col text-right mt-3 mt-md-0">
+                    <div class="btn-group dropdown mr-2">
+                        <button class=" btn btn-outline-success" (click)="exportExcel()">
+                            <i class="far fa-file-excel"></i>
+                            {{l("ExcelOperations")}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Lịch sử xử lý -->
+                                <div class="col-md-12">
+                                    <po-history-modal
+                                        [id]="filterInput.pO_ID"
+                                        #po_history_modal
+                                        [isShowEnterRejectContent]="false"
+                                        [trN_TYPE]="'PO_MASTER'" 
+                                        [buttonRejectKT]="true"
+                                        [stage] = "'HC'">
+                                    </po-history-modal>
+                                </div>
+
+                                <!-- Số PO -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Số PO')}}</label>
+                                        <input [(ngModel)]="filterInput.pO_CODE" name="pO_CODE"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+                                <!-- Tên PO -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Tên PO')}}</label>
+                                        <input [(ngModel)]="filterInput.pO_NAME" name="pO_NAME"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+                                
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+
+                                <!-- Ngày xuất -->
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold;
+                                            text-decoration: underline'>{{l("Ngày xuất")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        [inpCss]="'form-control'"
+                                                        name="frmdate"
+                                                        [(ngModel)]="filterInput.frmdate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        [inpCss]="'form-control'"
+                                                        name="todate"
+                                                        [(ngModel)]="filterInput.todate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class='col-md-12'></div>
+                                <!-- Tuần xuất -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('Tuần xuất')}}</label>
+                                        <input class="form-control m-input" type="number"
+                                            name="exporT_WEEK"
+                                            (focusout)="onchangeFilterPO()"
+                                            [(ngModel)]="filterInput.exporT_WEEK" >
+                                    </div>
+                                </div>
+                                <!-- Năm xuất -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('Năm xuất')}}</label>
+                                        <input [(ngModel)]="filterInput.exporT_YEAR"
+                                            name="exporT_YEAR"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="number">
+                                    </div>
+                                </div>
+                                <!-- Hệ hàng 
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Hệ hàng')}}</label>
+                                        <input [(ngModel)]="filterInput.grouP_PRODUCT_NAME" name="grouP_PRODUCT_NAME"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>-->
+                                <div class='col-md-12'></div>
+                                <!-- Tìm kiếm -->
+                                <div class='col-md-3'>
+                                    <div class='form-group'>
+                                        <label class='btn btn-primary' 
+                                                (click)="onSearch()"
+                                                style="margin-top: 6px; color:white!important;">
+                                            {{this.l('Tìm kiếm')}}
+                                        </label>
+                                    </div>        
+                                </div>
+                                <div class='col-md-12'></div>        
+                            </div>
+                        </div>
+                    </form>
+                    <!-- Begin Danh sách đơn hàng chưa đặt hàng -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l('Danh sách đơn hàng chưa đặt hàng')}}</h5>
+                    </div>
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table (onChangePage)="updateView()" #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Khách hàng 
+                                        <th sortField="customeR_NAME" class="center">
+                                            <span style="width: 150px">{{l('Khách hàng')}}</span>
+                                        </th>-->
+                                        <!-- Tên PO 
+                                        <th sortField="pO_NAME" class="center">
+                                            <span style="width: 150px">{{l('Tên PO')}}</span>
+                                        </th>-->
+                                        <!-- Mã đơn hàng -->
+                                        <th sortField="purchasE_CODE" class="center">
+                                            <span style="width: 150px">{{l('Mã đơn hàng')}}</span>
+                                        </th>
+                                        <!-- Tên đơn hàng -->
+                                        <th sortField="purchasE_NAME" class="center" >
+                                            <span style="width: 150px">{{l('Tên đơn hàng')}}</span>
+                                        </th>
+                                        <!-- Trạng thái đơn hàng -->
+                                        <th sortField="purchasE_PROCESS_NAME" class="center" >
+                                            <span style="width: 150px">{{l('Trạng thái đơn hàng')}}</span>
+                                        </th>
+                                        <!-- Trạng thái giao hàng -->
+                                        <th sortField="purchasE_IMPORT_PROCESS_NAME" class="center" >
+                                            <span style="width: 150px">{{l('Trạng thái giao hàng')}}</span>
+                                        </th>
+                                        <!-- Ngày xuất 
+                                        <th sortField="exporT_DATE" class="center" >
+                                            <span style="width: 100px">{{l('Ngày xuất')}}</span>
+                                        </th>-->
+                                        <!-- Tuần xuất 
+                                        <th sortField="exporT_WEEK" class="center" >
+                                            <span style="width: 100px">{{l('Tuần xuất')}}</span>
+                                        </th>-->
+                                        <!-- Booking 
+                                        <th sortField="bookingdt" class="center" >
+                                            <span style="width: 150px">{{l('Booking')}}</span>
+                                        </th>-->
+                                        <!-- R 
+                                        <th sortField="r" class="center" >
+                                            <span style="width: 150px">{{l('R')}}</span>
+                                        </th>-->
+                                        <!-- Ghi chú PO 
+                                        <th sortField="notes" class="center">
+                                            <span style="width: 150px">{{l('Ghi chú PO')}}</span>
+                                        </th>-->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable"
+                                        (dblclick)="onDblclick(record)" (click)="selectRow($event,record);getPoPurchase(record.purchasE_ID, record.pO_ID, record.purchasE_NAME, record.pO_NAME);updateView()">
+                                        <!-- STT -->
+                                        <td class="center"><span
+                                            class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                        </td>
+                                        <!-- Khách hàng 
+                                        <td><span class="mo-header"></span>{{record.customeR_NAME}}</td>-->
+                                        <!-- Tên PO 
+                                        <td><span class="mo-header"></span>{{record.pO_NAME}}</td>-->
+                                        <!-- Mã Đơn hàng -->
+                                        <td><span class="mo-header"></span>{{record.purchasE_CODE}}</td>
+                                        <!-- Tên đơn hàng -->
+                                        <td><span class="mo-header"></span>{{record.purchasE_NAME}}</td>
+                                        <!-- Trạng thái đơn hàng -->
+                                        <td><span class="mo-header"></span>{{record.purchasE_PROCESS_NAME}}</td>
+                                        <!-- Trạng thái giao hàng -->
+                                        <td><span class="mo-header"></span>{{record.purchasE_IMPORT_PROCESS_NAME}}</td>
+                                        <!-- Ngày xuất 
+                                        <td><span class="mo-header"></span>{{record.exporT_DATE | dateFormatPipe}}</td>-->
+                                        <!-- Tuần xuất 
+                                        <td><span class="mo-header"></span>{{record.exporT_WEEK}}</td>-->
+                                        <!-- Booking 
+                                        <td><span class="mo-header"></span>{{record.bookingdt}}</td>-->
+                                        <!-- R 
+                                        <td><span class="mo-header"></span>{{record.r_CODE}}</td>-->
+                                        <!-- Ghi chú PO 
+                                        <td><span class="mo-header"></span>{{record.noteS_PO}}</td>-->
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Danh sách đơn hàng chưa đặt hàng -->
+
+                    <!-- Begin Danh sách vật tư -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l('Danh sách vật tư thuộc ') + purchase_selected}}</h5>
+                    </div>
+
+                    <div class="primeng-datatable-container">
+                        <editable-table
+                            [requiredFields]=""
+                            #editTablePurchaseOrder class="custom-table ui-table">
+                            <thead>
+                                <tr>
+                                    <!-- STT -->
+                                    <th class="center">
+                                        <span style="width: 40px">{{l("No")}}</span>
+                                    </th>
+                                    <!-- Tên PO -->
+                                    <th sortField="pO_NAME" class="center">
+                                        <span style="width: 150px">{{l('Tên PO')}}</span>
+                                    </th>
+                                    <!-- Tên đơn hàng -->
+                                    <th sortField="purchasE_NAME" class="center">
+                                        <span style="width: 150px">{{l('Tên đơn hàng')}}</span>
+                                    </th>
+                                    <!-- Tên vật tư -->
+                                    <th sortField="hardwarE_NAME" class="center" >
+                                        <span style="width: 150px">{{l("Tên vật tư")}}</span>
+                                    </th>
+                                    <!-- Đơn vị tính -->
+                                    <th sortField="uniT_NAME" class="center" >
+                                        <span style="width: 100px">{{l("Đơn vị tính")}}</span>
+                                    </th>
+                                    <!-- Số lượng đặt -->
+                                    <th sortField="quantitY_ORDER" class="center">
+                                        <span style="width: 100px">{{l("Số lượng đặt")}}</span>
+                                    </th>
+                                    <!-- Số lượng nhập -->
+                                    <th sortField="quantitY_PURCHASED" class="center">
+                                        <span style="width: 100px">{{l("Số lượng nhập")}}</span>
+                                    </th>
+                                    <!-- Số lượng còn lại -->
+                                    <th sortField="quantitY_REMAIN" class="center">
+                                        <span style="width: 100px">{{l("Số lượng còn lại")}}</span>
+                                    </th>
+                                    <!-- Ghi chú đơn hàng -->
+                                    <th sortField="notes" class="center">
+                                        <span style="width: 150px">{{l("Ghi chú đơn hàng")}}</span>
+                                    </th>
+                                    <!-- Ghi chú nhập kho -->
+                                    <th sortField="notes" class="center">
+                                        <span style="width: 150px">{{l("Ghi chú nhập kho")}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editTablePurchaseOrder.dataInPage; let in= index"
+                                    [hidden]="item['page'] != editTablePurchaseOrder.currentPage"
+                                    class="selectable {{item['editableSelected']? 'selected' :''}}"
+                                    (click)='editTablePurchaseOrder.selectRow($event,item);updateView()'>
+
+                                    <!-- STT -->
+                                    <td><span class="mo-header"></span>{{item['no']}}</td>
+                                    <!-- Mã PO -->
+                                    <td><span class="mo-header"></span>{{item.pO_NAME}}</td>
+                                    <!-- Tên đơn hàng -->
+                                    <td><span class="mo-header"></span>{{item.purchasE_NAME}}</td>
+                                    <!-- Tên vật tư -->
+                                    <td><span class="mo-header"></span>{{item.hardwarE_NAME}}</td>
+                                    <!-- Đơn vị tính -->
+                                    <td><span class="mo-header"></span>{{item.uniT_NAME}}</td>
+                                    <!-- Số lượng đặt -->
+                                    <td><span class="mo-header"></span>{{item.quantitY_ORDER | moneyFormatPipe}}</td>
+                                    <!-- Số lượng nhập -->
+                                    <td><span class="mo-header"></span>{{item.quantitY_PURCHASED | moneyFormatPipe}}</td>
+                                    <!-- Số lượng còn lại -->
+                                    <td><span class="mo-header"></span>{{item.quantitY_REMAIN | moneyFormatPipe}}</td>
+                                    <!-- Ghi chú đơn hàng -->
+                                    <td><span class="mo-header"></span>{{item.notes}}</td>
+                                    <!-- Ghi chú nhập kho -->
+                                    <td><span class="mo-header"></span>{{item.noteS_IMPORT_WAREHOUSE}}</td>
+                                </tr>
+                            </tbody>
+                        </editable-table>
+                    </div>
+                    <!-- End Danh sách vật tư -->
+
+                    <!-- Begin Danh sách công đoạn -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l('Danh sách công đoạn thuộc ') + po_selected}}</h5>
+                    </div>
+
+                    <div class="primeng-datatable-container">
+                        <editable-table
+                            [requiredFields]=""
+                            #editTableProductedPart class="custom-table ui-table">
+                            <thead>
+                                <tr>
+                                    <th class="center" style="width: 10%;">
+                                        <span >{{l("No")}}</span>
+                                    </th>
+                                    <!-- Mã công đoạn -->
+                                    <th  sortField="producteD_PART_CODE" class="center" style="width: 10%;">
+                                        <span>{{l('Mã công đoạn')}}</span>
+                                    </th>
+                                    <!-- Tên công đoạn -->
+                                    <th  sortField="producteD_PART_NAME" class="center" style="width: 20%;">
+                                        <span>{{l('Tên công đoạn')}}</span>
+                                    </th>
+                                    <!-- Trạng thái hoàn thành -->
+                                    <th sortField="processing" class="center" style="width: 10%;" >
+                                        <span>{{l('Trạng thái hoàn thành')}}</span>
+                                    </th>
+                                    <!-- Ngày dự kiến hoàn thành -->
+                                    <th sortField="expecteD_DT" class="center" style="width: 25%;">
+                                        <span>{{l('Ngày dự kiến hoàn thành')}}</span>
+                                    </th>
+                                    <!-- Ghi chú -->
+                                    <th  sortField="notes" class="center" style="width: 25%;" >
+                                        <span>{{l('Ghi chú')}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editTableProductedPart.dataInPage; let in= index"
+                                    [hidden]="item['page'] != editTableProductedPart.currentPage"
+                                    class="selectable {{item['editableSelected']? 'selected' :''}}"
+                                    (click)='editTableProductedPart.selectRow($event,item); getPoProductedPartDetail(item.pO_ID, item.producteD_PART_CODE, item.producteD_PART_NAME);updateView()'>
+
+                                    <!-- STT -->
+                                    <td><span class="mo-header"></span>{{item['no']}}</td>
+                                    <!-- Mã công đoạn -->
+                                    <td><span class="mo-header"></span>{{item.producteD_PART_CODE}}</td>
+                                    <!-- Tên công đoạn -->
+                                    <td><span class="mo-header"></span>{{item.producteD_PART_NAME}}</td>
+                                    <!-- Trạng thái hoàn thành -->
+                                    <td><span class="mo-header"></span>{{item.percenT_COMPLETED}}</td>
+                                    <!-- Ngày dự kiến hoàn thành -->
+                                    <td><span class="mo-header"></span>{{item.expecteD_DT | dateFormatPipe}}</td>
+                                    <!-- Ghi chú -->
+                                    <td>
+                                        <textarea
+                                            class="form-control transparent" type="text"
+                                            [disabled]="true"
+                                            name="{{editTableProductedPart.name('notes',in)}}"
+                                            [(ngModel)]="item.notes">
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </editable-table>
+                    </div>
+                    <!-- End Danh sách công đoạn -->
+
+<!-- Begin Danh sách tiến độ -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l('Chi tiết tiến độ ') + producted_part_name}}</h5>
+                    </div>
+
+                    <div class="primeng-datatable-container">
+                        <editable-table [requiredFields]=""  #editTableProductedPartDetail class="custom-table ui-table">
+                            <thead>
+                                <tr>
+                                    <!-- STT -->
+                                    <th style="width: 10%"><span >{{l("STT")}}</span></th>
+                                    <!-- Ngày cập nhật -->
+                                    <th sortField="UPDATE_DT" class="center"style="width: 30%" >
+                                        <span style="width: 250px">{{l('Ngày cập nhật')}}</span>
+                                    </th>
+                                    <!-- Phần trăm hoàn thành -->
+                                    <th sortField="percenT_COMPLETED" class="center" style="width: 30%">
+                                        <span style="width: 350px">{{l('Phần trăm hoàn thành')}}</span>
+                                    </th>
+                                    <!-- Ghi chú -->
+                                    <th sortField="notes" class="center" style="width: 20%">
+                                        <span style="width: 150px">{{l('Ghi chú')}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editTableProductedPartDetail.dataInPage; let in= index"
+                                    [hidden]="item['page'] != editTableProductedPartDetail.currentPage"
+                                    class="selectable {{item['editableSelected']? 'selected' :''}}"
+                                    (click)='editTableProductedPartDetail.selectRow($event,item); updateView()'>
+
+                                    <!-- STT -->
+                                    <td class="center"><span class="mo-header"></span>
+                                        <input class="label"
+                                            [disabled]="true"
+                                            name="{{editTableProductedPartDetail.name('no',in)}}"
+                                            [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['no']">
+                                    </td>
+                                    <!-- Ngày cập nhật -->
+                                    <td>
+                                        <date-control
+                                            #updatE_DT="ngModel"
+                                            [disabled]='true'
+                                            [inpCss]="'form-control'"
+                                            [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['updatE_DT']"
+                                            name="{{editTableProductedPartDetail.name('updatE_DT',in)}}">
+                                        </date-control>
+                                    </td>
+                                    <!-- Phần trăm hoàn thành -->
+                                    <td>
+                                        <div class='file-input-group'>
+                                            <input
+                                                [disabled]="true"
+                                                name="{{editTableProductedPartDetail.name('percenT_COMPLETED',in)}}"
+                                                class="form-control transparent" type="text"
+                                                [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['percenT_COMPLETED']"/>
+                                        </div>
+                                    </td>
+                                    <!-- Ghi chú -->
+                                    <td>
+                                        <textarea [disabled]="true"
+                                            class="form-control transparent"
+                                            type="text"
+                                            name="{{editTableProductedPartDetail.name('notes',in)}}"
+                                            [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['notes']">
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </editable-table>
+                    </div>
+<!-- End Danh sách tiến độ -->
+<!-- Begin Danh sách hệ hàng -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l("Danh sách hệ hàng thuộc po số ") + po_selected}}</h5>
+                    </div>
+
+                    <div class="primeng-datatable-container">
+                        <editable-table [requiredFields]="" #editTableGroupProduct class="custom-table ui-table">
+                            <thead>
+                                <tr>
+                                    <th class="center">
+                                        <span style="width: 40px">
+                                            <checkbox-control
+                                                (onchange)="editTableGroupProduct.checkAll($event.target.checked)"
+                                                [checked]="editTableGroupProduct.isCheckAll">
+                                            </checkbox-control>
+                                        </span>
+                                    </th>
+                                    <th class="center">
+                                        <span style="width: 40px">{{l("No")}}</span>
+                                    </th>
+                                    <!-- Khách hàng -->
+                                    <th sortField="customeR_NAME" class="center">
+                                        <span style="width: 150px">{{l('Khách hàng')}}</span>
+                                    </th>
+                                    <!-- Tên PO -->
+                                    <th sortField="pO_NAME" class="center">
+                                        <span style="width: 150px">{{l('Tên PO')}}</span>
+                                    </th>
+                                    <!-- Mã hệ hàng -->
+                                    <th sortField="grouP_PRODUCT_CODE" class="center">
+                                        <span style="width: 250px">{{l("Mã hệ hàng")}}</span>
+                                    </th>
+                                    <!-- Tên hệ hàng -->
+                                    <th sortField="grouP_PRODUCT_NAME" class="center">
+                                        <span style="width: 350px">{{l("Tên hệ hàng")}}</span>
+                                    </th>
+                                    <!-- Màu hệ hàng -->
+                                    <th sortField="color" class="center">
+                                        <span style="width: 350px">{{l("Màu hệ hàng")}}</span>
+                                    </th>
+                                    <!-- Ngày xuất -->
+                                    <th sortField="exporT_DATE" class="center" >
+                                        <span style="width: 100px">{{l('Ngày xuất')}}</span>
+                                    </th>
+                                    <!-- Tuần xuất -->
+                                    <th sortField="exporT_WEEK" class="center" >
+                                        <span style="width: 100px">{{l('Tuần xuất')}}</span>
+                                    </th>
+                                    <!-- Booking -->
+                                    <th sortField="bookingdt" class="center" >
+                                        <span style="width: 150px">{{l('Booking')}}</span>
+                                    </th>
+                                    <!-- R -->
+                                    <th sortField="r" class="center" >
+                                        <span style="width: 150px">{{l('R')}}</span>
+                                    </th>
+                                    <!-- Ghi chú PO -->
+                                    <th sortField="notes" class="center">
+                                        <span style="width: 150px">{{l('Ghi chú PO')}}</span>
+                                    </th>
+                                    <!-- Ghi chú -->
+                                    <th sortField="notes" class="center">
+                                        <span style="width: 150px">{{l("Ghi chú")}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editTableGroupProduct.dataInPage; let in= index"
+                                    [hidden]="item['page'] != editTableGroupProduct.currentPage"
+                                    class="selectable {{item['editableSelected']? 'selected' :''}}"
+                                    (click)='editTableGroupProduct.selectRow($event,item);getListProductOfGroupProduct(item.grouP_PRODUCT_ID, item.grouP_PRODUCT_NAME);updateView()'>
+                                    <!-- Checkbox -->
+                                    <td [attr.dataindex]="in" class="center">
+                                        <span class="mo-header"></span>
+                                        <checkbox-control
+                                            [disabled]="true"
+                                            name="{{editTableGroupProduct.name('isChecked',in)}}"
+                                            [(ngModel)]="editTableGroupProduct.dataInPage[in]['isChecked']">
+                                        </checkbox-control>
+                                    </td>
+
+                                    <!-- STT -->
+                                    <td class="center"><span class="mo-header"></span>
+                                        <input class="label"
+                                            [disabled]="true"
+                                            name="{{editTableGroupProduct.name('no',in)}}"
+                                            [(ngModel)]="editTableGroupProduct.dataInPage[in]['no']">
+                                    </td>
+                                    <!-- Khách hàng -->
+                                    <td><span class="mo-header"></span>{{item.customeR_NAME}}</td>
+                                    <!-- Tên PO -->
+                                    <td><span class="mo-header"></span>{{item.pO_NAME}}</td>
+                                    <!-- Mã hệ hàng -->
+                                    <td class="center"><span class="mo-header"></span>
+                                        <input class='form-control'
+                                            [disabled]="true"
+                                            name="{{editTableGroupProduct.name('grouP_PRODUCT_CODE',in)}}"
+                                            [(ngModel)]="editTableGroupProduct.dataInPage[in]['grouP_PRODUCT_CODE']">
+                                    </td>
+                                    <!-- Tên hệ hàng -->
+                                    <td>
+                                        <div class='file-input-group'>
+                                            <input class="form-control transparent" type="text"
+                                                [disabled]="true"
+                                                name="{{editTableGroupProduct.name('grouP_PRODUCT_NAME',in)}}"
+                                                [(ngModel)]="editTableGroupProduct.dataInPage[in]['grouP_PRODUCT_NAME']"/>
+                                        </div>
+                                    </td>
+                                    <!-- Màu hệ hàng -->
+                                    <td>
+                                        <div class='file-input-group'>
+                                            <input class="form-control transparent" type="text"
+                                                [disabled]="true"
+                                                name="{{editTableGroupProduct.name('color',in)}}"
+                                                [(ngModel)]="editTableGroupProduct.dataInPage[in]['color']"/>
+                                        </div>
+                                    </td>
+                                    <!-- Ngày xuất -->
+                                    <td><span class="mo-header"></span>{{item.exporT_DATE | dateFormatPipe}}</td>
+                                    <!-- Tuần xuất -->
+                                    <td><span class="mo-header"></span>{{item.exporT_WEEK}}</td>
+                                    <!-- Booking -->
+                                    <td><span class="mo-header"></span>{{item.bookingdt}}</td>
+                                    <!-- R -->
+                                    <td><span class="mo-header"></span>{{item.r_CODE}}</td>
+                                    <!-- Ghi chú PO -->
+                                    <td><span class="mo-header"></span>{{item.noteS_PO}}</td>
+                                    <!-- Ghi chú -->
+                                    <td>
+                                        <textarea
+                                            class="form-control transparent" type="text"
+                                            [disabled]="true"
+                                            name="{{editTableGroupProduct.name('notes',in)}}"
+                                            [(ngModel)]="editTableGroupProduct.dataInPage[in]['notes']">
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </editable-table>
+                    </div>
+<!-- End Danh sách hệ hàng -->
+
+<!-- Begin Danh sách sản phẩm -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l('Danh sách sản phẩm thuộc hệ hàng ') + group_product__selected}}</h5>
+                    </div>
+
+                    <div class="primeng-datatable-container">
+                        <editable-table [requiredFields]="" #editTableProduct class="custom-table ui-table">
+                            <thead>
+                                <tr>
+                                    <th class="center">
+                                        <span style="width: 40px">
+                                            <checkbox-control
+                                                (onchange)="editTableProduct.checkAll($event.target.checked)"
+                                                [checked]="editTableProduct.isCheckAll">
+                                            </checkbox-control>
+
+                                        </span>
+                                    </th>
+
+                                    <th class="center"><span style="width: 40px">{{l("No")}}</span></th>
+
+                                    <!-- Mã sản phẩm -->
+                                    <th  class="center"  sortField="producT_CODE">
+                                        <span style="width: 150px">{{l('Mã sản phẩm')}}</span>
+                                    </th>
+                                    <!-- Tên sản phẩm -->
+                                    <th sortField="producT_NAME" class="center" >
+                                        <span style="width: 250px">{{l('Tên sản phẩm')}}</span>
+                                    </th>
+                                        <!-- Số lượng -->
+                                        <th sortField="quantity" class="center" >
+                                        <span style="width: 100px">{{l('Số lượng')}}</span>
+                                    </th>
+                                    <!-- Ghi chú -->
+                                    <th sortField="notes" class="center"  >
+                                        <span style="width: 150px">{{l('Ghi chú')}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editTableProduct.dataInPage; let in= index"
+                                    [hidden]="item['page'] != editTableProduct.currentPage"
+                                    class="selectable {{item['editableSelected']? 'selected' :''}}"
+                                    (click)='editTableProduct.selectRow($event,item);updateView()'>
+                                    <!-- Checkbox -->
+                                    <td [attr.dataindex]="in" class="center">
+                                        <span class="mo-header"></span>
+                                        <checkbox-control
+                                            [disabled]="true"
+                                            name="{{editTableProduct.name('isChecked',in)}}"
+                                            [(ngModel)]="editTableProduct.dataInPage[in]['isChecked']">
+                                        </checkbox-control>
+                                    </td>
+
+                                    <!-- STT -->
+                                    <td class="center"><span class="mo-header"></span>
+                                        <input class="label"
+                                            [disabled]="true"
+                                            name="{{editTableProduct.name('no',in)}}"
+                                            [(ngModel)]="editTableProduct.dataInPage[in]['no']">
+                                    </td>
+                                    <!-- Mã sản phẩm -->
+                                    <td class="center"><span class="mo-header"></span>
+                                        <input class='form-control'
+                                            [disabled]="true"
+                                            name="{{editTableProduct.name('producT_CODE',in)}}"
+                                            [(ngModel)]="editTableProduct.dataInPage[in]['producT_CODE']">
+                                    </td>
+                                    <!-- Tên sản phẩm -->
+                                    <td>
+                                        <div class='file-input-group'>
+                                            <input
+                                                [disabled]="true"
+                                                class="form-control transparent" type="text"
+                                                name="{{editTableProduct.name('producT_NAME',in)}}"
+                                                [(ngModel)]="editTableProduct.dataInPage[in]['producT_NAME']"/>
+                                        </div>
+                                    </td>
+                                    <!-- Số lượng -->
+                                    <td>
+                                        <div class="right"><span class="mo-header"></span>
+                                            <money-input
+                                                [disabled]="true"
+                                                [isDecimal_round3]="true"
+                                                class="transparent"
+                                                name="{{editTableProduct.name('quantity',in)}}"
+                                                [(ngModel)]="editTableProduct.dataInPage[in]['quantity']">
+                                            </money-input>
+                                        </div>
+                                    </td>
+                                    
+                                    <!-- Ghi chú -->
+                                    <td>
+                                        <textarea [disabled]="true"
+                                            class="form-control transparent"
+                                            type="text"
+                                            name="{{editTableProduct.name('notes_product',in)}}"
+                                            [(ngModel)]="editTableProduct.dataInPage[in]['notes']">
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </editable-table>
+                    </div>
+<!-- Begin Danh sách sản phẩm -->
+                </div>
+            </div>
+        </div>
+    </div>

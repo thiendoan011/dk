@@ -1,0 +1,66 @@
+<!-- Thông tin layout thuộc sản phẩm -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{_title}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="width: 40px;">{{l("No")}}</span></th>
+                <!-- File đính kèm -->
+                <th>
+                    <span style="width: 250px;">{{l("File đính kèm")}}</span>
+                </th>
+                <!-- Ngày đính kèm -->
+                <th sortField="attacH_DT">
+                    <span style="width: 120px;">{{l("Ngày đính kèm")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th sortField="notes">
+                    <span style="width: 150px;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- File đính kèm -->
+                <td>
+                    <file-picker type="text"
+                        [multiFile]="false"
+                        [accept]=" '.xlsx,.xls,.doc,.docx,.pdf,.rar,.jpeg,.png,.jpg'"
+                        [disabled]="true"
+                        name="{{editTable.name('filE_ATTACHMENT', in)}}"
+                        [(ngModel)]="item['filE_ATTACHMENT']">
+                    </file-picker>
+                </td>
+                <!-- Ngày đính kèm -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('attacH_DT', in)}}"
+                        [(ngModel)]="item.attacH_DT">
+                    </date-control>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="true"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes', in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

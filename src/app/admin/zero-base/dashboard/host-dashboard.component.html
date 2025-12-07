@@ -1,0 +1,74 @@
+<div [@routerTransition] id="TenantDashboard">
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 class="m-subheader__title m-subheader__title--separator">
+
+                    <span>{{"Dashboard" | localize}}</span>
+                </h3>
+                <span class="m-section__sub">
+                    {{"DashboardHeaderInfo" | localize}}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+
+
+        <div class="row">
+            <div class="col-lg-6 col-xs-6 col-sm-6">
+                <div class="m-portlet m-portlet--full-height ">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    Tình trạng tài sản
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="m-portlet__head-tools">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xs-6 col-sm-6">
+                <div class="m-portlet m-portlet--full-height ">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    Tình trạng tài sản theo đơn vị
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="m-portlet__head-tools">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-xs-12 col-sm-12">
+                <div class="m-portlet m-portlet--full-height ">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    Số lượng tài sản cần bảo dưỡng
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="m-portlet__head-tools">
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

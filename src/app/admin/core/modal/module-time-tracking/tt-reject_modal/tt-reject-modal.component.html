@@ -1,0 +1,163 @@
+<!-- Nhập nội dung trả về -->
+<ng-container *ngIf="showEnterRejectLog">
+    <div>
+        <div id="accordionFilter" class="accordion md-accordion form-group" role="tablist">
+            <div class="card">
+                <div id="heading-kiemke" class="card-header black lighten-3 z-depth-1" role="tab">
+                    <a  class="white-text font-weight-bold" data-toggle="collapse" aria-expanded="true" 
+                        href="#createReject" 
+                        aria-controls="createReject">
+                        <h6 class="mb-0 py-1">
+                            <i class="fas fa-angle-right" style="padding-right: 5px"> </i>
+                            {{ this.l("Bấm vào đây để nhập nội dung xử lý") }}
+                        </h6>
+                    </a>
+                </div>
+                <div id="createReject" class="collapse" role="tabpanel" aria-labelledby="heading" 
+                    data-parent="#accordionFilter" >
+                    <div class="card-body">
+                        <form #rejectForm="ngForm" id="rejectForm" class="horizontal-form" autocomplete="off" >
+                            <!-- Nội dung xử lý -->
+                            <div class="col-md-12">
+                                <div class="form-group required">
+                                    <label>{{ l("Nội dung xử lý") }}</label>
+                                    <textarea
+                                        required
+                                        class="form-control"
+                                        name="reason"
+                                        [(ngModel)]="rejectLogInput.reason">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <!-- Nội dung xử lý gần nhất -->
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>{{l("Nội dung xử lý gần nhất")}}</label>
+                                    <textarea
+                                        disabled
+                                        class="form-control"
+                                        name="reason_rejectLatest"
+                                        [(ngModel)]="rejectLatest.reason">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <!-- Người trả về -->
+                            <div class="col-md-12" *ngIf="reject_infor">
+                                <div class="form-group">
+                                    <label>{{ l("Người trả về: " + rejectLatest.makeR_ID) }}</label>
+                                    <label>{{ l("Vào ngày: ")}} &nbsp; {{rejectLatest.creatE_DT | dateTimeFormatPipe}}</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <!-- Trả về người tạo -->
+                                    <button class="btn btn-primary" (click)="onReject('HC')">
+                                        {{this.l("Trả về người tạo")}}
+                                    </button>
+                                    <!-- Trả về người xử lý -->
+                                    <button class="btn btn-primary" (click)="onReject('NS')" *ngIf="stage == 'NS'">
+                                        {{this.l("Trả về người xử lý")}}
+                                    </button>
+                                </div>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Xem nội dung trả về -->
+<div *ngIf="showRejectLog">
+    <div id="accordionFilter" class="accordion md-accordion form-group" role="tablist">
+        <div class="card">
+            <div class="card-header black lighten-3 z-depth-1" style="padding: 1px 5px !important" role="tab">
+                <a class="white-text font-weight-bold" data-toggle="collapse" aria-expanded="true" 
+                    aria-controls="viewReject"
+                    href="#viewReject">
+                    <h6 class="mb-0 py-1">
+                        <i class="fas fa-angle-right" style="padding-right: 5px"></i>
+                        {{ this.l("Bấm vào đây để xem lịch sử trả về") }}
+                    </h6>
+                </a>
+            </div>
+            <div id="viewReject" class="collapse" role="tabpanel" aria-labelledby="heading"
+                data-parent="#accordionFilter">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="editable-title-group mt-1" style="width: 100%">
+                            <h5 class="popup-title col-md-12 pl-3 ml-1" style="text-transform: initial" >
+                                {{ this.l("Lịch sử trả về") }}
+                            </h5>
+                        </div>
+
+                        <div class="primeng-datatable-container col-md-12">
+                            <editable-table #tableRejectLog class="custom-table ui-table" >
+                                <thead>
+                                    <tr>
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{ l("No") }}</span>
+                                        </th>
+                                        <!-- Người trả vê -->
+                                        <th class="center" style="width: 21%" sortField="makeR_ID" >
+                                            <span style="width: 150px">{{ l("Người trả vê") }}</span>
+                                        </th>
+                                        <!-- Ngày trả về -->
+                                        <th class="center" style="width: 21%" sortField="creatE_DT" >
+                                            <span style="width: 155px">{{ l("Ngày trả về") }}</span>
+                                        </th>
+                                        <!-- Bước xử lý -->
+                                        <th class="center" style="width: 21%" sortField="procesS_DESC" >
+                                            <span style="width: 250px">{{ l("Bước xử lý") }}</span>
+                                        </th>
+                                        <!-- Nội dung -->
+                                        <th class="center" style="width: 35%" sortField="reason" >
+                                            <span style="width: 250px">{{ l("Nội dung trả về") }}</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor=" let item of tableRejectLog.dataInPage; let in = index">
+                                        <!-- STT -->
+                                        <td style="width: 40px" class="center"> <span class="mo-header"></span > 
+                                            {{ item["no"] }} 
+                                        </td>
+                                        <!-- Người trả vê -->
+                                        <td> <span class="mo-header"></span> 
+                                            {{ item.makeR_ID }} 
+                                        </td>
+                                        <!-- Ngày trả về -->
+                                        <td> <span class="mo-header"></span> 
+                                            {{ item.creatE_DT | dateTimeFormatPipe }} 
+                                        </td>
+                                        <!-- Bước xử lý -->
+                                        <td> <span class="mo-header"></span > 
+                                            {{ item.procesS_DESC }} 
+                                        </td>
+                                        <!-- Nội dung trả về -->
+                                        <td> <span class="mo-header"></span> 
+                                            {{ item.reason }} 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </editable-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .collapse:not(.in) {
+        display: none !important;
+    }
+
+    .collapse:not(.show) {
+        display: initial;
+    }
+</style>

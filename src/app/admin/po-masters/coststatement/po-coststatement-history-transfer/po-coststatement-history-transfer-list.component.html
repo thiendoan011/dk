@@ -1,0 +1,204 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()" class="m-subheader__title
+                        m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title
+                        m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Điều phối yêu cầu xử lý")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form"autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration: underline'>
+                                            {{l("Thông tin phiếu yêu cầu xử lý")}}
+                                        </legend>
+                                        <div class='row'>
+                                            <!-- ID phiếu -->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>{{l("ID phiếu")}}</label>
+                                                    <input class="form-control"
+                                                        name='coststatemenT_HISTORY_ID'
+                                                        [(ngModel)]='filterInput.coststatemenT_HISTORY_ID'>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tình trạng điều phối -->
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>{{l("Tình trạng điều phối")}}</label>
+                                                    <all-code-select
+                                                        name="iS_TRANSFER"
+                                                        [(ngModel)]="filterInput.iS_TRANSFER"
+                                                        [emptyText]="l('SelectAll')"
+                                                        [cdName]="'OPTION_YN_2'"
+                                                        [cdType]="'CM'">
+                                                    </all-code-select>
+                                                </div>
+                                            </div>
+
+                                            <div class='col-md-12'></div>
+                                            <!-- Ngày tạo -->
+                                            <div class="col-md-8">
+                                                <fieldset>
+                                                    <legend style='font-weight: bold; text-decoration:  underline'>{{l("CreateDate")}}</legend>
+                                                    <div class='row'>
+                                                        <!-- Từ ngày -->
+                                                        <div class='col-sm-6'>
+                                                            <div class='form-group'>
+                                                                <label>{{l('Từ ngày')}}</label>
+                                                                <date-control
+                                                                    name="froM_DATE"
+                                                                    [(ngModel)]="filterInput.froM_DATE">
+                                                                </date-control>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Đến ngày -->
+                                                        <div class='col-sm-6'>
+                                                            <div class='form-group'>
+                                                                <label>{{l('Đến ngày')}}</label>
+                                                                <date-control
+                                                                    name="tO_DATE"
+                                                                    [(ngModel)]="filterInput.tO_DATE">
+                                                                </date-control>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                            <div class='col-md-12'></div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <!-- End Filter -->
+                                <div class='col-md-3'>
+                                    <div class='form-group'>
+                                        <label class='btn btn-primary' 
+                                                (click)="onSearch()"
+                                                style="margin-top: 6px; color:white!important;">
+                                            {{this.l('Tìm kiếm')}}
+                                        </label>
+                                    </div>        
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l("Danh sách yêu cầu xử lý")}}</h5>
+                    </div>
+
+                    <div class="row">
+                        <div class="primeng-datatable-container">
+                            <editable-table #editTable [requiredFields]="[]"
+                                class="custom-table ui-table" (onChangePage)="updateView()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <th class="center">
+                                            <span style="width: 40px">
+                                                <checkbox-control
+                                                    (onchange)="editTable.checkAll($event.target.checked)"
+                                                    [checked]="editTable.isCheckAll">
+                                                </checkbox-control>
+                                            </span>
+                                        </th>
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- ID phiếu -->
+                                        <th sortField="coststatemenT_HISTORY_ID">
+                                            <span style="width: 170px">{{l("ID phiếu")}}</span>
+                                        </th>
+                                        <!-- Người được giao xử lý -->
+                                        <th sortField="checkeR_ID">
+                                            <span style="width: 230px">{{l("Người được giao xử lý")}}</span>
+                                        </th>
+                                        <!-- Ngày yêu cầu -->
+                                        <th sortField="creatE_DT">
+                                            <span style="width: 150px">{{l("Ngày yêu cầu")}}</span>
+                                        </th>
+                                        <!-- Người yêu cầu -->
+                                        <th sortField="makeR_NAME">
+                                            <span style="width: 150px">{{l("Người yêu cầu")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                                        [hidden]="item['page'] != editTable.currentPage"
+                                        class="selectable" 
+                                        (dblclick)="onViewDetail(item)" >
+                                        <!-- Begin Table Value -->
+                                        <td class="center">
+                                            <span class="mo-header"></span>
+                                            <checkbox-control
+                                                name="{{editTable.name('isChecked',in)}}"
+                                                [(ngModel)]="editTable.dataInPage[in]['isChecked']">
+                                            </checkbox-control>
+                                        </td>
+                                        <!-- STT -->
+                                        <td class="center"><span class="mo-header"></span>
+                                            <input class="label"
+                                                [disabled]='true'
+                                                [(ngModel)]="editTable.dataInPage[in]['no']"
+                                                [attr.dataname]="editTable.name('no',in)"
+                                                name="{{editTable.name('no',in)}}">
+                                        </td>
+                                        <!-- ID phiếu -->
+                                        <td><span class="mo-header"></span>{{item.coststatemenT_HISTORY_ID}}</td>
+                                        <!-- Người được giao xử lý -->
+                                        <td><span class="mo-header"></span>
+                                            <select2-custom
+                                                name="{{editTable.name('checkeR_ID',in)}}"
+                                                [(ngModel)]="item.checkeR_ID"
+                                                [(list)]="userList"
+                                                [valueMember]="'tlnanme'"
+                                                [displayMember]="'tlnanme|tlFullName'">
+                                            </select2-custom>
+                                        </td>
+                                        <!-- Ngày yêu cầu -->
+                                        <td><span class="mo-header"></span>{{item.creatE_DT | dateFormatPipe }}</td>
+                                        <!-- Người yêu cầu -->
+                                        <td><span class="mo-header"></span>{{item.makeR_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </editable-table>
+                        </div>
+                    </div>
+                    
+                    <!-- Điều phối -->
+                    <div class="horizontal-form filter-form ng-untouched ng-pristine ng-valid">
+                        <div class='form-group'>
+                            <label class='btn btn-primary' 
+                                    (click)="saveInput()"
+                                    style="color:white!important;">
+                                {{this.l('Điều phối')}}
+                            </label>
+                        </div>        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

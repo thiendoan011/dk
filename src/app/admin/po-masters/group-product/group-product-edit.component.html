@@ -1,0 +1,289 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>Hệ hàng</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-2-modal
+                                #history_modal
+                                [id]="inputModel.grouP_PRODUCT_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </po-history-2-modal>
+                        </div>
+                        <!-- Mã hệ hàng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l('Mã Hệ hàng')}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="grouP_PRODUCT_CODE"
+                                    [(ngModel)]="inputModel.grouP_PRODUCT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên Hệ hàng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l('Tên Hệ hàng')}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="grouP_PRODUCT_NAME"
+                                    [(ngModel)]="inputModel.grouP_PRODUCT_NAME" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>{{l('Ngày tạo')}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    [inpCss]="'form-control'"
+                                    name="creatE_DT"
+                                    [(ngModel)]="inputModel.creatE_DT">
+                                </date-control>
+                                
+                            </div>
+                        </div>
+
+                        <!-- Màu hệ hàng -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l('Màu hệ hàng')}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="color"
+                                    [(ngModel)]="inputModel.color" />
+                            </div>
+                        </div>
+
+                        <!-- Khách hàng -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Khách hàng'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.customeR_NAME"
+                                (showModal)="showCusModal()"
+                                (deleteDisplayText)="onDeleteCustomer()"
+                                name="customeR_NAME">
+                            </input-select>
+                        </div>
+                        
+
+                        <div class="col-md-12"></div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l('Ghi chú')}}</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="notes"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Hoàn tất đơn hàng -->
+                        <div class="col-md-3" *ngIf="showButtonAppr">
+                            <div class="form-group">
+                                <label (click)="onGroupProductAppr()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Hoàn tất đơn hàng')}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Import excel -->
+                        <div class="col-md-3" [hidden]="disableInput">
+                            <div class="form-group">
+                                <label type="button"
+                                    class='btn btn-primary' for="file-upload"
+                                    style="margin-top: 6px;color:white!important">
+                                    {{this.l('Import danh sách sản phẩm')}}
+                                    <import-excel [id]="'file-upload'"
+                                        [hidden]="true"
+                                        [startPosition]="'A2'"
+                                        [disable]="disableInput"
+                                        (toArrayObject)='onImportExcel($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Tải mẫu import excel -->
+                        <div class="col-md-3" [hidden]="disableInput">
+                            <div class="form-group">
+                                <label (click)="exportExcelTemplate()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('DownloadTemplate')}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Chỉnh sửa hệ hàng -->
+                        <div class='col-md-3' *ngIf="isEditGroupProduct">
+                            <div class='form-group'>
+                                <label class='btn btn-primary' 
+                                    (click)="onEdit()"
+                                    style="margin-top: 6px; color:white!important;">
+                                    {{l("Chỉnh sửa hệ hàng")}}
+                                </label>
+                            </div>        
+                        </div>
+                    </div>
+
+<!-- Begin Danh sách sản phẩm -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l('Danh sách sản phẩm')}}</h5>
+                        <div class="action-button">
+                            <button type="button" [disabled]="disableInput"
+                                class="btn btn-primary"
+                                (click)="showProduct()"><i class="pi pi-plus"></i>{{l("Add")}}</button>
+                            <button type="button" [disabled]="disableInput"
+                                class="btn btn-danger"
+                                (click)="editTableProduct.removeAllCheckedItem()"><i
+                                    class="pi pi-times"></i>{{l("Delete")}}</button>
+                        </div>
+                    </div>
+
+                    <div class="primeng-datatable-container">
+                        <editable-table [requiredFields]=""  #editTableProduct class="custom-table ui-table">
+                            <thead>
+                                <tr>
+                                    <th class="center">
+                                        <span>
+                                            <checkbox-control
+                                                (onchange)="editTableProduct.checkAll($event.target.checked)"
+                                                [checked]="editTableProduct.isCheckAll">
+                                            </checkbox-control>
+                                        </span>
+                                    </th>
+
+                                    <th><span >{{l("No")}}</span></th>
+
+                                    <!-- Mã sản phẩm -->
+                                    <th sortField="producT_CODE" >
+                                        <span style="width: 250px">{{l('Mã sản phẩm')}}</span>
+                                    </th>
+                                    <!-- Tên sản phẩm -->
+                                    <th sortField="producT_NAME">
+                                        <span style="width: 350px">{{l('Tên sản phẩm')}}</span>
+                                    </th>
+                                    <!-- Ghi chú -->
+                                    <th sortField="notes">
+                                        <span style="width: 150px">{{l('Ghi chú')}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editTableProduct.dataInPage; let in= index"
+                                    [hidden]="item['page'] != editTableProduct.currentPage"
+                                    class="selectable {{item['editableSelected']? 'selected' :''}}"
+                                    (click)='editTableProduct.selectRow($event,item);updateView()'>
+                                    <!-- Checkbox -->
+                                    <td [attr.dataindex]="in" class="center">
+                                        <span class="mo-header"></span>
+                                        <checkbox-control
+                                            [disabled]="disableInput"
+                                            name="{{editTableProduct.name('isChecked',in)}}"
+                                            [(ngModel)]="editTableProduct.dataInPage[in]['isChecked']">
+                                        </checkbox-control>
+                                    </td>
+
+                                    <!-- STT -->
+                                    <td class="center"><span class="mo-header"></span>
+                                        <input class="label"
+                                            [disabled]="true"
+                                            name="{{editTableProduct.name('no',in)}}"
+                                            [(ngModel)]="editTableProduct.dataInPage[in]['no']">
+                                    </td>
+                                    <!-- Mã sản phẩm -->
+                                    <td class="center"><span class="mo-header"></span>
+                                        <input class='form-control'
+                                            [disabled]="true"
+                                            name="{{editTableProduct.name('producT_CODE',in)}}"
+                                            [(ngModel)]="editTableProduct.dataInPage[in]['producT_CODE']">
+                                    </td>
+                                    <!-- Tên sản phẩm -->
+                                    <td>
+                                        <div class='file-input-group'>
+                                            <input
+                                                [disabled]="true"
+                                                name="{{editTableProduct.name('producT_NAME',in)}}"
+                                                class="form-control transparent" type="text"
+                                                [(ngModel)]="editTableProduct.dataInPage[in]['producT_NAME']"/>
+                                        </div>
+                                    </td>
+                                    <!-- Ghi chú -->
+                                    <td>
+                                        <textarea [disabled]="disableInput"
+                                            class="form-control transparent"
+                                            type="text"
+                                            name="{{editTableProduct.name('notes',in)}}"
+                                            [(ngModel)]="editTableProduct.dataInPage[in]['notes']">
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </editable-table>
+                    </div>
+<!-- End Danh sách sản phẩm -->
+                    <!-- Danh sách PO đã chọn hệ hàng này -->
+                    <po-group-product-po-edittable 
+                        #poGroupProductPOEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput">
+                    </po-group-product-po-edittable>
+                    <!-- Danh sách PO đã chọn hệ hàng này -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<po-customer-modal (onSelect)='onSelectCustomer($event)' #poCusModal
+    [multiple]="false"></po-customer-modal>
+<po-product-modal (onSelect)='onSelectProduct($event)' #poProductModal
+    [multiple]="true"></po-product-modal>

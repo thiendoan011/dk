@@ -1,0 +1,63 @@
+<div id="content" class="m-content">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <div class="m-form m-form--label-align-right">
+                <div class="row">
+                    <!-- Begin -->
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend style='font-weight: bold!important; font-size: 15px; text-decoration:  underline'>{{_title}}</legend>
+                            <div class="row">
+                                <!-- Begin Filter -->
+                                <!-- Tuần -->
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>{{l("Tuần")}}</label>
+                                        <input class="form-control" type="number"
+                                            name="WEEK"
+                                            [(ngModel)]="filterInput.WEEK" />
+                                    </div>
+                                </div>
+                                 <!-- Năm -->
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>{{l("Năm")}}</label>
+                                        <input class="form-control" type="number"
+                                            name="YEAR"
+                                            [(ngModel)]="filterInput.YEAR" />
+                                    </div>
+                                </div>
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="_branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-search"
+                                            (click)="exportToExcel()">{{l('In báo cáo')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <!-- End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

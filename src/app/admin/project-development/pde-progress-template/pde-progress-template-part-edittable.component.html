@@ -1,0 +1,104 @@
+<!-- Thông tin chi tiết báo cáo cho từng công đoạn làm mẫu -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Thông tin chi tiết báo cáo cho từng công đoạn làm mẫu")}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Tên công đoạn -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên công đoạn")}}</span>
+                </th>
+                <!-- Tiến độ hoàn thành -->
+                <th sortField="producT_NAME">
+                    <span style="white-space: nowrap;">{{l("Tiến độ hoàn thành")}}</span>
+                </th>
+                <!-- Thời gian hoàn thành -->
+                <th sortField="layouT_DT_DESC">
+                    <span style="white-space: nowrap;">{{l("Thời gian hoàn thành")}}</span>
+                </th>
+                <!-- Ghi chú phát sinh -->
+                <th sortField="deP_ID">
+                    <span style="white-space: nowrap;">{{l("Ghi chú phát sinh")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Tên công đoạn -->
+                <td>
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'pdE_PROGRESS_TEMPLATE_PART_NAME'"
+                        [cdType]="'PDE'"
+                        name="pdE_PROGRESS_TEMPLATE_PART_NAME" 
+                        [(ngModel)]="item.pdE_PROGRESS_TEMPLATE_PART_NAME">
+                    </all-code-select>
+                </td>
+                <!-- Tiến độ hoàn thành -->
+                <td>
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PDE_PROGRESS_TEMPLATE_PART_PERCENT'"
+                        [cdType]="'PDE'"
+                        name="pdE_PROGRESS_TEMPLATE_PART_PERCENT" 
+                        [(ngModel)]="item.pdE_PROGRESS_TEMPLATE_PART_PERCENT">
+                    </all-code-select>
+                </td>
+                <!-- Thời gian hoàn thành -->
+                <td>
+                    <date-control
+                        [disabled]='true'
+                        name="{{editTable.name('pdE_PROGRESS_TEMPLATE_PART_DT',in)}}"
+                        [(ngModel)]="item.pdE_PROGRESS_TEMPLATE_PART_DT">
+                    </date-control>
+                </td>
+                
+                <!-- Ghi chú phát sinh -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('pdE_PROGRESS_TEMPLATE_PART_NOTES',in)}}" 
+                        [(ngModel)]="item.pdE_PROGRESS_TEMPLATE_PART_NOTES"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

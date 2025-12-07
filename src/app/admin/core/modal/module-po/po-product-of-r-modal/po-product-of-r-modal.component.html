@@ -1,0 +1,128 @@
+<popup-frame [title]="l('Tìm kiếm thông tin sản phẩm')" (onSearchEvent)="buttonSearch()" (onSelectEvent)="accept()" #popupFrame>
+    <div class="horizontal-form filter-form" autocomplete="off">
+        <form class="m-form m-form--label-align-right">
+            <div class="row m--margin-bottom-30">
+<!-- Begin Filter -->
+                <!-- Mã lệnh sản xuất -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Mã lệnh sản xuất")}}</label>
+                        <input class="form-control m-input"
+                            disabled
+                            name="r_CODE"
+                            [(ngModel)]="filterInput.r_CODE" >
+                    </div>
+                </div>
+
+                <!-- Mã PO -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Mã PO")}}</label>
+                        <input class="form-control m-input"
+                            name="pO_CODE"
+                            [(ngModel)]="filterInput.pO_CODE" >
+                    </div>
+                </div>
+
+                <!-- Mã hệ hàng -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Mã hệ hàng")}}</label>
+                        <input class="form-control m-input"
+                            name="grouP_PRODUCT_CODE"
+                            [(ngModel)]="filterInput.grouP_PRODUCT_CODE" >
+                    </div>
+                </div>
+
+                <!-- Mã sản phẩm -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Mã sản phẩm")}}</label>
+                        <input class="form-control m-input"
+                            name="producT_CODE"
+                            [(ngModel)]="filterInput.producT_CODE" >
+                    </div>
+                </div>
+
+<!-- End Filter -->
+                <div style="display:none;" class="col-md-12">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-search" (click)="search()"></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div isLoading="dataTable.isLoading" class="primeng-datatable-container">
+            <div class="spinner-border m-5" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <core-table [reloadPageOnInit]="false" #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                <thead>
+                    <tr>
+                        <!-- Begin Table Column -->
+                        <!-- multiple -->
+                        <th class="center" *ngIf="multiple">
+                            <span style="width: 40px">
+                                <checkbox-control #checkAllElement
+                                    (change)="onCheckAll(checkAllElement.inputRef.nativeElement)" [checked]="checkAll">
+                                </checkbox-control>
+                            </span>
+                        </th>
+                        <!-- STT -->
+                        <th class="center">
+                            <span style="width: 40px">{{l("No")}}</span>
+                        </th>
+                        <!-- Mã lệnh sản xuất -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Mã lệnh sản xuất")}}</span>
+                        </th>
+                        <!-- Mã PO -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Mã PO")}}</span>
+                        </th>
+                        <!-- Mã hệ hàng -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Mã hệ hàng")}}</span>
+                        </th>
+                        <!-- Mã sản phẩm -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Mã sản phẩm")}}</span>
+                        </th>
+                        <!-- Tên sản phẩm -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Tên sản phẩm")}}</span>
+                        </th>
+                        <!-- End Table Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- multiple dblclick -->
+                    <tr *ngFor="let record of dataTable.records; let no = index;" class="selectable" (click)="selectRow($event,record)" (dblclick)="onDoubleClick(record)">
+                        <!-- Begin Table Value -->
+                        <!-- multiple -->
+                        <td class="center" *ngIf="multiple">
+                            <span class="mo-header"></span>
+                            <checkbox-control (onchange)="setChecked($event.target.checked, record)" [checked]="record['isChecked']"></checkbox-control>
+                        </td>
+                        <!-- STT -->
+                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                        </td>
+                        <!-- Mã lệnh sản xuất -->
+                        <td><span class="mo-header"></span>{{record.r_CODE}}</td>
+                        <!-- Mã PO -->
+                        <td><span class="mo-header"></span>{{record.pO_CODE}}</td>
+                        <!-- Mã hệ hàng -->
+                         <td><span class="mo-header"></span>{{record.grouP_PRODUCT_CODE}}</td>
+                         <!-- Mã sản phẩm -->
+                          <td><span class="mo-header"></span>{{record.producT_CODE}}</td>
+                          <!-- Tên sản phẩm -->
+                           <td><span class="mo-header"></span>{{record.producT_NAME}}</td>
+                        <!-- End Table Value -->
+                    </tr>
+                </tbody>
+            </core-table>
+        </div>
+    </div>
+</popup-frame>

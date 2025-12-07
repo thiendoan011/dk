@@ -1,0 +1,76 @@
+<div id="content" class="m-content">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <div class="m-form m-form--label-align-right">
+                <div class="row">
+                    <!-- Begin -->
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend style='font-weight: bold!important; font-size: 15px; text-decoration:  underline'>{{_title}}</legend>
+                            <div class="row">
+                                <!-- Begin Filter -->
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="_branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+                                <div class="col-md-12"></div>
+                                
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày xuất PO theo khách")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        (focusout)="onchangeFilter()"
+                                                        name="frmdate"
+                                                        [(ngModel)]="filterInput.frmdate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        (focusout)="onchangeFilter()"
+                                                        name="todate"
+                                                        [(ngModel)]="filterInput.todate">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <!-- End Filter -->
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-search"
+                                            (click)="exportToExcel()">{{l('In báo cáo')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <!-- End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

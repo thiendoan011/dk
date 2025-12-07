@@ -1,0 +1,177 @@
+<!-- Nhập nội dung trả về -->
+<ng-container *ngIf="isShowEnterRejectContent">
+    <div>
+        <div class="accordion md-accordion form-group" id="accordionFilter" role="tablist">
+            <div class="card">
+                <div class="card-header black lighten-3 z-depth-1" role="tab"
+                    id="heading-kiemke">
+                    <a  class="white-text font-weight-bold"
+                        data-toggle="collapse"
+                        href="#createReject"
+                        aria-expanded="true"
+                        aria-controls="createReject">
+                        <h6 class="mb-0 py-1">
+                            <i class="fas fa-angle-right" style="padding-right: 5px"> </i>
+                            {{ this.l("Bấm vào đây để nhập nội dung xử lý") }}
+                        </h6>
+                    </a>
+                </div>
+                <div id="createReject"
+                    class="collapse"
+                    role="tabpanel"
+                    aria-labelledby="heading"
+                    data-parent="#accordionFilter" >
+                    <div class="card-body">
+                        <form #rejectForm="ngForm"
+                            id="rejectForm"
+                            class="horizontal-form"
+                            autocomplete="off" >
+                            <!-- Nội dung xử lý -->
+                            <div class="col-md-12">
+                                <div class="form-group required">
+                                    <label>{{ l("Nội dung xử lý") }}</label>
+                                    <textarea
+                                        required
+                                        name="reason"
+                                        class="form-control"
+                                        type="text"
+                                        maxlength="4000"
+                                        [(ngModel)]="rejectLogInput.reason">
+                                    </textarea>
+                                </div>
+                            </div>
+                            <!-- Gửi tin -->
+                            <div class="col-md-8 form-group">
+                                <button class="btn btn-primary"
+                                        (click)="onIns()">
+                                    {{this.l("Gửi")}}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<!-- Xem nội dung trả về -->
+<div>
+    <div class="accordion md-accordion form-group" id="accordionFilter" role="tablist">
+        <div class="card">
+            <div
+                class="card-header black lighten-3 z-depth-1"
+                style="padding: 1px 5px !important"
+                role="tab">
+                <a class="white-text font-weight-bold"
+                    data-toggle="collapse"
+                    href="#viewReject"
+                    aria-expanded="true"
+                    aria-controls="viewReject">
+                    <h6 class="mb-0 py-1">
+                        <i class="fas fa-angle-right" style="padding-right: 5px"></i>
+                        {{ this.l(title) }}
+                    </h6>
+                </a>
+            </div>
+            <div id="viewReject" class="collapse" role="tabpanel" aria-labelledby="heading" data-parent="#accordionFilter">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="editable-title-group mt-1" style="width: 100%">
+                            <h5 class="popup-title col-md-12 pl-3 ml-1" style="text-transform: initial" >
+                                {{ this.l("Lịch sử xử lý") }}
+                            </h5>
+                        </div>
+
+                        <div class="primeng-datatable-container col-md-12">
+                            <editable-table #tableProcessLog class="custom-table ui-table" >
+                                <thead>
+                                    <tr>
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{ l("No") }}</span>
+                                        </th>
+                                        <!-- Người tạo -->
+                                        <th class="center" style="width: 21%" sortField="checkeR_NAME" >
+                                            <span style="width: 150px">{{ l("Người tạo") }}</span>
+                                        </th>
+                                        <!-- Ngày tạo -->
+                                        <th class="center" style="width: 21%" sortField="approvE_DT" >
+                                            <span style="width: 155px">{{ l("Ngày tạo") }}</span>
+                                        </th>
+                                        <!-- Phòng ban -->
+                                        <th class="center" style="width: 21%" sortField="department" >
+                                            <span style="width: 250px">{{ l("Phòng ban") }}</span>
+                                        </th>
+                                        <!-- Bước xử lý -->
+                                        <th class="center" sortField="notes" >
+                                            <span style="width: 250px">{{ l("Bước xử lý") }}</span>
+                                        </th>
+                                        <!-- Nội dung -->
+                                        <th class="center" style="width: 35%" sortField="procesS_DESC" >
+                                            <span style="width: 250px">{{ l("Nội dung") }}</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor=" let item of tableProcessLog.dataInPage; let in = index; trackBy: trackByFn">
+                                        <!-- STT -->
+                                        <td style="width: 40px" class="center">
+                                            <span class="mo-header"></span >
+                                                {{ item["no"] }}
+                                        </td>
+                                        <!-- Người tạo -->
+                                        <td>
+                                            <span class="mo-header"></span>
+                                            {{ item.checkeR_NAME }}
+                                        </td>
+                                        <!-- Ngày tạo -->
+                                        <td>
+                                            <span class="mo-header"></span>
+                                            {{ item.approvE_DT | dateTimeFormatPipe }}
+                                        </td>
+                                        <!-- Phòng ban -->
+                                        <td>
+                                            <span class="mo-header"></span >
+                                            {{ item.department }}
+                                        </td>
+                                        <!-- Bước xử lý -->
+                                        <td> <span class="mo-header"></span> 
+                                            <textarea [disabled]='true'
+                                                class="form-control transparent" 
+                                                appTextareaAutoresize
+                                                name="notes"
+                                                [(ngModel)]="item.notes"
+                                                style="width: 100%; height: 32px">
+                                            </textarea>
+                                        </td>
+                                        <!-- Nội dung -->
+                                        <td> <span class="mo-header"></span> 
+                                            <textarea [disabled]='true'
+                                                class="form-control transparent" 
+                                                appTextareaAutoresize
+                                                name="procesS_DESC"
+                                                [(ngModel)]="item.procesS_DESC"
+                                                style="width: 100%; height: 32px">
+                                            </textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </editable-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .collapse:not(.in) {
+        display: none !important;
+    }
+
+    .collapse:not(.show) {
+        display: initial;
+    }
+</style>

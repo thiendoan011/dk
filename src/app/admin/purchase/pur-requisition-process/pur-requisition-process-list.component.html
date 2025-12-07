@@ -1,0 +1,174 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin xử lý yêu cầu mua hàng")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- ID yêu cầu mua hàng -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("ID yêu cầu mua hàng")}}</label>
+                                        <input class="form-control" 
+                                            name="puR_REQUISITION_ID"
+                                            [(ngModel)]="filterInput.puR_REQUISITION_ID">
+                                    </div>
+                                </div>
+                                <!-- Tên yêu cầu mua hàng -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Tên yêu cầu mua hàng")}}</label>
+                                        <input class="form-control" 
+                                            name="puR_REQUISITION_NAME"
+                                            [(ngModel)]="filterInput.puR_REQUISITION_NAME">
+                                    </div>
+                                </div>
+                                
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái xử lý -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái xử lý")}}</label>
+                                        <all-code-select 
+                                            name="procesS_STATUS" 
+                                            [(ngModel)]="filterInput.procesS_STATUS"
+                                            [emptyText]="l('SelectAll')" 
+                                            [cdName]="'PURCHASE_STATUS'"
+                                            [cdType]="'CM'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày tạo phiếu yêu cầu mua hàng")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="frM_DATE"
+                                                        [(ngModel)]="filterInput.frM_DATE">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="tO_DATE"
+                                                        [(ngModel)]="filterInput.tO_DATE">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- ID phiếu yêu cầu mua hàng -->
+                                        <th sortField="puR_REQUISITION_ID">
+                                            <span>{{l("ID phiếu yêu cầu mua hàng")}}</span>
+                                        </th>
+                                        <!-- Tên phiếu yêu cầu mua hàng -->
+                                        <th sortField="puR_REQUISITION_NAME">
+                                            <span>{{l("Tên phiếu yêu cầu mua hàng")}}</span>
+                                        </th>
+                                        <!-- Người tạo -->
+                                        <th>
+                                            <span>{{l("Người tạo")}}</span>
+                                        </th>
+                                        <!-- Người duyệt -->
+                                        <th>
+                                            <span>{{l("Người duyệt")}}</span>
+                                        </th>
+                                        <!-- Trạng thái xử lý -->
+                                        <th>
+                                            <span>{{l("Trạng thái xử lý")}}</span>
+                                        </th>
+                                        <!-- Ghi chú -->
+                                        <th>
+                                            <span>{{l("Ghi chú")}}</span>
+                                        </th>
+                                        
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.puR_REQUISITION_ID}}</td>
+                                        <td><span class="mo-header"></span>{{record.puR_REQUISITION_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.makeR_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.checkeR_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.procesS_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.notes}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

@@ -1,0 +1,157 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12"> {{l("Danh sách PO")}} </h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l('Remove')}}
+        </button>
+    </div>
+</div>
+<div
+    class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="width: 40px;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+
+                <th sortField="pO_CODE">
+                <span style="white-space: nowrap;">{{l("Mã PO")}}</span>
+                </th>
+
+                <th sortField="pO_NAME">
+                <span style="white-space: nowrap;">{{l("Tên PO")}}</span>
+                </th>
+
+                <th sortField="grouP_PRODUCT_CODEs">
+                <span style="white-space: nowrap;">{{l("Mã hệ hàng")}}</span>
+                </th>
+
+                <th sortField="creatE_DT">
+                <span style="white-space: nowrap;">{{l("Ngày tạo")}}</span>
+                </th>
+
+                <th sortField="exporT_DATE">
+                <span style="white-space: nowrap;">{{l("Ngày xuất")}}</span>
+                </th>
+
+                <th sortField="qtY_CONT">
+                <span style="white-space: nowrap;">{{l("Số lượng cont")}}</span>
+                </th>
+
+                <th sortField="customeR_NAME">
+                <span style="white-space: nowrap;">{{l("Khách hàng")}}</span>
+                </th>
+
+                <th sortField="cusT_PO">
+                <span style="white-space: nowrap;">{{l("Cust PO")}}</span>
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}"
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                
+                <!-- Checkbox -->
+                <td class='center'>
+                    <checkbox-control 
+                        [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+
+                <td class="center"><span class="mo-header"></span>
+                <input
+                    class="form-control"
+                    readonly
+                    style="color: blue; cursor: pointer;"
+                    (click)="onViewDetailPO(item)"
+                    name="{{editTable.name('pO_CODE',in)}}"
+                    [(ngModel)]="item.pO_CODE"
+                />
+                </td>
+
+                <td class="center"><span class="mo-header"></span>
+                <input
+                    class="form-control"
+                    readonly
+                    name="{{editTable.name('pO_NAME',in)}}"
+                    [(ngModel)]="item.pO_NAME"
+                />
+                </td>
+
+                <td class="center"><span class="mo-header"></span>
+                <input
+                    class="form-control"
+                    readonly
+                    name="{{editTable.name('pO_GROUP_PRODUCT_CODEs',in)}}"
+                    [(ngModel)]="item.pO_GROUP_PRODUCT_CODEs"
+                />
+                </td>
+
+                <td class="center"><span class="mo-header"></span>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('creatE_DT', in)}}"
+                        [(ngModel)]="item.creatE_DT">
+                    </date-control>
+                </td>
+
+                <td class="center"><span class="mo-header"></span>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('exporT_DATE', in)}}"
+                        [(ngModel)]="item.exporT_DATE">
+                    </date-control>
+                </td>
+
+                <td class="center"><span class="mo-header"></span>
+                <input
+                    class="form-control"
+                    readonly
+                    type="number"
+                    name="{{editTable.name('qtY_CONT',in)}}"
+                    [(ngModel)]="item.qtY_CONT"
+                />
+                </td>
+
+                <td class="center"><span class="mo-header"></span>
+                <input
+                    class="form-control"
+                    readonly
+                    name="{{editTable.name('customeR_NAME',in)}}"
+                    [(ngModel)]="item.customeR_NAME"
+                />
+                </td>
+
+                <td class="center"><span class="mo-header"></span>
+                <input
+                    class="form-control"
+                    readonly
+                    name="{{editTable.name('cusT_PO',in)}}"
+                    [(ngModel)]="item.cusT_PO"
+                />
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<po-po-modal (onSelect)='onSelectPopup($event)' #poPOModal [multiple]="true"></po-po-modal>
