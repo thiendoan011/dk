@@ -9,13 +9,14 @@ import { EmailActivationComponent } from './email-activation/email-activation.co
 import { ConfirmEmailComponent } from './email-activation/confirm-email.component';
 import { SendTwoFactorCodeComponent } from './login/send-two-factor-code.component';
 import { ValidateTwoFactorCodeComponent } from './login/validate-two-factor-code.component';
+import { accountRouteGuard } from './auth/account-route-guard';
 
 export const accountRoutes: Routes = [
     {
         path: '',
         component: AccountComponent,
         children: [
-            { path: 'login', component: LoginComponent },
+            { path: 'login', component: LoginComponent, canActivate: [accountRouteGuard] },
             { path: 'register', component: RegisterComponent },
             { path: 'forgot-password', component: ForgotPasswordComponent },
             { path: 'reset-password', component: ResetPasswordComponent },

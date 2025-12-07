@@ -1,13 +1,22 @@
-import { Component, ElementRef, Injector, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, ViewChild, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AccountServiceProxy, IsTenantAvailableInput, IsTenantAvailableOutput, TenantAvailabilityState } from '@shared/service-proxies/service-proxies';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
+import { UtilsModule } from '@shared/utils/utils.module'; // Import module chứa buttonBusy
 import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'tenantChangeModal',
     templateUrl: './tenant-change-modal.component.html',
-    standalone: false
+    standalone: true, // ✅ Standalone
+    imports: [
+        CommonModule,
+        FormsModule,
+        ModalModule,
+        UtilsModule // Cần thiết cho [buttonBusy] và [busyText]
+    ]
 })
 export class TenantChangeModalComponent extends AppComponentBase {
 
@@ -18,10 +27,10 @@ export class TenantChangeModalComponent extends AppComponentBase {
     active = false;
     saving = false;
 
-    constructor(
-        private _accountService: AccountServiceProxy,
-        injector: Injector
-    ) {
+    // REFACTOR: Sử dụng inject()
+    private _accountService = inject(AccountServiceProxy);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 
@@ -36,7 +45,6 @@ export class TenantChangeModalComponent extends AppComponentBase {
     }
 
     save(): void {
-
         if (!this.tenancyName) {
             abp.multiTenancy.setTenantIdCookie(undefined);
             this.close();
@@ -60,7 +68,7 @@ export class TenantChangeModalComponent extends AppComponentBase {
                     case TenantAvailabilityState.InActive:
                         this.message.warn(this.l('TenantIsNotActive', this.tenancyName));
                         break;
-                    case TenantAvailabilityState.NotFound: //NotFound
+                    case TenantAvailabilityState.NotFound:
                         this.message.warn(this.l('ThereIsNoTenantDefinedWithName{0}', this.tenancyName));
                         break;
                 }

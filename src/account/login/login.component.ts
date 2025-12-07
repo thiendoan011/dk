@@ -12,7 +12,8 @@ import { WebConsts } from '@app/ultilities/enum/consts';
 import { LoginMethod } from '@app/ultilities/enum/login-method';
 import { AppConsts } from '@shared/AppConsts';
 // Import Validation Component (nếu chưa có standalone thì phải import SharedModule chứa nó)
-import { ValidationMessagesComponent } from '@shared/utils/validation-messages.component'; // Cần check path chính xác
+import { ValidationMessagesComponent } from '@shared/utils/validation-messages.component';
+import { LocalizePipe } from "../../shared/common/pipes/localize.pipe"; // Cần check path chính xác
 
 @Component({
     templateUrl: './login.component.html',
@@ -22,7 +23,8 @@ import { ValidationMessagesComponent } from '@shared/utils/validation-messages.c
         FormsModule,
         RouterLink,
         NgIf,
-        ValidationMessagesComponent
+        ValidationMessagesComponent,
+        LocalizePipe
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

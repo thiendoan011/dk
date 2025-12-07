@@ -35074,7 +35074,7 @@ export class ProfileServiceProxy {
     /**
      * @return Success
      */
-    sendVerificationSms(): Observable<void> {
+    sendVerificationSms(model: SendEmailActivationLinkInput): Observable<void> {
         let url_ = this.baseUrl + "/api/services/app/Profile/SendVerificationSms";
         url_ = url_.replace(/[?&]$/, "");
 

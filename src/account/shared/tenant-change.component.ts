@@ -1,16 +1,33 @@
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AccountServiceProxy } from '@shared/service-proxies/service-proxies';
 import { TenantChangeModalComponent } from './tenant-change-modal.component';
 
 @Component({
     selector: 'tenant-change',
-    template:
-        `<span *ngIf="isMultiTenancyEnabled">
-        {{"CurrentTenant" | localize}}: <span *ngIf="tenancyName" title="{{name}}"><strong>{{tenancyName}}</strong></span> <span *ngIf="!tenancyName">{{"NotSelected" | localize}}</span> (<a href="javascript:;" (click)="showChangeModal()">{{l("Change")}}</a>)
-        <tenantChangeModal #tenantChangeModal></tenantChangeModal>
-    </span>`,
-    standalone: true
+    template: `
+    @if (isMultiTenancyEnabled) {
+        <span>
+            {{l("CurrentTenant")}}: 
+            
+            @if (tenancyName) {
+                <span title="{{name}}"><strong>{{tenancyName}}</strong></span>
+            } @else {
+                <span>{{l("NotSelected")}}</span>
+            }
+            
+            (<a href="javascript:;" (click)="showChangeModal()">{{l("Change")}}</a>)
+            
+            <tenantChangeModal #tenantChangeModal></tenantChangeModal>
+        </span>
+    }
+    `,
+    standalone: true, // ✅ Standalone
+    imports: [
+        CommonModule,
+        TenantChangeModalComponent // ✅ Import component con
+    ]
 })
 export class TenantChangeComponent extends AppComponentBase implements OnInit {
 
@@ -19,10 +36,10 @@ export class TenantChangeComponent extends AppComponentBase implements OnInit {
     tenancyName: string;
     name: string;
 
-    constructor(
-        injector: Injector,
-        private _accountService: AccountServiceProxy
-    ) {
+    // REFACTOR: inject()
+    private _accountService = inject(AccountServiceProxy);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 

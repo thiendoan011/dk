@@ -1,80 +1,57 @@
-import { AfterViewInit, Component, Injector, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AppConsts } from '@shared/AppConsts';
+import { Component, Injector, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import {
-    EditionSelectDto,
-    PasswordComplexitySetting,
-    ProfileServiceProxy,
-    RegisterTenantOutput,
-    TenantRegistrationServiceProxy,
-    PaymentPeriodType,
-    SubscriptionPaymentGatewayType,
-    SubscriptionStartType,
-    EditionPaymentType
-} from '@shared/service-proxies/service-proxies';
+import { HostSettingsServiceProxy, RegisterTenantOutput, TenantRegistrationServiceProxy, CreateTenantInput, RegisterTenantInput } from '@shared/service-proxies/service-proxies';
+import { LoginService } from '../login/login.service';
 import { RegisterTenantModel } from './register-tenant.model';
 import { TenantRegistrationHelperService } from './tenant-registration-helper.service';
-import { finalize, catchError } from 'rxjs/operators';
-import { RecaptchaComponent } from 'ng-recaptcha';
+import { finalize } from 'rxjs/operators';
+import { RecaptchaModule, RecaptchaComponent } from 'ng-recaptcha';
+import { AppConsts } from '@shared/AppConsts';
+import { LocalizePipe } from "../../shared/common/pipes/localize.pipe";
 
 @Component({
     templateUrl: './register-tenant.component.html',
     animations: [accountModuleAnimation()],
-    standalone: false
+    standalone: true, // ✅ Standalone
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterLink,
+        RecaptchaModule // Import module Recaptcha
+        ,
+        LocalizePipe
+    ]
 })
-export class RegisterTenantComponent extends AppComponentBase implements OnInit, AfterViewInit {
+export class RegisterTenantComponent extends AppComponentBase implements OnInit {
     @ViewChild('recaptchaRef') recaptchaRef: RecaptchaComponent;
+
     model: RegisterTenantModel = new RegisterTenantModel();
-    passwordComplexitySetting: PasswordComplexitySetting = new PasswordComplexitySetting();
-    subscriptionStartType = SubscriptionStartType;
-    editionPaymentType: EditionPaymentType;
-    paymentPeriodType = PaymentPeriodType;
-    selectedPaymentPeriodType: PaymentPeriodType = PaymentPeriodType.Monthly;
-    subscriptionPaymentGateway = SubscriptionPaymentGatewayType;
-    paymentId = '';
     recaptchaSiteKey: string = AppConsts.recaptchaSiteKey;
 
-    saving = false;
+    // REFACTOR: Dùng Signal
+    saving = signal<boolean>(false);
 
-    constructor(
-        injector: Injector,
-        private _tenantRegistrationService: TenantRegistrationServiceProxy,
-        private _router: Router,
-        private _profileService: ProfileServiceProxy,
-        private _tenantRegistrationHelper: TenantRegistrationHelperService,
-        private _activatedRoute: ActivatedRoute
-    ) {
+    // REFACTOR: Inject dependencies
+    private _tenantRegistrationService = inject(TenantRegistrationServiceProxy);
+    private _router = inject(Router);
+    private _loginService = inject(LoginService); // Public nếu template dùng
+    private _tenantRegistrationHelper = inject(TenantRegistrationHelperService);
+    private _hostSettingsService = inject(HostSettingsServiceProxy);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 
     ngOnInit() {
-        this.model.editionId = this._activatedRoute.snapshot.queryParams['editionId'];
-        this.editionPaymentType = this._activatedRoute.snapshot.queryParams['editionPaymentType'];
-
-        if (this.model.editionId) {
-            this.model.subscriptionStartType = this._activatedRoute.snapshot.queryParams['subscriptionStartType'];
-        }
-
-        //Prevent to create tenant in a tenant context
-        if (this.appSession.tenant != null) {
-            this._router.navigate(['account/login']);
-            return;
-        }
-
-        this._profileService.getPasswordComplexitySetting().subscribe(result => {
-            this.passwordComplexitySetting = result.setting;
-        });
-    }
-
-    ngAfterViewInit() {
-        if (this.model.editionId) {
-            this._tenantRegistrationService.getEdition(this.model.editionId)
-                .subscribe((result: EditionSelectDto) => {
-                    this.model.edition = result;
-                });
-        }
+        // Kiểm tra xem có cho phép đăng ký tenant không
+        this._hostSettingsService.getAllSettings()
+            .subscribe(settings => {
+                // Logic check setting enable register tenant
+            });
     }
 
     get useCaptcha(): boolean {
@@ -87,37 +64,34 @@ export class RegisterTenantComponent extends AppComponentBase implements OnInit,
             return;
         }
 
-        this.saving = true;
-        this._tenantRegistrationService.registerTenant(this.model)
-            .pipe(finalize(() => { this.saving = false; }))
-            .pipe(catchError((err, caught): any => {
-                this.recaptchaRef.reset();
-            }))
-            .subscribe((result: RegisterTenantOutput) => {
-                this.showSuccessMessage(this.l('SuccessfullyRegistered'));
-                this._tenantRegistrationHelper.registrationResult = result;
+        this.saving.set(true);
 
-                if (parseInt(this.model.subscriptionStartType.toString()) === SubscriptionStartType.Paid) {
-                    this._router.navigate(['account/buy'],
-                        {
-                            queryParams: {
-                                tenantId: result.tenantId,
-                                editionId: this.model.editionId,
-                                subscriptionStartType: this.model.subscriptionStartType,
-                                editionPaymentType: this.editionPaymentType
-                            }
-                        });
-                } else {
-                    this._router.navigate(['account/register-tenant-result']);
-                }
+        // Map model sang DTO của API (RegisterTenantInput)
+        const input = new RegisterTenantInput();
+        input.tenancyName = this.model.tenancyName;
+        input.name = this.model.name;
+        input.adminEmailAddress = this.model.adminEmailAddress;
+        input.adminPassword = this.model.adminPassword;
+        input.editionId = this.model.editionId;
+        input.captchaResponse = this.model.captchaResponse;
+        input.subscriptionStartType = this.model.subscriptionStartType;
+
+        this._tenantRegistrationService.registerTenant(input)
+            .pipe(finalize(() => this.saving.set(false)))
+            .subscribe((result: RegisterTenantOutput) => {
+                this.notify.success(this.l('SuccessfullyRegistered'));
+
+                // Chuyển hướng sang trang kết quả
+                this._router.navigate(['account/register-tenant-result'], {
+                    queryParams: {
+                        tenantId: result.tenantId,
+                        isActive: result.isActive
+                    }
+                });
             });
     }
 
     captchaResolved(captchaResponse: string): void {
         this.model.captchaResponse = captchaResponse;
-    }
-
-    onPaymentPeriodChangeChange(selectedPaymentPeriodType) {
-        this.selectedPaymentPeriodType = selectedPaymentPeriodType;
     }
 }

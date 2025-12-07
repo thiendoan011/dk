@@ -1,61 +1,83 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { Component, Injector, OnInit, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { SendTwoFactorAuthCodeModel, TokenAuthServiceProxy } from '@shared/service-proxies/service-proxies';
 import { LoginService } from './login.service';
-import { finalize } from 'rxjs/operators';
+import { LocalizePipe } from "../../shared/common/pipes/localize.pipe";
 
 @Component({
     templateUrl: './send-two-factor-code.component.html',
     animations: [accountModuleAnimation()],
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterLink,
+        LocalizePipe
+    ]
 })
-export class SendTwoFactorCodeComponent extends AppComponentBase implements CanActivate, OnInit {
-    selectedTwoFactorProvider: string;
-    submitting = false;
+export class SendTwoFactorCodeComponent extends AppComponentBase implements OnInit {
 
-    constructor(
-        injector: Injector,
-        public loginService: LoginService,
-        private _tokenAuthService: TokenAuthServiceProxy,
-        private _router: Router
-    ) {
+    selectedTwoFactorProvider = signal<string>('');
+    submitting = signal<boolean>(false);
+    twoFactorProviders: string[] = [];
+
+    // ✅ THÊM: Biến local để lưu userId, tránh lỗi undefined khi gọi API
+    private _userId: number;
+
+    private _tokenAuthService = inject(TokenAuthServiceProxy);
+    private _router = inject(Router);
+    private _loginService = inject(LoginService);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 
-    canActivate(): boolean {
-        if (this.loginService.authenticateModel &&
-            this.loginService.authenticateResult &&
-            this.loginService.authenticateResult.twoFactorAuthProviders &&
-            this.loginService.authenticateResult.twoFactorAuthProviders.length
-        ) {
-            return true;
-        }
+    ngOnInit(): void {
+        // Lấy kết quả login từ service
+        const result = this._loginService.authenticateResult;
 
-        return false;
+        // Kiểm tra kỹ nếu result tồn tại
+        if (result && result.twoFactorAuthProviders && result.twoFactorAuthProviders.length > 0) {
+            this._userId = result.userId; // ✅ Lưu userId vào biến local
+            this.twoFactorProviders = result.twoFactorAuthProviders;
+            this.selectedTwoFactorProvider.set(this.twoFactorProviders[0]);
+        } else {
+            // Nếu không có thông tin (vd: F5 trang), đá về login
+            this._router.navigate(['account/login']);
+        }
     }
 
-    ngOnInit(): void {
-        if (!this.canActivate()) {
+    sendCode(): void {
+        // Kiểm tra an toàn lần cuối
+        if (!this._userId) {
             this._router.navigate(['account/login']);
             return;
         }
 
-        this.selectedTwoFactorProvider = this.loginService.authenticateResult.twoFactorAuthProviders[0];
-    }
+        this.submitting.set(true);
 
-    submit(): void {
         const model = new SendTwoFactorAuthCodeModel();
-        model.userId = this.loginService.authenticateResult.userId;
-        model.provider = this.selectedTwoFactorProvider;
+        model.userId = this._userId;
+        model.provider = this.selectedTwoFactorProvider();
 
-        this.submitting = true;
-        this._tokenAuthService
-            .sendTwoFactorAuthCode(model)
-            .pipe(finalize(() => this.submitting = false))
-            .subscribe(() => {
-                this._router.navigate(['account/verify-code']);
+        // ✅ FIX: Dùng this._userId đã được gán giá trị
+        this._tokenAuthService.sendTwoFactorAuthCode(model)
+            .subscribe({
+                next: () => {
+                    this.submitting.set(false);
+                    this._router.navigate(['account/verify-code'], {
+                        queryParams: {
+                            provider: this.selectedTwoFactorProvider()
+                        }
+                    });
+                },
+                error: (err) => {
+                    this.submitting.set(false);
+                }
             });
     }
 }

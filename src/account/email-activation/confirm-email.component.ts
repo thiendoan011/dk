@@ -1,63 +1,56 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Injector, OnInit, inject } from '@angular/core';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router'; // Thêm ActivatedRoute
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { AccountServiceProxy, ActivateEmailInput, ResolveTenantIdInput } from '@shared/service-proxies/service-proxies';
+import { AccountServiceProxy, ActivateEmailInput } from '@shared/service-proxies/service-proxies';
+import { accountModuleAnimation } from '@shared/animations/routerTransition';
+import { CommonModule } from '@angular/common';
+import { LocalizePipe } from "../../shared/common/pipes/localize.pipe"; // Import CommonModule nếu template dùng pipe localize
 
 @Component({
-    template: `<p>{{waitMessage}}</p>`,
-    standalone: false
+    template: `
+    <div class="m-login__signin" [@routerTransition]>
+        <div class="m-login__head">
+            <h3 class="m-login__title">
+                {{ 'EmailConfirmation' | localize }}
+            </h3>
+            <div class="m-login__desc">
+                {{ waitMessage | localize }}
+            </div>
+        </div>
+    </div>
+    `,
+    animations: [accountModuleAnimation()],
+    standalone: true, // ✅ Standalone
+    imports: [CommonModule, RouterLink, LocalizePipe]
 })
 export class ConfirmEmailComponent extends AppComponentBase implements OnInit {
 
-    waitMessage: string;
-
+    waitMessage: string = 'PleaseWaitWhileWeAreActivatingYourEmail';
     model: ActivateEmailInput = new ActivateEmailInput();
 
-    constructor(
-        injector: Injector,
-        private _accountService: AccountServiceProxy,
-        private _router: Router,
-        private _activatedRoute: ActivatedRoute
-    ) {
+    // REFACTOR: Inject
+    private _accountService = inject(AccountServiceProxy);
+    private _router = inject(Router);
+    private _activatedRoute = inject(ActivatedRoute);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 
     ngOnInit(): void {
-        this.waitMessage = this.l('PleaseWaitToConfirmYourEmailMessage');
+        this.model.userId = this._activatedRoute.snapshot.queryParams['userId'];
+        this.model.confirmationCode = this._activatedRoute.snapshot.queryParams['confirmationCode'];
 
-        this.model.c = this._activatedRoute.snapshot.queryParams['c'];
-
-        let input = new ResolveTenantIdInput();
-
-        input.c = this.model.c;
-
-        this._accountService.resolveTenantId(input).subscribe((tenantId) => {
-            let reloadNeeded = (this.appSession as any).changeTenantIfNeeded(
-                tenantId
-            );
-
-            if (reloadNeeded) {
-                return;
-            }
-
-            this._accountService.activateEmail(this.model)
-                .subscribe(() => {
-                    this.notify.success(this.l('YourEmailIsConfirmedMessage'), '',
-                        {
-                            onClose: () => {
-                                this._router.navigate(['account/login']);
-                            }
-                        });
-                });
-        });
-    }
-
-    parseTenantId(tenantIdAsStr?: string): number {
-        let tenantId = !tenantIdAsStr ? undefined : parseInt(tenantIdAsStr, 10);
-        if (isNaN(tenantId)) {
-            tenantId = undefined;
-        }
-
-        return tenantId;
+        this._accountService.activateEmail(this.model)
+            .subscribe({
+                next: () => {
+                    this.notify.success(this.l('YourEmailIsConfirmed'));
+                    this._router.navigate(['account/login']);
+                },
+                error: (error) => {
+                    this.notify.error(this.l('EmailConfirmationFailed'));
+                    // Có thể thêm logic redirect về trang lỗi nếu cần
+                }
+            });
     }
 }

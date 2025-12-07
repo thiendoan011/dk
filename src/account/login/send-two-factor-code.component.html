@@ -1,28 +1,70 @@
-<div [@routerTransition]>
-    <div class="m-login__signin">
-        <div class="m-login__head">
-            <h3 class="m-login__title">
-                {{'SendSecurityCode' | localize}}
-            </h3>
-        </div>
-        <form #twoFactorForm="ngForm" class="m-login__form m-form" method="post" (ngSubmit)="submit()" *ngIf="loginService.authenticateResult">
-            <p>{{"SendSecurityCode_Information" | localize}}</p>
-            <div class="form-group m-form__group">
-                <select autoFocus
-                        size="1"
-                        class="form-control"
-                        [(ngModel)]="selectedTwoFactorProvider"
-                        name="selectedTwoFactorProvider">
-                    <option *ngFor="let provider of loginService.authenticateResult.twoFactorAuthProviders" [value]="provider">{{provider}}</option>
-                </select>
-            </div>
-
-            <div class="m-login__form-action">
-                <button type="submit" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--air">{{"Submit" | localize}}</button>
-            </div>
-        </form>
+<div class="m-login__signin"
+    [@routerTransition]>
+    <div
+        class="m-login__head">
+        <h3
+            class="m-login__title">
+            {{
+            'SendSecurityCode'
+            |
+            localize
+            }}
+        </h3>
     </div>
+    <form
+        #sendTwoFactorCodeForm="ngForm"
+        class="m-login__form m-form"
+        method="post"
+        novalidate
+        (ngSubmit)="sendCode()">
+        <div
+            class="form-group m-form__group">
+            <select
+                class="form-control"
+                name="twoFactorProvider"
+                [ngModel]="selectedTwoFactorProvider()"
+                (ngModelChange)="selectedTwoFactorProvider.set($event)">
+                @for
+                (provider
+                of
+                twoFactorProviders;
+                track
+                provider)
+                {
+                <option
+                    [value]="provider">
+                    {{
+                    provider
+                    |
+                    localize
+                    }}
+                </option>
+                }
+            </select>
+        </div>
+        <div
+            class="m-login__form-action">
+            <button
+                [disabled]="submitting()"
+                type="submit"
+                class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--air m-login__btn m-login__btn--primary">
+                {{
+                'Submit'
+                |
+                localize
+                }}
+            </button>
+            <button
+                [disabled]="submitting()"
+                routerLink="/account/login"
+                type="button"
+                class="btn btn-outline-primary m-btn m-btn--pill m-btn--custom m-login__btn">
+                {{
+                'Cancel'
+                |
+                localize
+                }}
+            </button>
+        </div>
+    </form>
 </div>
-
-
-

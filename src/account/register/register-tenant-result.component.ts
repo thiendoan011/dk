@@ -1,40 +1,37 @@
-import { Component, Injector, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Injector, OnInit, inject } from '@angular/core';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
-import { AppUrlService } from '@shared/common/nav/app-url.service';
-import { RegisterTenantOutput } from '@shared/service-proxies/service-proxies';
-import { TenantRegistrationHelperService } from './tenant-registration-helper.service';
 
 @Component({
     templateUrl: './register-tenant-result.component.html',
     animations: [accountModuleAnimation()],
-    standalone: false
+    standalone: true, // ✅ Standalone
+    imports: [
+        CommonModule,
+        RouterLink
+    ]
 })
 export class RegisterTenantResultComponent extends AppComponentBase implements OnInit {
 
-    model: RegisterTenantOutput = new RegisterTenantOutput();
-    tenantUrl: string;
+    tenantId: number;
+    isActive: boolean;
+    tenantLoginAddress: string;
 
-    saving = false;
+    private _router = inject(Router);
+    private _activatedRoute = inject(ActivatedRoute);
 
-    constructor(
-        injector: Injector,
-        private _router: Router,
-        private _appUrlService: AppUrlService,
-        private _tenantRegistrationHelper: TenantRegistrationHelperService
-    ) {
+    constructor(injector: Injector) {
         super(injector);
     }
 
-    ngOnInit() {
-        if (!this._tenantRegistrationHelper.registrationResult) {
-            this._router.navigate(['account/login']);
-            return;
-        }
+    ngOnInit(): void {
+        // Lấy params từ query string
+        this.tenantId = parseInt(this._activatedRoute.snapshot.queryParams['tenantId']);
+        this.isActive = this._activatedRoute.snapshot.queryParams['isActive'] === 'true';
 
-        this.model = this._tenantRegistrationHelper.registrationResult;
-        abp.multiTenancy.setTenantIdCookie(this.model.tenantId);
-        this.tenantUrl = this._appUrlService.getAppRootUrlOfTenant(this.model.tenancyName);
+        // Tạo URL login giả định cho tenant (tùy logic Subdomain hay Path)
+        // this.tenantLoginAddress = ... 
     }
 }

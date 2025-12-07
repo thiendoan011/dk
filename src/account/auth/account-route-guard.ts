@@ -1,40 +1,16 @@
-import { PermissionCheckerService } from 'abp-ng2-module';
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router, CanActivateFn } from '@angular/router';
 import { AppSessionService } from '@shared/common/session/app-session.service';
 
-@Injectable()
-export class AccountRouteGuard implements CanActivate {
+export const accountRouteGuard: CanActivateFn = (route, state) => {
+    const router = inject(Router);
+    const sessionService = inject(AppSessionService);
 
-    constructor(
-        private _permissionChecker: PermissionCheckerService,
-        private _router: Router,
-        private _sessionService: AppSessionService
-    ) { }
-
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        if (route.queryParams['ss'] && route.queryParams['ss'] === 'true') {
-            return true;
-        }
-
-        if (this._sessionService.user) {
-            this._router.navigate([this.selectBestRoute()]);
-            return false;
-        }
-
-        return true;
+    // Nếu đã có user (đã login), không cho vào trang login/register nữa -> đá về trang chính
+    if (sessionService.user) {
+        router.navigate(['/app/main/dashboard']);
+        return false;
     }
 
-    selectBestRoute(): string {
-
-        if (this._permissionChecker.isGranted('Pages.Administration.Host.Dashboard')) {
-            return '/app/admin/hostDashboard';
-        }
-
-        if (this._permissionChecker.isGranted('Pages.Tenant.Dashboard')) {
-            return '/app/main/dashboard';
-        }
-
-        return '/app/notifications';
-    }
-}
+    return true;
+};

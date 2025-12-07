@@ -1,5 +1,60 @@
-<div *ngIf="languages.length > 1" class="language-switch-area">
-    <a *ngFor="let language of languages" (click)="changeLanguage(language)">
-        <span [ngClass]="{'language-icon-current': language.name==currentLanguage.name}" title="{{language.displayName}}"><i class="{{language.icon}}" [attr.aria-label]="language.displayName"></i></span>
-    </a>
+<div
+    class="m-stack__item m-stack__item--right">
+    <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-left m-dropdown--align-push"
+        m-dropdown-toggle="hover"
+        aria-expanded="true">
+        <a href="#"
+            class="m-portlet__nav-link m-dropdown__toggle btn btn-outline-metal m-btn m-btn--pill m-btn--wide m-btn--uppercase">
+            <span
+                class="language-selection-trigger">
+                <i
+                    [class]="currentLanguage.icon"></i>
+                {{currentLanguage.displayName}}
+                <i
+                    class="fa fa-angle-down"></i>
+            </span>
+        </a>
+        <div
+            class="m-dropdown__wrapper">
+            <span
+                class="m-dropdown__arrow m-dropdown__arrow--left"></span>
+            <div
+                class="m-dropdown__inner">
+                <div
+                    class="m-dropdown__body">
+                    <div
+                        class="m-dropdown__content">
+                        <ul
+                            class="m-nav">
+                            @for
+                            (language
+                            of
+                            languages;
+                            track
+                            language.name)
+                            {
+                            <li
+                                class="m-nav__item">
+                                <a href="javascript:;"
+                                    (click)="changeLanguage(language.name)"
+                                    class="m-nav__link">
+                                    <span
+                                        class="m-nav__link-icon">
+                                        <i
+                                            [class]="language.icon"></i>
+                                    </span>
+                                    <span
+                                        class="m-nav__link-text"
+                                        [class.m--font-bolder]="language.name === currentLanguage.name">
+                                        {{language.displayName}}
+                                    </span>
+                                </a>
+                            </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,34 +1,35 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Import CommonModule
 import { AppComponentBase } from '@shared/common/app-component-base';
-import * as _ from 'lodash';
+import { filter as _filter } from 'lodash-es';
 
 @Component({
     selector: 'language-switch',
     templateUrl: './language-switch.component.html',
-    standalone: true
+    standalone: true, // ✅ Standalone
+    imports: [CommonModule]
 })
 export class LanguageSwitchComponent extends AppComponentBase implements OnInit {
 
+    languages: abp.localization.ILanguageInfo[];
     currentLanguage: abp.localization.ILanguageInfo;
-    languages: abp.localization.ILanguageInfo[] = [];
 
     constructor(injector: Injector) {
         super(injector);
     }
 
     ngOnInit(): void {
-        this.languages = _.filter(abp.localization.languages, l => (<any>l).isDisabled === false);
-        this.currentLanguage = abp.localization.currentLanguage;
+        this.languages = _filter(this.localization.languages, l => !l.isDisabled);
+        this.currentLanguage = this.localization.currentLanguage;
     }
 
-    changeLanguage(language: abp.localization.ILanguageInfo) {
+    changeLanguage(languageName: string): void {
         abp.utils.setCookieValue(
             'Abp.Localization.CultureName',
-            language.name,
+            languageName,
             new Date(new Date().getTime() + 5 * 365 * 86400000), // 5 year
             abp.appPath
         );
-
         location.reload();
     }
 }

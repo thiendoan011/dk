@@ -1,16 +1,22 @@
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CanActivate, Router, RouterModule } from '@angular/router';
 import { accountModuleAnimation } from '@shared/animations/routerTransition';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { Subscription } from 'rxjs';
 import { timer } from 'rxjs';
 import { LoginService } from './login.service';
+import { LocalizePipe } from '@shared/common/pipes/localize.pipe';
+
 
 @Component({
     templateUrl: './validate-two-factor-code.component.html',
     styleUrls: ['./validate-two-factor-code.component.less'],
     animations: [accountModuleAnimation()],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, RouterModule, LocalizePipe],
+
 })
 export class ValidateTwoFactorCodeComponent extends AppComponentBase implements CanActivate, OnInit, OnDestroy {
 

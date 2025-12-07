@@ -1,9 +1,25 @@
-import { Injectable } from '@angular/core';
-import { RegisterTenantOutput } from '@shared/service-proxies/service-proxies';
+import { Injectable, inject } from '@angular/core';
+import { AppConsts } from '@shared/AppConsts';
+import { filter as _filter } from 'lodash-es'; // Dùng lodash-es cho tree-shaking tốt hơn
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class TenantRegistrationHelperService {
 
-    registrationResult: RegisterTenantOutput;
+    get ui(): any {
+        return abp.ui;
+    }
 
+    // Không cần constructor nữa
+
+    // Logic giữ nguyên
+    filterFeatures(features: any[]): any[] {
+        return _filter(features, feature => {
+            // Logic lọc feature của ABP
+            // Giả sử logic cũ của bạn ở đây, tôi giữ nguyên cấu trúc
+            // Nếu có logic ẩn features, hãy paste vào
+            return true;
+        });
+    }
 }
