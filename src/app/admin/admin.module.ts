@@ -58,25 +58,10 @@ import { TenantFeaturesModalComponent } from './zero-base/tenants/tenant-feature
 import { TenantsComponent } from './zero-base/tenants/tenants.component';
 import { UiCustomizationComponent } from './zero-base/ui-customization/ui-customization.component';
 import { DefaultThemeUiSettingsComponent } from './zero-base/ui-customization/default-theme-ui-settings.component';
-import { Theme2ThemeUiSettingsComponent } from './zero-base/ui-customization/theme2-theme-ui-settings.component';
-import { Theme3ThemeUiSettingsComponent } from './zero-base/ui-customization/theme3-theme-ui-settings.component';
-import { Theme4ThemeUiSettingsComponent } from './zero-base/ui-customization/theme4-theme-ui-settings.component';
-import { Theme5ThemeUiSettingsComponent } from './zero-base/ui-customization/theme5-theme-ui-settings.component';
-import { Theme6ThemeUiSettingsComponent } from './zero-base/ui-customization/theme6-theme-ui-settings.component';
-import { Theme7ThemeUiSettingsComponent } from './zero-base/ui-customization/theme7-theme-ui-settings.component';
-import { Theme8ThemeUiSettingsComponent } from './zero-base/ui-customization/theme8-theme-ui-settings.component';
-import { Theme9ThemeUiSettingsComponent } from './zero-base/ui-customization/theme9-theme-ui-settings.component';
-import { Theme10ThemeUiSettingsComponent } from './zero-base/ui-customization/theme10-theme-ui-settings.component';
-import { Theme11ThemeUiSettingsComponent } from './zero-base/ui-customization/theme11-theme-ui-settings.component';
-import { Theme12ThemeUiSettingsComponent } from './zero-base/ui-customization/theme12-theme-ui-settings.component';
 import { CreateOrEditUserModalComponent } from './zero-base/users/create-or-edit-user-modal.component';
 import { EditUserPermissionsModalComponent } from './zero-base/users/edit-user-permissions-modal.component';
 import { ImpersonationService } from './zero-base/users/impersonation.service';
 import { UsersComponent } from './zero-base/users/users.component';
-// TODO: Replace with Angular 19 compatible counter solution (e.g., ngx-countup)
-// import { CountoModule } from 'angular2-counto';
-// TODO: Replace with Angular 19 compatible input mask solution
-// import { TextMaskModule } from 'angular2-text-mask';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { NgxBootstrapDatePickerConfigService } from 'assets/ngx-bootstrap/ngx-bootstrap-datepicker-config.service';
 import { CCoreModule } from './core/core.module';
@@ -91,19 +76,14 @@ import { OrganizationUnitsTreeComponent } from './zero-base/shared/organization-
 import { EditionComboComponent } from './zero-base/shared/edition-combo.component';
 import { InvoiceComponent } from './zero-base/subscription-management/invoice/invoice.component';
 import { SubscriptionManagementComponent } from './zero-base/subscription-management/subscription-management.component';
-import { CustomStackVerticalChartComponent } from './zero-base/utils/custom-stack-vertical-chart/custom-stack-vertical-chart.component';
 import { GridPermissionComponent } from './zero-base/roles/grid-permission.component';
 import { PlanMasterModule } from './plan-masters/plan-master.module';
 import { ReportModule } from './reports/report.module';
 import { ToolModule } from './tools/tool.module';
 import { MaterialStoreModule } from './material-store/material-store.module';
 import { PoMasterModule } from './po-masters/po-master.module';
-import { ProjectDevelopmentModule } from './project-development/project-development.module';
 import { ProductModule } from './product/product.module';
-import { TimeTrackingModule } from './time-tracking/time-tracking.module';
 import { PurchaseModule } from './purchase/purchase.module';
-import { FreightModule } from './freight/freight.module';
-import { VehicleModule } from './vehicle/vehicle.module';
 
 
 @NgModule({
@@ -196,18 +176,6 @@ import { VehicleModule } from './vehicle/vehicle.module';
         DemoUiEditorComponent,
         UiCustomizationComponent,
         DefaultThemeUiSettingsComponent,
-        Theme2ThemeUiSettingsComponent,
-        Theme3ThemeUiSettingsComponent,
-        Theme4ThemeUiSettingsComponent,
-        Theme5ThemeUiSettingsComponent,
-        Theme6ThemeUiSettingsComponent,
-        Theme7ThemeUiSettingsComponent,
-        Theme8ThemeUiSettingsComponent,
-        Theme9ThemeUiSettingsComponent,
-        Theme10ThemeUiSettingsComponent,
-        Theme12ThemeUiSettingsComponent,
-        CustomStackVerticalChartComponent,
-        Theme11ThemeUiSettingsComponent,
         GridPermissionComponent
     ],
     exports: [
