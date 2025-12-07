@@ -1,65 +1,75 @@
-import { Injector, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { AbpMultiTenancyService } from 'abp-ng2-module';
-import { AbpSessionService } from 'abp-ng2-module';
-import { ImpersonationService } from '@app/admin/zero-base/users/impersonation.service';
+import { Component, Injector, OnInit, ViewEncapsulation, inject, NgZone } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import * as _ from 'lodash';
+
+// Modules & Services
+import { AbpMultiTenancyService, AbpSessionService } from 'abp-ng2-module';
+import { AppConsts } from '@shared/AppConsts';
 import { AppAuthService } from '@app/shared/common/auth/app-auth.service';
 import { LinkedAccountService } from '@app/shared/layout/linked-account.service';
-import { AppConsts } from '@shared/AppConsts';
 import { ThemesLayoutBaseComponent } from '@app/shared/layout/themes/themes-layout-base.component';
 import { ChangeUserLanguageDto, LinkedUserDto, ProfileServiceProxy, UserLinkServiceProxy } from '@shared/service-proxies/service-proxies';
-import * as _ from 'lodash';
+import { ImpersonationService } from '@app/admin/zero-base/users/impersonation.service';
 import { WebConsts } from '@app/ultilities/enum/consts';
 import { LoginMethod } from '@app/ultilities/enum/login-method';
+import { UtilsModule } from '@shared/utils/utils.module';
+
+// COMPONENTS CON (Bắt buộc import để HTML hiểu thẻ)
+import { HeaderNotificationsComponent } from './notifications/header-notifications.component';
+import { UserMenuComponent } from './nav/user-menu.component';
 
 @Component({
-    templateUrl: './topbar.component.html',
     selector: 'topbar',
-    encapsulation: ViewEncapsulation.None
+    templateUrl: './topbar.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: true, // Component chuẩn Angular 19
+    imports: [
+        CommonModule,
+        RouterModule,
+        UtilsModule,
+        // Import 2 component này để HTML hoạt động
+        HeaderNotificationsComponent,
+        UserMenuComponent
+    ]
 })
 export class TopBarComponent extends ThemesLayoutBaseComponent implements OnInit {
 
-    languages: abp.localization.ILanguageInfo[];
+    languages: abp.localization.ILanguageInfo[] = [];
     currentLanguage: abp.localization.ILanguageInfo;
     isImpersonatedLogin = false;
     isMultiTenancyEnabled = false;
     shownLoginName = '';
-    tenancyName = '';
-    userName = '';
     profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
-    defaultLogo = '/assets/logo/web_logo.png';
-    recentlyLinkedUsers: LinkedUserDto[];
-    unreadChatMessageCount = 0;
+    defaultProfilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
     chatConnected = false;
-    isQuickThemeSelectEnabled: boolean = this.setting.getBoolean('App.UserManagement.IsQuickThemeSelectEnabled');
-    isNormalLoginMethod = this.setting.get(WebConsts.LoginMethodConsts) == LoginMethod.normal;
+    unreadChatMessageCount = 0;
 
-    isShowLanguage: boolean = this.setting.getBoolean('gAMSProCore.LanguageComboboxEnable');
+    // INJECT SERVICE (Thay thế constructor injection dài dòng)
+    private readonly _abpSessionService = inject(AbpSessionService);
+    private readonly _abpMultiTenancyService = inject(AbpMultiTenancyService);
+    private readonly _profileServiceProxy = inject(ProfileServiceProxy);
+    // private readonly _userLinkServiceProxy = inject(UserLinkServiceProxy); // Chưa dùng có thể comment
+    private readonly _authService = inject(AppAuthService);
+    private readonly _impersonationService = inject(ImpersonationService);
+    private readonly _linkedAccountService = inject(LinkedAccountService);
+    private readonly _zone = inject(NgZone);
 
-    constructor(
-        injector: Injector,
-        private _abpSessionService: AbpSessionService,
-        private _abpMultiTenancyService: AbpMultiTenancyService,
-        private _profileServiceProxy: ProfileServiceProxy,
-        private _userLinkServiceProxy: UserLinkServiceProxy,
-        private _authService: AppAuthService,
-        private _impersonationService: ImpersonationService,
-        private _linkedAccountService: LinkedAccountService
-    ) {
+    // CONSTRUCTOR
+    // Vẫn phải giữ Injector ở đây để thỏa mãn lớp cha (ThemesLayoutBaseComponent)
+    constructor(injector: Injector) {
         super(injector);
     }
 
     ngOnInit() {
         this.isMultiTenancyEnabled = this._abpMultiTenancyService.isEnabled;
-        this.languages = _.filter(this.localization.languages, l => (l).isDisabled === false);
-
-        this.currentLanguage = this.localization.currentLanguage;
+        this.languages = _.filter(abp.localization.languages, l => (<any>l).isDisabled === false);
+        this.currentLanguage = abp.localization.currentLanguage;
         this.isImpersonatedLogin = this._abpSessionService.impersonatorUserId > 0;
 
         this.setCurrentLoginInformations();
         this.getProfilePicture();
-        //    this.getRecentlyLinkedUsers();
-
         this.registerToEvents();
     }
 
@@ -68,20 +78,17 @@ export class TopBarComponent extends ThemesLayoutBaseComponent implements OnInit
             this.getProfilePicture();
         });
 
-        abp.event.on('app.chat.unreadMessageCountChanged', messageCount => {
-            this.unreadChatMessageCount = messageCount;
-        });
-
         abp.event.on('app.chat.connected', () => {
-            this.chatConnected = true;
+            // Dùng NgZone để đảm bảo UI update khi event từ bên ngoài bắn vào
+            this._zone.run(() => {
+                this.chatConnected = true;
+            });
         });
 
-        abp.event.on('app.getRecentlyLinkedUsers', () => {
-            this.getRecentlyLinkedUsers();
-        });
-
-        abp.event.on('app.onMySettingsModalSaved', () => {
-            this.onMySettingsModalSaved();
+        abp.event.on('app.chat.unreadMessageCountChanged', count => {
+            this._zone.run(() => {
+                this.unreadChatMessageCount = count;
+            });
         });
     }
 
@@ -93,45 +100,28 @@ export class TopBarComponent extends ThemesLayoutBaseComponent implements OnInit
             abp.utils.setCookieValue(
                 'Abp.Localization.CultureName',
                 languageName,
-                new Date(new Date().getTime() + 5 * 365 * 86400000), //5 year
+                new Date(new Date().getTime() + 5 * 365 * 86400000), // 5 year
                 abp.appPath
             );
-
             window.location.reload();
         });
     }
 
     setCurrentLoginInformations(): void {
         this.shownLoginName = this.appSession.getShownLoginName();
-        this.tenancyName = this.appSession.tenancyName;
-        if (this.appSession.user) {
-            this.userName = this.appSession.user.userName;
-        }
-    }
-
-    getShownUserName(linkedUser: LinkedUserDto): string {
-        if (!this._abpMultiTenancyService.isEnabled) {
-            return linkedUser.username;
-        }
-
-        return (linkedUser.tenantId ? linkedUser.tenancyName : '.') + '\\' + linkedUser.username;
     }
 
     getProfilePicture(): void {
-
-        if (this.appSession.user.profilePicture) {
-            this.profilePicture = 'data:image/jpeg;base64,' + this.appSession.user.profilePicture.profilePicture
-            this.updateView();
-        }
-    }
-
-    getRecentlyLinkedUsers(): void {
-        this._userLinkServiceProxy.getRecentlyUsedLinkedUsers().subscribe(result => {
-            this.recentlyLinkedUsers = result.items;
+        this._profileServiceProxy.getProfilePicture().subscribe(result => {
+            if (result && result.profilePicture) {
+                this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
+            } else {
+                this.profilePicture = this.defaultProfilePicture;
+            }
         });
     }
 
-
+    // Các hàm show modal - Sử dụng event trigger global
     showLoginAttempts(): void {
         abp.event.trigger('app.show.loginAttemptsModal');
     }
@@ -155,8 +145,7 @@ export class TopBarComponent extends ThemesLayoutBaseComponent implements OnInit
     logout(): void {
         if (abp.setting.get('gAMSProCore.LoginMethod') == LoginMethod.adfs) {
             this._authService.logoutAdfs();
-        }
-        else {
+        } else {
             this._authService.logout();
         }
     }
@@ -174,12 +163,6 @@ export class TopBarComponent extends ThemesLayoutBaseComponent implements OnInit
     }
 
     get chatEnabled(): boolean {
-        return (!this._abpSessionService.tenantId || this.feature.isEnabled('App.ChatFeature'));
-    }
-
-    downloadCollectedData(): void {
-        this._profileServiceProxy.prepareCollectedData().subscribe(() => {
-            this.message.success(this.l('GdprDataPrepareStartedNotification'));
-        });
+        return (!this.appSession.tenantId || this.feature.isEnabled('App.ChatFeature'));
     }
 }

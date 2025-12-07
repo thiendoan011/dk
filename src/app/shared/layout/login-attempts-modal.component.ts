@@ -1,14 +1,16 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { ProfileServiceProxy, UserLoginAttemptDto, UserLoginServiceProxy } from '@shared/service-proxies/service-proxies';
 import moment from 'moment';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: 'loginAttemptsModal',
     templateUrl: './login-attempts-modal.component.html',
-    standalone: true
+    standalone: true,
+    imports: [CommonModule, ModalModule]
 })
 export class LoginAttemptsModalComponent extends AppComponentBase {
 
@@ -18,11 +20,10 @@ export class LoginAttemptsModalComponent extends AppComponentBase {
     profilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
     defaultProfilePicture = AppConsts.appBaseUrl + '/assets/common/images/default-profile-picture.png';
 
-    constructor(
-        injector: Injector,
-        private _userLoginService: UserLoginServiceProxy,
-        private _profileService: ProfileServiceProxy
-    ) {
+    private readonly _userLoginService = inject(UserLoginServiceProxy);
+    private readonly _profileService = inject(ProfileServiceProxy);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 
@@ -32,7 +33,6 @@ export class LoginAttemptsModalComponent extends AppComponentBase {
             this._profileService.getProfilePicture().subscribe(result => {
                 if (result && result.profilePicture) {
                     this.profilePicture = 'data:image/jpeg;base64,' + result.profilePicture;
-                    this.updateView();
                 }
                 this.modal.show();
             });
@@ -43,17 +43,7 @@ export class LoginAttemptsModalComponent extends AppComponentBase {
         this.modal.hide();
     }
 
-    setProfilePictureClass(userLoginAttemptResult: string): any {
-        const classes = {
-            label: true,
-            'label-success': userLoginAttemptResult === 'Success',
-            'label-danger': userLoginAttemptResult !== 'Success'
-        };
-
-        return classes;
-    }
-
     getLoginAttemptTime(userLoginAttempt: UserLoginAttemptDto): string {
-        return moment(userLoginAttempt.creationTime).lang('vi').fromNow() + ' (' + moment(userLoginAttempt.creationTime).lang('vi').format('YYYY-MM-DD hh:mm:ss') + ')';
+        return moment(userLoginAttempt.creationTime).fromNow() + ' (' + moment(userLoginAttempt.creationTime).format('YYYY-MM-DD HH:mm:ss') + ')';
     }
 }

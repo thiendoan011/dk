@@ -1,12 +1,15 @@
 import { Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild, forwardRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { SettingScopes, NameValueDto, TimingServiceProxy } from '@shared/service-proxies/service-proxies';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
     selector: 'timezone-combo',
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule],
     template:
-    `
+        `
     <select class="form-control" [formControl]="selectedTimeZone">
         <option *ngFor="let timeZone of timeZones" [value]="timeZone.value">{{timeZone.name}}</option>
     </select>`,

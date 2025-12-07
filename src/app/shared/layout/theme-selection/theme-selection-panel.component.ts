@@ -1,13 +1,15 @@
 import { AfterViewInit, Component, Injector, ViewEncapsulation, NgZone, ElementRef, HostBinding, OnInit, ViewChild } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { UiCustomizationSettingsServiceProxy } from '@shared/service-proxies/service-proxies';
+import { LocalizePipe } from "../../../../shared/common/pipes/localize.pipe";
 
 @Component({
     templateUrl: './theme-selection-panel.component.html',
     selector: 'theme-selection-panel',
     styleUrls: ['./theme-selection-panel.less'],
     encapsulation: ViewEncapsulation.None,
-    standalone: true
+    standalone: true,
+    imports: [LocalizePipe]
 })
 export class ThemeSelectionPanelComponent extends AppComponentBase implements AfterViewInit, OnInit {
 

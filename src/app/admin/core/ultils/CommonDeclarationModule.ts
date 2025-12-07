@@ -342,7 +342,7 @@ export const commonDeclarationImports = [
 
 @NgModule({
     imports: [
-        ngCommon.CommonModule,
+        CommonModule,
         FormsModule,
         HttpClientModule,
         HttpClientJsonpModule,
@@ -357,9 +357,9 @@ export const commonDeclarationImports = [
         ServiceProxyModule,
         TableModule,
         PaginatorModule,
+        HeaderNotificationsComponent
     ],
     declarations: [
-        HeaderNotificationsComponent,
         TopBarComponent,
         DefaultBrandComponent,
         SideBarMenuComponent

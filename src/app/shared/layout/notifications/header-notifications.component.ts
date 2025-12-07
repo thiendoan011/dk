@@ -1,28 +1,34 @@
-import { Component, Injector, OnInit, ViewEncapsulation, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, Injector, OnInit, ViewEncapsulation, NgZone, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { NotificationServiceProxy, UserNotification } from '@shared/service-proxies/service-proxies';
 import { IFormattedUserNotification, UserNotificationHelper } from './UserNotificationHelper';
-import * as _ from 'lodash';
+import { MomentFromNowPipe } from "../../../../shared/utils/moment-from-now.pipe";
 
 @Component({
+    selector: 'header-notifications',
     templateUrl: './header-notifications.component.html',
-    selector: '[headerNotifications]',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        MomentFromNowPipe
+    ]
 })
 export class HeaderNotificationsComponent extends AppComponentBase implements OnInit {
 
     notifications: IFormattedUserNotification[] = [];
     unreadNotificationCount = 0;
 
-    constructor(
-        injector: Injector,
-        private _notificationService: NotificationServiceProxy,
-        private _userNotificationHelper: UserNotificationHelper,
-        public _zone: NgZone
-    ) {
+    // Inject Dependencies
+    private readonly _notificationService = inject(NotificationServiceProxy);
+    private readonly _userNotificationHelper = inject(UserNotificationHelper);
+    private readonly _zone = inject(NgZone);
+
+    constructor(injector: Injector) {
         super(injector);
-        this.cdr = injector.get(ChangeDetectorRef);
-        // console.log(this);
     }
 
     ngOnInit(): void {
@@ -31,75 +37,57 @@ export class HeaderNotificationsComponent extends AppComponentBase implements On
     }
 
     loadNotifications(): void {
-        this._notificationService.getUserNotifications(undefined, 10, 0).subscribe(result => {
-            this.unreadNotificationCount = result.unreadCount;
-            this.notifications = [];
-            _.forEach(result.items, (item: UserNotification) => {
-                this.notifications.push(this._userNotificationHelper.format(<any>item));
+        // Gọi API load notifications
+        // Demo logic:
+        this._notificationService.getUserNotifications(undefined, undefined, undefined)
+            .subscribe(result => {
+                this.unreadNotificationCount = result.unreadCount;
+                this.notifications = [];
+                result.items.forEach(item => {
+                    this.notifications.push(this._userNotificationHelper.format(item));
+                });
             });
-
-            this.cdr.detectChanges();
-        });
     }
 
     registerToEvents() {
-        let self = this;
-
-        function onNotificationReceived(userNotification) {
-            self._userNotificationHelper.show(userNotification);
-            self.loadNotifications();
-        }
-
-        abp.event.on('abp.notifications.received', userNotification => {
-            self._zone.run(() => {
-                onNotificationReceived(userNotification);
+        // Lắng nghe sự kiện realtime từ SignalR (abp.event)
+        abp.event.on('abp.notifications.received', (userNotification) => {
+            this._zone.run(() => { // Cần chạy trong Zone để update UI
+                this._userNotificationHelper.show(userNotification);
+                this.loadNotifications();
             });
         });
-
-        function onNotificationsRefresh() {
-            self.loadNotifications();
-        }
 
         abp.event.on('app.notifications.refresh', () => {
-            self._zone.run(() => {
-                onNotificationsRefresh();
+            this._zone.run(() => {
+                this.loadNotifications();
             });
         });
 
-        function onNotificationsRead(userNotificationId) {
-            for (let i = 0; i < self.notifications.length; i++) {
-                if (self.notifications[i].userNotificationId === userNotificationId) {
-                    self.notifications[i].state = 'READ';
-                }
-            }
-
-            self.unreadNotificationCount -= 1;
-        }
-
-        abp.event.on('app.notifications.read', userNotificationId => {
-            self._zone.run(() => {
-                onNotificationsRead(userNotificationId);
+        abp.event.on('abp.notifications.read', (userNotificationId) => {
+            this._zone.run(() => {
                 this.loadNotifications();
-                // this.updateView();
             });
         });
     }
 
     setAllNotificationsAsRead(): void {
-        this._userNotificationHelper.setAllAsRead();
+        this._userNotificationHelper.setAllAsRead(() => {
+            this.loadNotifications();
+        });
     }
 
     openNotificationSettingsModal(): void {
-        this._userNotificationHelper.openSettingsModal();
+        // Logic mở modal settings thông qua Global Event hoặc ViewChild từ AppComponent
+        // Cách tốt hơn: Dùng Service để mở Modal, hoặc emit event
+        abp.event.trigger('app.show.notificationSettingsModal');
     }
 
     setNotificationAsRead(userNotification: IFormattedUserNotification): void {
-        this._userNotificationHelper.setAsRead(userNotification.userNotificationId);
-    }
-
-    gotoUrl(url): void {
-        if (url) {
-            location.href = url;
+        if (userNotification.state !== 'READ') {
+            this._userNotificationHelper.setAsRead(userNotification.userNotificationId, () => {
+                this.loadNotifications();
+            });
         }
     }
 }

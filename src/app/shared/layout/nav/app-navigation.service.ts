@@ -1,52 +1,128 @@
 import { Injectable, inject } from '@angular/core';
 import { AppMenu } from './app-menu';
 import { AppMenuItem } from './app-menu-item';
-import { PermissionCheckerService } from '@abp/auth/permission-checker.service';
+import { AppMenuServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/common/session/app-session.service';
+import { PermissionCheckerService } from 'abp-ng2-module'; // Hoặc đường dẫn đúng trong project của bạn
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root' // Đảm bảo service này global
+    providedIn: 'root'
 })
 export class AppNavigationService {
 
-    // Inject dependencies bằng hàm inject()
+    // 1. Inject Dependencies bằng inject()
     private readonly _permissionCheckerService = inject(PermissionCheckerService);
     private readonly _appSessionService = inject(AppSessionService);
+    private readonly _appMenuService = inject(AppMenuServiceProxy);
+
+    // Biến static để lưu cache hoặc truy cập global nếu code cũ cần
+    static appMenus: AppMenuItem[] = [];
 
     constructor() { }
 
-    getMenu(): AppMenu {
-        return new AppMenu('MainMenu', 'MainMenu', [
-            new AppMenuItem('Dashboard', 'Pages.Administration.Host.Dashboard', 'flaticon-line-graph', '/app/admin/hostDashboard'),
-            new AppMenuItem('Dashboard', 'Pages.Tenant.Dashboard', 'flaticon-line-graph', '/app/main/dashboard'),
-            new AppMenuItem('Tenants', 'Pages.Tenants', 'flaticon-list-3', '/app/admin/tenants'),
-            new AppMenuItem('Editions', 'Pages.Editions', 'flaticon-app', '/app/admin/editions'),
+    // 2. Logic lấy menu từ API (đã được refactor)
+    getMenus(): Observable<AppMenu> {
+        const subject = new Subject<AppMenu>();
 
-            // ... (Giữ nguyên danh sách menu cũ của bạn ở đây) ...
-            new AppMenuItem('Administration', '', 'flaticon-interface-8', '', [
-                new AppMenuItem('OrganizationUnits', 'Pages.Administration.OrganizationUnits', 'flaticon-map', '/app/admin/organization-units'),
-                new AppMenuItem('Roles', 'Pages.Administration.Roles', 'flaticon-suitcase', '/app/admin/roles'),
-                new AppMenuItem('Users', 'Pages.Administration.Users', 'flaticon-users', '/app/admin/users'),
-                new AppMenuItem('Languages', 'Pages.Administration.Languages', 'flaticon-tabs', '/app/admin/languages'),
-                new AppMenuItem('AuditLogs', 'Pages.Administration.AuditLogs', 'flaticon-folder-1', '/app/admin/auditLogs'),
-                new AppMenuItem('Maintenance', 'Pages.Administration.Host.Maintenance', 'flaticon-lock', '/app/admin/maintenance'),
-                new AppMenuItem('Subscription', 'Pages.Administration.Tenant.SubscriptionManagement', 'flaticon-refresh', '/app/admin/subscription-management'),
-                new AppMenuItem('VisualSettings', 'Pages.Administration.UiCustomization', 'flaticon-medical', '/app/admin/ui-customization'),
-                new AppMenuItem('Settings', 'Pages.Administration.Host.Settings', 'flaticon-settings', '/app/admin/hostSettings'),
-                new AppMenuItem('Settings', 'Pages.Administration.Tenant.Settings', 'flaticon-settings', '/app/admin/tenantSettings')
-            ]),
-            new AppMenuItem('DemoUiComponents', 'Pages.DemoUiComponents', 'flaticon-shapes', '/app/admin/demo-ui-components')
-        ]);
+        this.getMenuList().subscribe(appMenus => {
+            this.buildTreeMenu(appMenus);
+            // Lọc các item cấp 1 (không có parent) để tạo Root Menu
+            const menu = new AppMenu('MainMenu', 'MainMenu', appMenus.filter(x => x.parent == null));
+            subject.next(menu);
+            subject.complete();
+        });
+
+        return subject.asObservable();
     }
 
+    // 3. Hàm lấy danh sách phẳng từ Server
+    getMenuList(): Observable<AppMenuItem[]> {
+        const subject = new Subject<AppMenuItem[]>();
+
+        this._appMenuService.getAllMenus().subscribe(response => {
+            let appMenus: AppMenuItem[] = [];
+
+            // Lọc theo permission ngay khi nhận dữ liệu
+            const filteredResponse = response.filter(x => this._permissionCheckerService.isGranted(x.permissionName));
+
+            filteredResponse.forEach(x => {
+                const appMenu = new AppMenuItem(x.name, x.permissionName, x.icon, x.route);
+                appMenu.id = x.menuId; // Giả định AppMenuItem có property id/parentId (cần thêm vào class nếu thiếu)
+                appMenu.parentId = x.parentId;
+                appMenu.items = [];
+                appMenus.push(appMenu);
+            });
+
+            AppNavigationService.appMenus = appMenus;
+            subject.next(appMenus);
+            subject.complete();
+        });
+
+        return subject.asObservable();
+    }
+
+    // 4. Hàm chuyển danh sách phẳng sang cây (Tree)
+    buildTreeMenu(appMenus: AppMenuItem[]) {
+        const dist = {};
+
+        // Map ID
+        appMenus.forEach((x) => {
+            dist[x.id] = x;
+        });
+
+        // Gán con vào cha
+        appMenus.forEach((x) => {
+            const parent = dist[x.parentId];
+            if (parent) {
+                parent.items.push(x);
+                x.parent = parent;
+            }
+        });
+    }
+
+    // 5. Logic check permission đệ quy
     checkChildMenuItemPermission(menuItem: AppMenuItem): boolean {
-        if (menuItem.permissionName) {
-            return this._permissionCheckerService.isGranted(menuItem.permissionName);
-        } else if (menuItem.items && menuItem.items.length) {
-            return this.checkChildMenuItemPermission(menuItem.items[0]); // Check recursive logic cũ
+        if (menuItem.permissionName && this._permissionCheckerService.isGranted(menuItem.permissionName)) {
+            return true;
         }
+
+        if (menuItem.items && menuItem.items.length) {
+            for (let i = 0; i < menuItem.items.length; i++) {
+                if (this.checkChildMenuItemPermission(menuItem.items[i])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // 6. Logic ẩn hiện menu (bao gồm check Feature, Auth, Permission)
+    showMenuItem(menuItem: AppMenuItem): boolean {
+        // Logic nghiệp vụ riêng: Ẩn Subscription nếu Tenant chưa có Edition
+        if (menuItem.permissionName === 'Pages.Administration.Tenant.SubscriptionManagement' &&
+            this._appSessionService.tenant &&
+            !this._appSessionService.tenant.edition) {
+            return false;
+        }
+
+        if (menuItem.requiresAuthentication && !this._appSessionService.user) {
+            return false;
+        }
+
+        if (menuItem.permissionName && !this._permissionCheckerService.isGranted(menuItem.permissionName)) {
+            return false;
+        }
+
+        if (menuItem.hasFeatureDependency() && !menuItem.featureDependencySatisfied()) {
+            return false;
+        }
+
+        // Nếu là menu cha (có con), kiểm tra xem có con nào được phép hiện không
+        if (menuItem.items && menuItem.items.length) {
+            return this.checkChildMenuItemPermission(menuItem);
+        }
+
         return true;
     }
-
-    // ... Giữ các hàm logic khác nếu có
 }

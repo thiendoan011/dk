@@ -1,28 +1,70 @@
-<div bsModal #smsVerificationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" [config]="{backdrop: 'static'}">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form *ngIf="active" #smsVerificationModalForm="ngForm" (ngSubmit)="save()">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <span>{{"VerifyYourCode" | localize}}</span>
+<div bsModal
+    #modal="bs-modal"
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modal"
+    aria-hidden="true"
+    [config]="{backdrop: 'static'}">
+    <div
+        class="modal-dialog modal-lg">
+        <div
+            class="modal-content">
+            @if
+            (active)
+            {
+            <form
+                #smsVerificationModalForm="ngForm"
+                (ngSubmit)="save()">
+                <div
+                    class="modal-header">
+                    <h5
+                        class="modal-title">
+                        <span>{{l("SmsVerification")}}</span>
                     </h5>
-                    <button type="button" class="close" [attr.aria-label]="l('Close')" (click)="close()">
-                        <span aria-hidden="true">&times;</span>
+                    <button
+                        type="button"
+                        class="close"
+                        (click)="close()"
+                        [attr.aria-label]="l('Close')">
+                        <span
+                            aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div id="inputDiv" class="form-group required">
-                        <label for="YourCode">{{"YourCode" | localize}}</label>
-                        <input id="YourCode" #codeInput="ngModel" class="form-control" autoFocus type="text" name="Code" [(ngModel)]="verifyCode.code" required maxlength="6" minlength="6">
-                        <validation-messages [formCtrl]="codeInput"></validation-messages>
+                <div
+                    class="modal-body">
+                    <div
+                        class="form-group">
+                        <label
+                            for="Code">{{l("Code")}}</label>
+                        <input
+                            id="Code"
+                            type="text"
+                            name="Code"
+                            class="form-control"
+                            [(ngModel)]="verifyCodeInput.code"
+                            required
+                            maxlength="16">
                     </div>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" [disabled]="!smsVerificationModalForm.form.valid || saving"><i class="fa fa-save"></i> <span>{{"Verify" | localize}}</span></button>
+                <div
+                    class="modal-footer">
+                    <button
+                        [disabled]="saving"
+                        type="button"
+                        class="btn btn-secondary"
+                        (click)="close()">{{l("Cancel")}}</button>
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        [disabled]="!smsVerificationModalForm.form.valid || saving">
+                        <i
+                            class="fa fa-save"></i>
+                        <span>{{l("Save")}}</span>
+                    </button>
                 </div>
             </form>
+            }
         </div>
     </div>
 </div>

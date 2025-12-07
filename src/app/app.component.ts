@@ -18,16 +18,6 @@ import { NotificationSettingsModalComponent } from './shared/layout/notification
 import { ThemeSelectionPanelComponent } from './shared/layout/theme-selection/theme-selection-panel.component';
 import { DefaultLayoutComponent } from './shared/layout/themes/default/default-layout.component';
 import { Theme2LayoutComponent } from './shared/layout/themes/theme2/theme2-layout.component';
-import { Theme3LayoutComponent } from './shared/layout/themes/theme3/theme3-layout.component';
-import { Theme4LayoutComponent } from './shared/layout/themes/theme4/theme4-layout.component';
-import { Theme5LayoutComponent } from './shared/layout/themes/theme5/theme5-layout.component';
-import { Theme6LayoutComponent } from './shared/layout/themes/theme6/theme6-layout.component';
-import { Theme7LayoutComponent } from './shared/layout/themes/theme7/theme7-layout.component';
-import { Theme8LayoutComponent } from './shared/layout/themes/theme8/theme8-layout.component';
-import { Theme9LayoutComponent } from './shared/layout/themes/theme9/theme9-layout.component';
-import { Theme10LayoutComponent } from './shared/layout/themes/theme10/theme10-layout.component';
-import { Theme11LayoutComponent } from './shared/layout/themes/theme11/theme11-layout.component';
-import { Theme12LayoutComponent } from './shared/layout/themes/theme12/theme12-layout.component';
 import { UserNotificationHelper } from './shared/layout/notifications/UserNotificationHelper';
 import moment from 'moment';
 
@@ -52,17 +42,7 @@ import moment from 'moment';
 
 		// Layouts - Khai báo ở đây để HTML hiểu thẻ <default-layout>...
 		DefaultLayoutComponent,
-		Theme2LayoutComponent,
-		Theme3LayoutComponent,
-		Theme4LayoutComponent,
-		Theme5LayoutComponent,
-		Theme6LayoutComponent,
-		Theme7LayoutComponent,
-		Theme8LayoutComponent,
-		Theme9LayoutComponent,
-		Theme10LayoutComponent,
-		Theme11LayoutComponent,
-		Theme12LayoutComponent
+		Theme2LayoutComponent
 	]
 })
 export class AppComponent extends AppComponentBase implements OnInit, AfterViewInit {

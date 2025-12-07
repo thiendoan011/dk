@@ -11,7 +11,7 @@ class ErrorDef {
 }
 
 @Component({
-    selector: '<validation-messages>',
+    selector: 'validation-messages',
     template: `<div class="has-danger" *ngIf="formCtrl && formCtrl.invalid && (formCtrl.dirty || formCtrl.touched)">
                     <div *ngFor="let errorDef of errorDefsInternal">
                         <div *ngIf="getErrorDefinitionIsInValid(errorDef)" class="form-control-feedback">

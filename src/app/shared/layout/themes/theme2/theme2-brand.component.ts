@@ -1,28 +1,31 @@
-import { Injector, Component, ViewEncapsulation, Inject } from '@angular/core';
-
+import { Component, Injector, ViewEncapsulation, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AppConsts } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/common/app-component-base';
-
-import { DOCUMENT } from '@angular/common';
+import { AppUiCustomizationService } from '@shared/common/ui/app-ui-customization.service';
 
 @Component({
-    templateUrl: './theme2-brand.component.html',
     selector: 'theme2-brand',
-    encapsulation: ViewEncapsulation.None,
-    standalone: false
+    templateUrl: './theme2-brand.component.html',
+    standalone: true,
+    imports: [CommonModule],
+    encapsulation: ViewEncapsulation.None
 })
-export class Theme2BrandComponent extends AppComponentBase {
+export class Theme2BrandComponent extends AppComponentBase implements OnInit {
 
     remoteServiceBaseUrl: string = AppConsts.remoteServiceBaseUrl;
+    defaultLogo = '';
 
-    constructor(
-        injector: Injector,
-        @Inject(DOCUMENT) private document: Document
-    ) {
+    // Inject Service
+    uiCustomization = inject(AppUiCustomizationService);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 
-    clickTopbarToggle(): void {
-        this.document.body.classList.toggle('m-topbar--on');
+    ngOnInit() {
+        this.defaultLogo = this.appSession.theme.baseSettings.menu.asideSkin === 'light'
+            ? 'logo.png'
+            : 'logo_light.png';
     }
 }

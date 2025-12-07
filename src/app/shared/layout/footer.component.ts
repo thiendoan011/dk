@@ -1,21 +1,20 @@
-import { Component, Injector, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, inject, Injector } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AppConsts } from '@shared/AppConsts';
+import { CommonModule } from '@angular/common'; // Import CommonModule cho @if
 
 @Component({
     templateUrl: './footer.component.html',
     selector: 'footer-bar',
-    standalone: false
+    standalone: true,
+    imports: [CommonModule]
 })
 export class FooterComponent extends AppComponentBase implements OnInit {
 
     releaseDate: string;
-
     @Input() useWrapperDiv = false;
 
-    constructor(
-        injector: Injector
-    ) {
+    constructor(injector: Injector) {
         super(injector);
     }
 

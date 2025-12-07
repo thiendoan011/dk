@@ -1,39 +1,46 @@
-import { Injector, ElementRef, Component, OnInit, AfterViewInit, ViewChild, HostBinding } from '@angular/core';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
-import { LayoutRefService } from '@metronic/app/core/services/layout/layout-ref.service';
-import { ThemesLayoutBaseComponent } from '@app/shared/layout/themes/themes-layout-base.component';
-import { UrlHelper } from '@shared/helpers/UrlHelper';
-import { MenuAsideOffcanvasDirective } from '@metronic/app/core/directives/menu-aside-offcanvas.directive';
+import { Component, Injector, OnInit, ViewEncapsulation, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router'; // Bắt buộc để dùng <router-outlet>
+
+// 1. Import Base Class
+import { ThemesLayoutBaseComponent } from '../themes-layout-base.component';
+
+// 2. Import các Component con được dùng trong HTML
+import { DefaultBrandComponent } from './default-brand.component';
+import { SideBarMenuComponent } from '@app/shared/layout/nav/side-bar-menu.component';
+import { TopBarMenuComponent } from '@app/shared/layout/nav/top-bar-menu.component';
+import { HeaderNotificationsComponent } from '@app/shared/layout/notifications/header-notifications.component';
+import { UserMenuComponent } from '@app/shared/layout/nav/user-menu.component';
+import { FooterComponent } from '@app/shared/layout/footer.component';
 
 @Component({
-    templateUrl: './default-layout.component.html',
     selector: 'default-layout',
-    standalone: true,
-    animations: [appModuleAnimation()]
-})
-export class DefaultLayoutComponent extends ThemesLayoutBaseComponent implements OnInit, AfterViewInit {
+    templateUrl: './default-layout.component.html',
+    standalone: true, // BẮT BUỘC
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        RouterOutlet, // Để hiển thị nội dung trang con
 
-    @ViewChild('mHeader') mHeader: ElementRef;
-    @ViewChild('mAsideLeft') mAsideLeft: ElementRef;
-    @HostBinding('attr.mMenuAsideOffcanvas') mMenuAsideOffcanvas: MenuAsideOffcanvasDirective;
+        // Import các component giao diện
+        DefaultBrandComponent,
+        SideBarMenuComponent,
+        TopBarMenuComponent,
+        HeaderNotificationsComponent,
+        UserMenuComponent,
+        FooterComponent
+    ]
+})
+export class DefaultLayoutComponent extends ThemesLayoutBaseComponent implements OnInit {
 
     constructor(
-        injector: Injector,
-        private layoutRefService: LayoutRefService
+        injector: Injector
     ) {
         super(injector);
     }
 
     ngOnInit() {
-        this.installationMode = UrlHelper.isInstallUrl(location.href);
-    }
-
-    ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.mMenuAsideOffcanvas = new MenuAsideOffcanvasDirective(this.mAsideLeft, this.router);
-            this.mMenuAsideOffcanvas.ngAfterViewInit();
-        });
-
-        this.layoutRefService.addElement('header', this.mHeader.nativeElement);
+        super.ngOnInit();
+        // Logic init riêng cho Default Theme
     }
 }

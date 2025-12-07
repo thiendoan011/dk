@@ -1,29 +1,38 @@
-import { Component, ElementRef, EventEmitter, Injector, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Injector, Output, ViewChild, inject } from '@angular/core';
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { LinkToUserInput, UserLinkServiceProxy } from '@shared/service-proxies/service-proxies';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { finalize } from 'rxjs/operators';
-
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AppCommonModule } from '../common/app-common.module';
+import { ValidationMessagesComponent } from '@shared/utils/validation-messages.component';
+import { ButtonBusyDirective } from '@shared/utils/button-busy.directive';
 @Component({
     selector: 'linkAccountModal',
     templateUrl: './link-account-modal.component.html',
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ModalModule,
+        AppCommonModule,
+        ValidationMessagesComponent,
+        ButtonBusyDirective
+    ]
 })
 export class LinkAccountModalComponent extends AppComponentBase {
 
     @ViewChild('linkAccountModal') modal: ModalDirective;
-
     @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
     active = false;
     saving = false;
-
     linkUser: LinkToUserInput = new LinkToUserInput();
 
-    constructor(
-        injector: Injector,
-        private _userLinkService: UserLinkServiceProxy
-    ) {
+    private readonly _userLinkService = inject(UserLinkServiceProxy);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 
@@ -43,7 +52,7 @@ export class LinkAccountModalComponent extends AppComponentBase {
         this._userLinkService.linkToUser(this.linkUser)
             .pipe(finalize(() => { this.saving = false; }))
             .subscribe(() => {
-                this.showSuccessMessage(this.l('SavedSuccessfully'));
+                this.notify.info(this.l('SavedSuccessfully'));
                 this.close();
                 this.modalSave.emit(null);
             });

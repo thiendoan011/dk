@@ -1,4 +1,4 @@
-import { Injector, ViewChild, AfterContentInit } from '@angular/core';
+import { Injector, ViewChild, AfterContentInit, Directive } from '@angular/core';
 import { Paginator } from 'primeng/paginator';
 import $ from 'jquery';
 import { DefaultComponentBase } from './default-component-base';
@@ -6,6 +6,7 @@ import { IListComponent } from './ilist-component';
 import { CoreTableComponent } from '@app/admin/core/controls/common/core-table/core-table.component';
 import { EditableTableComponent } from '@app/admin/core/controls/common/editable-table/editable-table.component';
 
+@Directive()
 export abstract class ListComponentBase<T> extends DefaultComponentBase implements AfterContentInit, IListComponent {
 
     @ViewChild('coreTable') dataTable: CoreTableComponent<T>;

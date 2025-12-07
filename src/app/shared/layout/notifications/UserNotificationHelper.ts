@@ -30,7 +30,7 @@ export class UserNotificationHelper extends AppComponentBase {
         super(injector);
     }
 
-    getUrl(userNotification: abp.notifications.IUserNotification): string {
+    getUrl(userNotification: any): string {
         switch (userNotification.notification.notificationName) {
             case 'App.NewUserRegistered':
                 return '/app/admin/users?filterText=' + userNotification.notification.data.properties.emailAddress;
@@ -65,7 +65,7 @@ export class UserNotificationHelper extends AppComponentBase {
         }
     }
 
-    format(userNotification: abp.notifications.IUserNotification, truncateText?: boolean): IFormattedUserNotification {
+    format(userNotification: any, truncateText?: boolean): IFormattedUserNotification {
         let formatted: IFormattedUserNotification = {
             userNotificationId: userNotification.id,
             text: abp.notifications.getFormattedMessageFromUserNotification(userNotification),
@@ -85,7 +85,7 @@ export class UserNotificationHelper extends AppComponentBase {
         return formatted;
     }
 
-    show(userNotification: abp.notifications.IUserNotification): void {
+    show(userNotification: any): void {
 
         //Application notification
         abp.notifications.showUiNotifyForUserNotification(userNotification, {

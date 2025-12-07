@@ -1,4 +1,4 @@
-import { Injector, ViewChild, OnDestroy, AfterContentInit, ElementRef, AfterContentChecked } from '@angular/core';
+import { Injector, ViewChild, ElementRef, Directive } from '@angular/core';
 import { ToolbarComponent } from '../admin/core/controls/toolbar/toolbar.component';
 import { WebConst } from '@app/admin/core/ultils/consts/WebConsts';
 import { ChangeDetectionComponent } from '@app/admin/core/ultils/change-detection.component';
@@ -8,6 +8,7 @@ import { CacheRouteReuseStrategy } from '@app/admin/core/ultils/cache-route-reus
 import { RouteReuseStrategy } from '@angular/router';
 import { AuthStatusConsts } from '@app/admin/core/ultils/consts/AuthStatusConsts';
 
+@Directive()
 export abstract class DefaultComponentBase extends ChangeDetectionComponent {
 
     @ViewChild('appToolbar') appToolbar: ToolbarComponent;

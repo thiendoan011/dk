@@ -1,21 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AppAuthService } from '@app/shared/common/auth/app-auth.service';
 import { AppUrlService } from '@shared/common/nav/app-url.service';
 import { AccountServiceProxy, SwitchToLinkedAccountInput, SwitchToLinkedAccountOutput } from '@shared/service-proxies/service-proxies';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root' // Đảm bảo service này là singleton global
+})
 export class LinkedAccountService {
 
-    constructor(
-        private _accountService: AccountServiceProxy,
-        private _appUrlService: AppUrlService,
-        private _authService: AppAuthService
-    ) {
+    // Inject dependencies bằng hàm inject() thay vì constructor
+    private readonly _accountService = inject(AccountServiceProxy);
+    private readonly _appUrlService = inject(AppUrlService);
+    private readonly _authService = inject(AppAuthService);
 
-    }
+    constructor() { }
 
     switchToAccount(userId: number, tenantId?: number): void {
-
         const input = new SwitchToLinkedAccountInput();
         input.targetUserId = userId;
         input.targetTenantId = tenantId;
