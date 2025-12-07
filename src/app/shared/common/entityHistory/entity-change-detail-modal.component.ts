@@ -1,26 +1,37 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
+import moment from 'moment';
+
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AuditLogServiceProxy, EntityChangeListDto, EntityPropertyChangeDto } from '@shared/service-proxies/service-proxies';
-import moment from 'moment';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import { AppCommonModule } from '../app-common.module';
+import { LocalizePipe } from "../../../../shared/common/pipes/localize.pipe";
 
 @Component({
     selector: 'entityChangeDetailModal',
-    templateUrl: './entity-change-detail-modal.component.html'
+    templateUrl: './entity-change-detail-modal.component.html',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ModalModule,
+        AppCommonModule // Chứa localize pipe
+        ,
+        LocalizePipe
+    ]
 })
 export class EntityChangeDetailModalComponent extends AppComponentBase {
 
-    @ViewChild('entityChangeDetailModal')
-    modal: ModalDirective;
+    @ViewChild('entityChangeDetailModal') modal: ModalDirective;
 
     active = false;
     entityPropertyChanges: EntityPropertyChangeDto[];
     entityChange: EntityChangeListDto;
 
-    constructor(
-        injector: Injector,
-        private _auditLogService: AuditLogServiceProxy
-    ) {
+    // Inject service
+    private readonly _auditLogService = inject(AuditLogServiceProxy);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 

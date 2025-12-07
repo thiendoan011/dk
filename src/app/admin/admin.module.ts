@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppCommonModule } from '@app/shared/common/app-common.module';
 import { UtilsModule } from '@shared/utils/utils.module';
+import { CountoDirective } from '@app/shared/common/counto.directive';
 import { AddMemberModalComponent } from '@app/admin/zero-base/organization-units/add-member-modal.component';
 import { AddRoleModalComponent } from '@app/admin/zero-base/organization-units/add-role-modal.component';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -147,6 +148,7 @@ import { VehicleModule } from './vehicle/vehicle.module';
         PurchaseModule
     ],
     declarations: [
+        CountoDirective,
         UsersComponent,
         PermissionComboComponent,
         CreateOrEditUserModalComponent,

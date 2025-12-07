@@ -1,13 +1,16 @@
-import { Component, Injector, ViewChild } from '@angular/core';
-import { EntityChangeDetailModalComponent } from './entity-change-detail-modal.component';
+import { Component, Injector, ViewChild, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
+import { Table, TableModule } from 'primeng/table';
+import { Paginator, PaginatorModule } from 'primeng/paginator';
+import { finalize } from 'rxjs/operators';
+import * as _ from 'lodash';
+
 import { AppComponentBase } from '@shared/common/app-component-base';
 import { AuditLogServiceProxy, EntityChangeListDto } from '@shared/service-proxies/service-proxies';
-import { ModalDirective } from 'ngx-bootstrap/modal';
-import { LazyLoadEvent } from 'primeng/api';
-import { Paginator } from 'primeng/paginator';
-import { Table } from 'primeng/table';
-import * as _ from 'lodash';
-import { finalize } from 'rxjs/operators';
+import { EntityChangeDetailModalComponent } from './entity-change-detail-modal.component';
+import { UtilsModule } from '@shared/utils/utils.module'; // Chứa busyIf, momentFormat
+import { AppCommonModule } from '../app-common.module';
 
 export interface IEntityTypeHistoryModalOptions {
     entityTypeFullName: string;
@@ -17,12 +20,21 @@ export interface IEntityTypeHistoryModalOptions {
 
 @Component({
     selector: 'entityTypeHistoryModal',
-    templateUrl: './entity-type-history-modal.component.html'
+    templateUrl: './entity-type-history-modal.component.html',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ModalModule,
+        TableModule,
+        PaginatorModule,
+        UtilsModule,     // Import module tiện ích (busyIf)
+        AppCommonModule, // Import module chung (localize)
+        EntityChangeDetailModalComponent // Component con standalone
+    ]
 })
 export class EntityTypeHistoryModalComponent extends AppComponentBase {
 
     @ViewChild('entityChangeDetailModal') entityChangeDetailModal: EntityChangeDetailModalComponent;
-
     @ViewChild('modal') modal: ModalDirective;
     @ViewChild('dataTable') dataTable: Table;
     @ViewChild('paginator') paginator: Paginator;
@@ -34,10 +46,9 @@ export class EntityTypeHistoryModalComponent extends AppComponentBase {
     tenantId?: number;
     entityHistoryEnabled: false;
 
-    constructor(
-        injector: Injector,
-        private _auditLogService: AuditLogServiceProxy
-    ) {
+    private readonly _auditLogService = inject(AuditLogServiceProxy);
+
+    constructor(injector: Injector) {
         super(injector);
     }
 
@@ -59,8 +70,14 @@ export class EntityTypeHistoryModalComponent extends AppComponentBase {
         this.getRecordsIfNeeds(null);
     }
 
-    getRecordsIfNeeds(event?: LazyLoadEvent): void {
+    getRecordsIfNeeds(event?: any): void {
         if (!this.isShown) {
+            return;
+        }
+
+        // Fix logic LazyLoadEvent của PrimeNG
+        if (this.primengTableHelper.shouldResetPaging(event)) {
+            this.paginator.changePage(0);
             return;
         }
 
@@ -68,7 +85,7 @@ export class EntityTypeHistoryModalComponent extends AppComponentBase {
         this.isInitialized = true;
     }
 
-    getRecords(event?: LazyLoadEvent): void {
+    getRecords(event?: any): void {
         this.primengTableHelper.showLoadingIndicator();
 
         this._auditLogService.getEntityTypeChanges(

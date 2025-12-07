@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { TermsOfUseComponent } from './terms-of-use/terms-of-use.component';
 
 @NgModule({
     imports: [
@@ -9,7 +7,7 @@ import { TermsOfUseComponent } from './terms-of-use/terms-of-use.component';
             {
                 path: '',
                 children: [
-                   // { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } }
+                    // { path: 'dashboard', component: DashboardComponent, data: { permission: 'Pages.Tenant.Dashboard' } }
                 ]
             }
         ])

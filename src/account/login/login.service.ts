@@ -65,7 +65,7 @@ export class LoginService {
             });
     }
 
-    private processAuthenticateResult(authenticateResult: AuthenticateResultModel) {
+    processAuthenticateResult(authenticateResult: AuthenticateResultModel) {
         this.authenticateResult = authenticateResult;
 
         if (authenticateResult.shouldResetPassword) {
