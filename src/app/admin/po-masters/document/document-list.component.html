@@ -1,0 +1,280 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("THÔNG TIN VĂN BẢN VỀ QUY CHẾ, QUYẾT ĐỊNH, QUY TRÌNH")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="row">
+                <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body">
+                            <form class="horizontal-form filter-form" autocomplete="off">
+                                <!-- Begin Filter -->
+                                <div class="m-form m-form--label-align-right">
+                                    <div class="row">
+                                        <!-- Mã loại văn bản -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Mã loại văn bản")}}</label>
+                                                <input [(ngModel)]="filterInput.documenT_TYPE_CODE" 
+                                                    name="documenT_TYPE_CODE"
+                                                    class="form-control m-input" type="text">
+                                            </div>
+                                        </div>
+                                        <!-- Tên loại văn bản -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Tên loại văn bản")}}</label>
+                                                <input [(ngModel)]="filterInput.documenT_TYPE_NAME" 
+                                                    name="documenT_TYPE_NAME"
+                                                    class="form-control m-input" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4"></div>
+
+                                        <!-- Đơn vị yêu cầu -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Đơn vị yêu cầu")}}</label>
+                                                <select2-custom
+                                                    name="brancH_ID"
+                                                    [(ngModel)]="filterInput.brancH_ID"
+                                                    [(list)]="branchs"
+                                                    (onChangeSelect2)="onChangeBranch($event)"
+                                                    [emptyText]="l('SelectAll')"
+                                                    [valueMember]="'brancH_ID'"
+                                                    [displayMember]="'brancH_CODE|brancH_NAME'">
+                                                </select2-custom>
+                                            </div>
+                                        </div>
+                                        <!-- Phòng ban yêu cầu -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{ l("Phòng ban yêu cầu") }}</label>
+                                                <select2-custom
+                                                    name="deP_ID"
+                                                    [(ngModel)]="filterInput.deP_ID"
+                                                    [list]="departments"
+                                                    [emptyText]="l('SelectAll')"
+                                                    [valueMember]="'deP_ID'"
+                                                    [displayMember]="'deP_CODE|deP_NAME'">
+                                                </select2-custom>
+                                            </div>
+                                        </div>
+                                        <!-- Nhóm quyền -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{ l("Nhóm quyền") }}</label>
+                                                <select2-custom
+                                                    name="rolE_NAME"
+                                                    [(ngModel)]="filterInput.rolE_ID"
+                                                    [list]="roles"
+                                                    [emptyText]="l('SelectAll')"
+                                                    [valueMember]="'id'"
+                                                    [displayMember]="'displayname|desc'">
+                                                </select2-custom>
+                                            </div>
+                                        </div>
+                                        <!-- Nhóm quyền 
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Nhóm quyền")}}</label>
+                                                <input [(ngModel)]="filterInput.rolE_NAME" 
+                                                    name="rolE_NAME"
+                                                    class="form-control m-input" type="text">
+                                            </div>
+                                        </div>-->
+                                        
+                                        <div class='col-md-3'>
+                                            <div class='form-group'>
+                                                <label class='btn btn-primary' 
+                                                        (click)="onSearch()"
+                                                        style="margin-top: 6px; color:white!important;">
+                                                    {{this.l('Tìm kiếm')}}
+                                                </label>
+                                            </div>        
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End filter-->
+
+                                <!-- Begin table-->
+                                <div class="editable-title-group">
+                                    <h5 class="popup-title col-md-12">{{l("Danh sách loại văn bản")}}</h5>
+                                </div>
+                                <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                                    <div class="spinner-border m-5" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                        <thead>
+                                            <tr>
+                                                <!-- Begin Table Column -->
+                                                <th class="center">
+                                                    <span style="width:40px">{{l("No")}}</span>
+                                                </th>
+                                                <!-- Mã loại văn bản -->
+                                                <th sortField="documenT_TYPE_CODE" style="width: 30%">
+                                                    <span>{{l("Mã loại văn bản")}}</span>
+                                                </th>
+                                                <!-- Tên loại văn bản -->
+                                                <th sortField="documenT_TYPE_NAME" style="width: 40%">
+                                                    <span >{{l("Tên loại văn bản")}}</span>
+                                                </th>
+                                                <!-- Ghi chú loại văn bản -->
+                                                <th sortField="documenT_TYPE_NOTES" style="width: 30%">
+                                                    <span>{{l("Ghi chú loại văn bản")}}</span>
+                                                </th>
+                                                <!-- End Table Column -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let record of dataTable.records" class="selectable"
+                                                (dblclick)="onDblclick(record)" (click)="selectRow($event,record);onClickRow(record)">
+                                                <!-- Begin Table Value -->
+                                                <td class="center">
+                                                    <span class="mo-header"></span>
+                                                    {{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                                </td>
+                                                <!-- Mã loại văn bản -->
+                                                <td><span class="mo-header"></span>{{record.documenT_TYPE_CODE}}</td>
+                                                <!-- Tên loại văn bản -->
+                                                <td><span class="mo-header"></span>{{record.documenT_TYPE_NAME}}</td>
+                                                <!-- Ghi chú loại văn bản -->
+                                                <td><span class="mo-header"></span>{{record.documenT_TYPE_NOTES}}</td>
+                                                <!-- End Table Value -->
+                                            </tr>
+                                        </tbody>
+                                    </core-table>
+                                </div>
+                                <!-- End table-->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body">
+                            <form class="horizontal-form filter-form" autocomplete="off">
+                                <!-- Begin Filter -->
+                                <div class="m-form m-form--label-align-right">
+                                    <div class="row">
+                                        <!-- Mã văn bản -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Mã văn bản")}}</label>
+                                                <input [(ngModel)]="filterInput.documenT_CODE" 
+                                                    name="documenT_CODE"
+                                                    class="form-control m-input" type="text">
+                                            </div>
+                                        </div>
+                                        <!-- Tên văn bản -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Tên văn bản")}}</label>
+                                                <input [(ngModel)]="filterInput.documenT_NAME" 
+                                                    name="documenT_NAME"
+                                                    class="form-control m-input" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4"></div>
+
+                                        <!-- Đơn vị yêu cầu -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Đơn vị yêu cầu")}}</label>
+                                                <select2-custom
+                                                    name="brancH_ID1"
+                                                    [(ngModel)]="filterInput.brancH_ID"
+                                                    [(list)]="branchs"
+                                                    (onChangeSelect2)="onChangeBranch($event)"
+                                                    [emptyText]="l('SelectAll')"
+                                                    [valueMember]="'brancH_ID'"
+                                                    [displayMember]="'brancH_CODE|brancH_NAME'">
+                                                </select2-custom>
+                                            </div>
+                                        </div>
+                                        <!-- Phòng ban yêu cầu -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{ l("Phòng ban yêu cầu") }}</label>
+                                                <select2-custom
+                                                    name="deP_ID1"
+                                                    [(ngModel)]="filterInput.deP_ID"
+                                                    [list]="departments"
+                                                    [emptyText]="l('SelectAll')"
+                                                    [valueMember]="'deP_ID'"
+                                                    [displayMember]="'deP_CODE|deP_NAME'">
+                                                </select2-custom>
+                                            </div>
+                                        </div>
+                                        <!-- Nhóm quyền -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{ l("Nhóm quyền") }}</label>
+                                                <select2-custom #rolename1
+                                                    name="rolE_NAME1"
+                                                    [(ngModel)]="filterInput.rolE_ID"
+                                                    [list]="roles"
+                                                    [emptyText]="l('SelectAll')"
+                                                    [valueMember]="'id'"
+                                                    [displayMember]="'displayname|desc'">
+                                                </select2-custom>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Nhóm quyền 
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Nhóm quyền")}}</label>
+                                                <input [(ngModel)]="filterInput.rolE_NAME" 
+                                                    name="rolE_NAME1"
+                                                    class="form-control m-input" type="text">
+                                            </div>
+                                        </div>-->
+
+                                        <div class='col-md-12'></div>
+                                        <!-- Button tìm kiếm -->
+                                        <div class='col-md-3'>
+                                            <div class='form-group'>
+                                                <label class='btn btn-primary' 
+                                                        (click)="onSearchDocument()"
+                                                        style="margin-top: 6px; color:white!important;">
+                                                    {{this.l('Tìm kiếm')}}
+                                                </label>
+                                            </div>        
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+                                <!-- Danh sách các file đính kèm -->
+                                <document-attach-file 
+                                    #attachFile
+                                    [disableInput]='true'>
+                                </document-attach-file>
+                                <!-- Danh sách các file đính kèm -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>

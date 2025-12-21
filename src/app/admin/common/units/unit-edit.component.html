@@ -1,0 +1,82 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Unit_Title")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                        <span *ngSwitchCase="EditPageState.add">{{l("Toolbar_Create")}}</span>
+                <span *ngSwitchCase="EditPageState.edit">{{l("Toolbar_Update")}}</span>
+                <span *ngSwitchCase="EditPageState.viewDetail">{{l("Toolbar_ViewDetail")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="modal-body row">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page 
+                                    [authStatus]="inputModel.autH_STATUS">
+                                </auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã đơn vị tính -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Mã đơn vị tính")}} </label>
+                                <input
+                                    class="form-control" 
+                                    [disabled]="true" 
+                                    type="text" 
+                                    name="uniT_CODE" 
+                                    [(ngModel)]="inputModel.uniT_CODE">
+                                
+                            </div>
+                        </div>
+                        <!-- Tên đơn vị tính -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Tên đơn vị tính")}} </label>
+                                <input class="form-control" 
+                                    [disabled]="disableInput" 
+                                    type="text" 
+                                    name="uniT_NAME" 
+                                    [(ngModel)]="inputModel.uniT_NAME" >
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Note")}}</label>
+                                <textarea class="form-control" 
+                                [disabled]="disableInput" 
+                                type="text" 
+                                name="notes" 
+                                [(ngModel)]="inputModel.notes">
+                            </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- Begin Form -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- ID Booking -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("ID Booking")}}</span>
+                </th>
+                <!-- Tên phiếu booking -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên phiếu booking")}}</span>
+                </th>
+                <!-- Người tạo - ngày tạo -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Người tạo - ngày tạo")}}</span>
+                </th>
+                <!-- Người duyệt - ngày duyệt -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Người duyệt - ngày duyệt")}}</span>
+                </th>
+                <!-- Ngày booking -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày booking")}}</span>
+                </th>
+                <!-- Số lần delay -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số lần delay")}}</span>
+                </th>
+                <!-- Ghi chú booking -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ghi chú booking")}}</span>
+                </th>
+                <!-- Trạng thái -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- ID Booking -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.pO_BOOKING_ID"/>
+                </td>
+                <!-- Tên phiếu booking -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.pO_BOOKING_NAME"/>
+                </td>
+                <!-- Người tạo - ngày tạo -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.makeR_AND_CREATE_DT"/>
+                </td>
+                <!-- Người duyệt - ngày duyệt -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.checkeR_AND_APPROVE_DT"/>
+                </td>
+                <!-- Ngày booking -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.bookinG_DT"/>
+                </td>
+                <!-- Số lần delay -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.nbE_DELAY"/>
+                </td>
+                <!-- Ghi chú booking -->
+                <td>
+                    <input class="form-control transparent" type="number"
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.bookinG_NOTES"/>
+                </td>
+                <!-- Trạng thái -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.autH_STATUS_NAME"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

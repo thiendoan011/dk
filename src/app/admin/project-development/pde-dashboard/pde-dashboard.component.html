@@ -1,0 +1,61 @@
+<div [@routerTransition]>
+    <div class="m-subheader">
+        <div class="row">
+
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Biểu đồ tiến độ -->
+                <label><h3>{{l('Danh sách phiếu yêu cầu của hệ hàng')}}</h3></label>
+                <pde-dashboard-group-product-edittable 
+                    [title]="'Danh sách phiếu yêu cầu của hệ hàng'">
+                </pde-dashboard-group-product-edittable>
+
+                <div class="dashboard-page pl-5" style="margin-top:30px !important">
+                    <div class="row">
+                        <!-- Biểu đồ Phiếu yêu cầu -->
+                        <div class="col-12 row pt-3 rounded bg-white">
+                            <label class="col-12 text-left"><h3>{{l('Phiếu yêu cầu')}}</h3></label>
+                            <pde-request-dashboard
+                                class="col-12 bg-white row pb-4 pr-0" 
+                                style="border-bottom-left-radius: 3rem !important;">
+                            </pde-request-dashboard>
+                        </div>
+                        <!-- Biểu đồ tiến độ -->
+                        <div class="col-12 row pt-3 rounded bg-white">
+                            <label class="col-12 text-left"><h3>{{l('Tiến độ')}}</h3></label>
+                            <pde-progress-dashboard
+                                class="col-12 bg-white row pb-4 pr-0" 
+                                style="border-bottom-left-radius: 3rem !important;">
+                            </pde-progress-dashboard>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <style>
+    #background {
+     position: fixed;
+      top: 30%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 123%;
+      width: auto;
+      height: auto;
+      z-index: 1;
+      -webkit-transform: translateX(-50%) translateY(-50%);
+      transform: translateX(-50%) translateY(-50%);
+      background: url('/assets/logo/homepage.png?v=1') no-repeat;
+      background-size: cover;
+
+    }
+    
+</style> -->

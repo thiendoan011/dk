@@ -1,0 +1,255 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar [hidden]="editPageState !== 'ViewDetail'"></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Phiếu vận chuyển hàng hóa")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Lịch sử trả về -->
+                        <div class="col-md-12">
+                            <fre-reject-modal
+                                [id]="inputModel.frE_FREIGHT_ID"
+                                #reject_modal
+                                [page]="'FREIGHT'"
+                                [stage]="'HC'"
+                                [process]="'REJECT'"
+                                [showEnterRejectLog]="rejectInput"
+                                [showRejectLog]="true"
+                                (reject_out)="onReject($event)">
+                            </fre-reject-modal>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <fre-history-modal
+                                #history_modal
+                                [id]="inputModel.frE_FREIGHT_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </fre-history-modal>
+                        </div>
+
+                        <!-- Mã phiếu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Mã phiếu")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="frE_FREIGHT_CODE"
+                                    [(ngModel)]="inputModel.frE_FREIGHT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Người duyệt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="checkeR_NAME"
+                                    [(ngModel)]="inputModel.checkeR_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+
+                        <!-- Người yêu cầu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người yêu cầu")}}</label>
+                                <select2-custom
+                                    [(list)]="_users"
+                                    [disabled]="disableInput"
+                                    name="useR_REQUEST_ID"
+                                    [(ngModel)]="inputModel.useR_REQUEST_ID"
+                                    [valueMember]="'tlnanme'"
+                                    [displayMember]="'tlnanme|tlFullName'">
+                                </select2-custom>
+                            </div>
+                        </div>
+
+                        <!-- Độ ưu tiên -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Độ ưu tiên")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    [cdName]="'PRIORITY'"
+                                    [cdType]="'CM'"
+                                    name="frE_FREIGHT_PRIORITY" 
+                                    [(ngModel)]="inputModel.frE_FREIGHT_PRIORITY">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái phiếu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái phiếu")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'AUTH_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="autH_STATUS" 
+                                    [(ngModel)]="inputModel.autH_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+                        <!--
+                        <div class="col-md-12">
+                            <fieldset>
+                                <legend style='font-weight: bold; text-decoration:  underline'>{{l("Thời gian đi")}}</legend>
+                                <div class='row'>
+                                    <div class='col-sm-6'>
+                                        <div class='form-group'>
+                                            <label>{{l('Từ ngày')}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                [hasTime]="true"
+                                                name="froM_DT"
+                                                [(ngModel)]="inputModel.froM_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                    <div class='col-sm-6'>
+                                        <div class='form-group'>
+                                            <label>{{l('Đến ngày')}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                [hasTime]="true"
+                                                name="tO_DT"
+                                                [(ngModel)]="inputModel.tO_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>-->
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]="disableInput"
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Lưu -->
+                        <div class="col-md-3" [hidden]="disableSave">
+                            <div class="form-group">
+                                <label (click)="onSave()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Lưu')}}
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Gửi phê duyệt -->
+                        <div class="col-md-3" [hidden]="disableSendAppr">
+                            <div class="form-group">
+                                <label (click)="onSendAppr()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi phê duyệt')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+
+                    <fre-freight-route-edittable [hidden]="true"
+                        #freFreightRouteEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [title]="'Danh sách lộ trình'">
+                    </fre-freight-route-edittable>
+
+                    <fre-freight-vehicle-request-edittable [hidden]="!inputModel.frE_FREIGHT_ID && editPageState !== 'ViewDetail'"
+                        #freFreightVehicleRequestEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [disableUpdate]="disableUpdateVHEVehicleRequest"
+                        [disableSendAppr]="disableSendAppr"
+                        (o_Save)="onSaveEdittable()"
+                        (o_SaveAndLock)="onSaveAndLockEdittable('vheVehicleRequest')"
+                        (o_UnLock)="onUnLockEdittable('vheVehicleRequest')"
+                        [title]="'Danh sách phiếu yêu cầu xe'">
+                    </fre-freight-vehicle-request-edittable>
+
+                    <fre-freight-good-edittable [hidden]="hiddenUpdateFREGood && editPageState !== 'ViewDetail'"
+                        #freFreightGoodEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [disableUpdate]="disableUpdateFREGood"
+                        [disableSendAppr]="disableSendAppr"
+                        (o_Save)="onSaveEdittable()"
+                        (o_SaveAndLock)="onSaveAndLockEdittable('freGood')"
+                        (o_UnLock)="onUnLockEdittable('freGood')"
+                        [title]="'Danh sách hàng hóa đi'">
+                    </fre-freight-good-edittable>
+
+                    <fre-freight-good-user-edittable [hidden]="hiddenUpdateFREGoodUser && editPageState !== 'ViewDetail'"
+                        #freFreightGoodUserEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [disableUpdate]="disableUpdateFREGoodUser"
+                        [disableSendAppr]="disableSendAppr"
+                        (o_Save)="onSaveEdittable()"
+                        (o_SaveAndLock)="onSaveAndLockEdittable('freGoodUser')"
+                        (o_UnLock)="onUnLockEdittable('freGoodUser')"
+                        [title]="'Danh sách người đi cùng'">
+                    </fre-freight-good-user-edittable>
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>
+

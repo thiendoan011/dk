@@ -1,0 +1,17 @@
+<!-- Chờ xử lý -->
+<div *ngIf="authStatus == 'U'" class="auth-status-input-page">
+    <i class="pi pi-clock request-text"></i>
+    <span>{{l('Chờ xử lý')}}</span>
+</div>
+
+<!-- Đã nhận thông tin - đang xử lý -->
+<div *ngIf="authStatus == 'P'" class="auth-status-input-page">
+    <i class="pi pi-spinner processing-text"></i>
+    <span>{{l('Đã nhận thông tin - đang xử lý')}}</span>
+</div>
+
+<!-- Đã xử lý -->
+<div *ngIf="authStatus == 'A'" class="auth-status-input-page">
+    <i class="pi pi-check success-text"></i>
+    <span>{{l('Đã xử lý')}}</span>
+</div>

@@ -1,0 +1,151 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Department_Title")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+                <div class="col text-right mt-3 mt-md-0">
+                    <div class="btn-group dropdown mr-2">
+                        <button class=" btn btn-outline-success" *ngIf="appToolbar.buttonSearchEnable" (click)="exportExcel()">
+                            <i class="far fa-file-excel"></i>
+                            {{l("ExcelOperations")}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+                                <!-- Mã phòng -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("DepartmentCode")}}</label>
+                                        <input [(ngModel)]="filterInput.deP_CODE" name="deP_CODEFilter" autoFocus class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+                                <!-- Tên phòng ban -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("DepartmentName")}}</label>
+                                        <input [(ngModel)]="filterInput.deP_NAME" name="deP_NAMEFilter" class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-12"></div>
+                                <!-- Trạng thái duyệt -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("ApproveStatus")}}</label>
+                                        <all-code-select name="autH_STATUS" [(ngModel)]="filterInput.autH_STATUS" [emptyText]="l('SelectAll')" [cdName]="'AUTH_STATUS'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+                                <div style="display:none;" class="col-md-12">
+                                    <div class="form-group">
+                                        <button *ngIf="appToolbar.buttonSearchEnable" class="btn btn-primary btn-search" (click)="onSearch()">{{l('Search')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã phòng -->
+                                        <th style="width:30%" sortField="deP_CODE">
+                                            <span style="width: 150px">{{l("DepartmentCode")}}</span>
+                                        </th>
+                                        <!-- Tên phòng ban -->
+                                        <th style="width:40%" sortField="deP_NAME">
+                                            <span style="width: 150px">{{l("DepartmentName")}}</span>
+                                        </th>
+                                        <!-- Mã đơn vị -->
+                                        <th style="width:30%" sortField="brancH_CODE">
+                                            <span style="width: 150px">{{l("BranchCode")}}</span>
+                                        </th>
+                                        <!-- Dao Code -->
+                                        <th sortField="DAO_CODE">
+                                            <span style="width: 150px">{{l("DaoCode")}}</span>
+                                        </th>
+                                        <!-- Dao Name -->
+                                        <th sortField="DAO_NAME">
+                                            <span style="width: 150px">{{l("DaoName")}}</span>
+                                        </th>
+                                        <!-- Số điện thoại -->
+                                        <th sortField="tel">
+                                            <span style="width: 150px">{{l("PhoneNumber")}}</span>
+                                        </th>
+                                        <!-- Ghi chú -->
+                                        <th class="center" style="width:100%" sortField="notes">
+                                            <span style="width: 200px">{{l("Notes")}}</span>
+                                        </th>
+                                        <!-- Hoạt động -->
+                                        <th sortField="RECORD_STATUS_NAME">
+                                            <span style="width: 150px">{{l("IsActive")}}</span>
+                                        </th>
+                                        <!-- Trạng thái duyệt -->
+                                        <th sortField="AUTH_STATUS_NAME">
+                                            <span style="width: 150px">{{l("ApproveStatus")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <!-- STT -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                        </td>
+                                        <!-- Mã phòng -->
+                                        <td><span class="mo-header"></span>{{record.deP_CODE}}</td>
+                                        <!-- Tên phòng ban -->
+                                        <td><span class="mo-header"></span>{{record.deP_NAME}}</td>
+                                        <!-- Mã đơn vị -->
+                                        <td><span class="mo-header"></span>{{record.brancH_CODE}}</td>
+                                        <!-- Dao Code -->
+                                        <td><span class="mo-header"></span>{{record.daO_CODE}}</td>
+                                        <!-- Dao Name -->
+                                        <td><span class="mo-header"></span>{{record.daO_NAME}}</td>
+                                        <!-- Số điện thoại -->
+                                        <td><span class="mo-header"></span>{{record.tel}}</td>
+                                        <!-- Ghi chú -->
+                                        <td><span class="mo-header"></span>{{record.notes}}</td>
+                                        <!-- Hoạt động -->
+                                        <td><span class="mo-header"></span>{{record.recorD_STATUS_NAME}}</td>
+                                        <!-- Trạng thái duyệt -->
+                                        <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

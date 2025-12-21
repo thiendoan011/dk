@@ -1,0 +1,204 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Phiếu yêu cầu chung")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.reQ_NORMAL_REQ_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <history-2-modal
+                                #history_modal
+                                [id]="inputModel.grouP_PRODUCT_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'"
+                                [trN_TYPE]="'NORMAL'"
+                                [stage]="'mau'">
+                            </history-2-modal>
+                        </div>
+
+                        <!-- Mã hệ hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã hệ hàng")}}</label>
+                                <div class='file-input-group'>
+                                    <input readonly
+                                        class="form-control"
+                                        style="color: blue; cursor: pointer;"
+                                        (click)="onViewDetailGroupProduct()"
+                                        name="grouP_PRODUCT_CODE"
+                                        [(ngModel)]="inputModel.grouP_PRODUCT_CODE">
+                                    <button type="button" class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='disableInput'
+                                        (click)="showGroupProduct()">{{l("...")}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Người gửi yêu cầu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người gửi yêu cầu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="reQ_NORMAL_REQ_REQUESTER_NAME"
+                                    [(ngModel)]="inputModel.reQ_NORMAL_REQ_REQUESTER_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Phòng ban nhận triển khai -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Phòng ban nhận triển khai")}}</label>
+                                <div class='file-input-group'>
+                                    <input readonly
+                                        class="form-control"
+                                        name="reQ_NORMAL_REQ_DEP_NAME"
+                                        [(ngModel)]="inputModel.reQ_NORMAL_REQ_DEP_NAME">
+                                    <button type="button" class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='disableInput'
+                                        (click)="showDep()">{{l("...")}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <!-- Ngày yêu cầu chung -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu chung")}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="reQ_NORMAL_REQ_DT"
+                                    [(ngModel)]="inputModel.reQ_NORMAL_REQ_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày khách xem mẫu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày khách xem mẫu")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="cuS_VIEW_TEMPLATE_DT"
+                                    [(ngModel)]="inputModel.cuS_VIEW_TEMPLATE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu hoàn thành chung -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành chung")}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="reQ_NORMAL_REQ_COMPLETE_DT"
+                                    [(ngModel)]="inputModel.reQ_NORMAL_REQ_COMPLETE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái tiếp nhận -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái tiếp nhận")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    name="reQ_NORMAL_REQ_STATUS" 
+                                    [(ngModel)]="inputModel.reQ_NORMAL_REQ_STATUS"
+                                    [cdName]="'PDE_REQ_PRICE'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12 modal-body">
+                        <!-- Gửi phiếu yêu cầu  -->
+                        <div class="col-md-2" *ngIf="isSend">
+                            <div class="form-group">
+                                <label (click)="onSend()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Gửi phiếu yêu cầu')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Export Phiếu yêu cầu phiếu chung -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label (click)="onExportPYC()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Export Phiếu yêu cầu phiếu chung')}}
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Thông tin yêu cầu từ khách 
+                    <pde-infor-request-cus-attach-file
+                        #pdeInforRequestCusAttachFile
+                        [disableInput]='true'>
+                    </pde-infor-request-cus-attach-file>-->
+                    <!-- Bản vẽ kỹ thuật từ khách 
+                    <pde-tech-request-cus-attach-file
+                        #pdeTechRequestCusAttachFile
+                        [disableInput]='true'>
+                    </pde-tech-request-cus-attach-file>-->
+                    <!-- Thông tin chung từ bên bộ phận dự án mẫu gửi 
+                    <pde-progress-normal-attach-file
+                        #pdeReqnormalAttachFileEdittable
+                        [title]="'Thông tin chung từ bên bộ phận dự án mẫu gửi'"
+                        [disableInput]='true'>
+                    </pde-progress-normal-attach-file>-->
+                    <!-- Thông tin yêu cầu -->
+                    <pde-req-normal-product-edittable
+                        #pdeProductEditTable
+                        [inputModel]="inputModel"
+                        [title]="'Thông tin yêu cầu'"
+                        [is_request]="true"
+                        [is_progress]="false"
+                        (edit_completed)="onCompleteEditProduct()"
+                        [disableInput]='disableInput'>
+                    </pde-req-normal-product-edittable>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<pde-group-product-modal (onSelect)='onSelectGroupProduct($event)' #pdeGroupProductModal
+[multiple]="false"></pde-group-product-modal>
+<dep-modal #depModal [multiple]="false" (onSelect)="onSelectDep($event)"></dep-modal>
+

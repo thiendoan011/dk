@@ -1,0 +1,90 @@
+<popup-frame [title]="l('Tìm kiếm bảng chiết tính')" (onSearchEvent)="buttonSearch()" (onSelectEvent)="accept()" #popupFrame>
+    <div class="horizontal-form filter-form" autocomplete="off">
+        <form class="m-form m-form--label-align-right">
+            <div class="row m--margin-bottom-30">
+<!-- Begin Filter -->
+                <!-- Mã bảng chiết tính -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Mã bảng chiết tính")}}</label>
+                        <input class="form-control m-input" type="text"
+                            [(ngModel)]="filterInput.producT_COSTSTATEMENT_CODE" 
+                            name="producT_COSTSTATEMENT_CODE">
+                    </div>
+                </div>
+
+                <!-- Tên bảng chiết tính -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Tên bảng chiết tính")}}</label>
+                        <input 
+                            class="form-control m-input" type="text"
+                            [(ngModel)]="filterInput.producT_COSTSTATEMENT_NAME" 
+                            name="producT_COSTSTATEMENT_NAME" >
+                    </div>
+                </div>
+<!-- End Filter -->
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div isLoading="dataTable.isLoading" class="primeng-datatable-container">
+            <div class="spinner-border m-5" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <core-table [reloadPageOnInit]="false" #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                <thead>
+                    <tr>
+                        <!-- Begin Table Column -->
+                        <!-- multiple -->
+                        <th class="center" *ngIf="multiple">
+                            <span style="width: 40px">
+                                <checkbox-control #checkAllElement
+                                    (change)="onCheckAll(checkAllElement.inputRef.nativeElement)" [checked]="checkAll">
+                                </checkbox-control>
+                            </span>
+                        </th>
+                        <!-- STT -->
+                        <th class="center">
+                            <span style="width: 40px">{{l("No")}}</span>
+                        </th>
+                        <!-- Mã bảng chiết tính -->
+                        <th sortField="producT_COSTSTATEMENT_CODE">
+                            <span style="width: 150px">{{l("Mã bảng chiết tính")}}</span>
+                        </th>
+                        <!-- Tên bảng chiết tính -->
+                        <th sortField="producT_COSTSTATEMENT_NAME">
+                            <span style="width: 250px">{{l("Tên bảng chiết tính")}}</span>
+                        </th>
+                        <!-- Ghi chú -->
+                        <th sortField="notes">
+                            <span style="width: 150px">{{l("Ghi chú")}}</span>
+                        </th>
+                        <!-- End Table Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- multiple dblclick -->
+                    <tr *ngFor="let record of dataTable.records; let no = index;" class="selectable" (click)="selectRow($event,record)" (dblclick)="onDoubleClick(record)">
+                        <!-- Begin Table Value -->
+                        <!-- multiple -->
+                        <td class="center" *ngIf="multiple">
+                            <span class="mo-header"></span>
+                            <checkbox-control (onchange)="setChecked($event.target.checked, record)" [checked]="record['isChecked']"></checkbox-control>
+                        </td>
+                        <!-- STT -->
+                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                        </td>
+                        <!-- Mã bảng chiết tính -->
+                        <td><span class="mo-header"></span>{{record.producT_COSTSTATEMENT_CODE}}</td>
+                        <!-- Tên bảng chiết tính -->
+                        <td><span class="mo-header"></span>{{record.producT_COSTSTATEMENT_NAME}}</td>
+                        <!-- Ghi chú -->
+                         <td><span class="mo-header"></span>{{record.notes}}</td>
+                        <!-- End Table Value -->
+                    </tr>
+                </tbody>
+            </core-table>
+        </div>
+    </div>
+</popup-frame>

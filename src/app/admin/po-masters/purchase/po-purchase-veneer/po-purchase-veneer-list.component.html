@@ -1,0 +1,184 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin đơn hàng Veneer")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+                <div class="col text-right mt-3 mt-md-0">
+                    <div class="btn-group dropdown mr-2">
+                        <button class=" btn btn-outline-success" (click)="exportExcel()">
+                            <i class="far fa-file-excel"></i>
+                            {{l("ExcelOperations")}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+
+                                <!-- Số PO 
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Số PO")}}</label>
+                                        <input [(ngModel)]="filterInput.pO_CODE" name="pO_CODE"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>-->
+
+                                <!-- Tên PO 
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Tên PO")}}</label>
+                                        <input [(ngModel)]="filterInput.pO_NAME" name="pO_NAME"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>-->
+
+                                <!-- R 
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('R')}}</label>
+                                        <input [(ngModel)]="filterInput.r" name="r"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>-->
+                                <!-- Mã đơn hàng -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Mã đơn hàng")}}</label>
+                                        <input [(ngModel)]="filterInput.purchasE_VENEER_CODE" name="pO_CODE"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+
+                                <!-- Tên đơn hàng -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Tên đơn hàng")}}</label>
+                                        <input [(ngModel)]="filterInput.purchasE_VENEER_NAME" name="pO_NAME"
+                                            (focusout)="onchangeFilterPO()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+
+                                <!-- Đơn vị quản lý PO -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý PO')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+
+                                <div style="display:none;" class="col-md-12">
+                                    <div class="form-group">
+                                        <button *ngIf="appToolbar.buttonSearchEnable" class="btn btn-primary btn-search"
+                                            (click)="onSearch()">{{l('Search')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Khách hàng -->
+                                        <th sortField="customeR_NAME">
+                                            <span style="width: 100px">{{l("Khách hàng")}}</span>
+                                        </th>
+                                        <!-- Mã đơn hàng -->
+                                        <th sortField="purchasE_VENEER_CODE">
+                                            <span style="width: 100px">{{l("Mã đơn hàng")}}</span>
+                                        </th>
+                                        <!-- Tên đơn hàng-->
+                                        <th sortField="purchasE_VENEER_NAME">
+                                            <span style="width: 250px">{{l("Tên đơn hàng")}}</span>
+                                        </th>
+                                        <!-- Ngày dự kiến về -->
+                                        <th sortField="expecteD_DT">
+                                            <span style="width: 150px">{{l("Ngày dự kiến về")}}</span>
+                                        </th>
+                                        <!-- Trạng thái tiến độ -->
+                                        <th sortField="AUTH_STATUS_NAME">
+                                            <span style="width: 100px">{{l("Trạng thái tiến độ")}}</span>
+                                        </th>
+                                        <!-- Trạng thái đơn hàng -->
+                                        <th sortField="purchasE_AUTH_STATUS_NAME">
+                                            <span style="width: 100px">{{l("Trạng thái đơn hàng")}}</span>
+                                        </th>
+                                        <!-- Trạng thái nhập kho -->
+                                        <th sortField="purchasE_STATE_AUTH_STATUS_NAME">
+                                            <span style="width: 100px">{{l("Trạng thái nhập kho")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable"
+                                        (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span
+                                                class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                        </td>
+                                        <!-- Khách hàng -->
+                                        <td><span class="mo-header"></span>{{record.customeR_NAME}}</td>
+                                        <!-- Mã đơn hàng -->
+                                        <td><span class="mo-header"></span>{{record.purchasE_VENEER_CODE}}</td>
+                                        <!-- Tên đơn hàng -->
+                                        <td><span class="mo-header"></span>{{record.purchasE_VENEER_NAME}}</td>
+                                        <!-- Ngày dự kiến về -->
+                                        <td><span class="mo-header"></span>{{record.expecteD_DT | dateFormatPipe}}</td>
+                                        <!-- Trạng thái tiến độ -->
+                                        <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                        <!-- Trạng thái đơn hàng -->
+                                        <td><span class="mo-header"></span>{{record.purchasE_AUTH_STATUS_NAME}}</td>
+                                        <!-- Trạng thái nhập kho -->
+                                        <td><span class="mo-header"></span>{{record.purchasE_STATE_AUTH_STATUS_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

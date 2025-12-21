@@ -1,0 +1,210 @@
+<!-- Begin -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l('Danh sách sản phẩm')}}</h5>
+    <div class="action-button">
+        <label [hidden]="disableInput" type="button" title="upload danh sách sản phẩm"
+            class="btn btn-primary" style="color:white!important" for="file-upload">
+            <i class="pi pi-upload" style="margin-left: 0px;"></i>
+            <import-excel [id]="'file-upload'"
+                [hidden]="true"
+                [startPosition]="'A2'"
+                [disable]="disableInput"
+                (toArrayObject)='onImportExcel($event)'>
+            </import-excel>
+        </label>
+        <button [hidden]="disableInput" type="button" (click)='exportExcelTemplate()' title="dowload template"
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-download"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+    
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <th  style="width: 10%" class="center">
+                    <span>
+                        <checkbox-control
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+
+                <th style="width: 10%"><span >{{l("No")}}</span></th>
+
+                <!-- Mã sản phẩm -->
+                <th sortField="producT_CODE" class="center"style="width: 30%" >
+                    <span style="width: 150px">{{l('Mã sản phẩm')}}</span>
+                </th>
+                <!-- Tên sản phẩm -->
+                <th sortField="producT_NAME" class="center" style="width: 30%">
+                    <span style="width: 250px">{{l('Tên sản phẩm')}}</span>
+                </th>
+                <!-- Tiêu chuẩn K/H -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Tiêu chuẩn K/H')}}</span>
+                </th>
+                <!-- Tiêu chuẩn Test -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Tiêu chuẩn Test')}}</span>
+                </th>
+                <!-- YC đóng gói -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('YC đóng gói')}}</span>
+                </th>
+                <!-- Mẫu K/H tham chiếu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Mẫu K/H tham chiếu')}}</span>
+                </th>
+                <!-- Bản vẽ K/H -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Bản vẽ K/H')}}</span>
+                </th>
+                <!-- Nhận xét của kỹ thuật 
+                <th>
+                    <span style="white-space: nowrap;">{{l('Nhận xét của kỹ thuật')}}</span>
+                </th>-->
+                <!-- Ghi chú -->
+                <th sortField="notes" class="center" style="width: 20%">
+                    <span style="width: 150px">{{l('Ghi chú')}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                [hidden]="item['page'] != editTable.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTable.selectRow($event,item);updateView()'>
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        [disabled]="disableInput"
+                        name="{{editTable.name('isChecked',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        [disabled]="true"
+                        name="{{editTable.name('no',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['no']">
+                </td>
+                <!-- Mã sản phẩm -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailProduct(item)"
+                        name="{{editTable.name('producT_CODE',in)}}"
+                        [(ngModel)]="item.producT_CODE">
+                </td>
+                <!-- Tên sản phẩm -->
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            [disabled]="true"
+                            name="{{editTable.name('producT_NAME',in)}}"
+                            class="form-control transparent" type="text"
+                            [(ngModel)]="item.producT_NAME"/>
+                    </div>
+                </td>
+                <!-- Tiêu chuẩn K/H -->
+                <td>
+                    <textarea [disabled]="disableInput"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('customeR_STANDARD',in)}}"
+                        [(ngModel)]="item.customeR_STANDARD">
+                    </textarea>
+                </td>
+                <!-- Tiêu chuẩn Test -->
+                <td>
+                    <textarea [disabled]="disableInput"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('tesT_STANDART',in)}}"
+                        [(ngModel)]="item.tesT_STANDART">
+                    </textarea>
+                </td>
+                <!-- Yêu cầu đóng gói -->
+                <td>
+                    <textarea [disabled]="disableInput"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('requiremenT_PACKAGING',in)}}"
+                        [(ngModel)]="item.requiremenT_PACKAGING">
+                    </textarea>
+                </td>
+                <!-- Mẫu K/H tham chiếu -->
+                <td>
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'OPTION_YN'"
+                        [cdType]="'CM'"
+                        name="customeR_TEMPLATE_REF" 
+                        [(ngModel)]="item.customeR_TEMPLATE_REF">
+                    </all-code-select>
+                </td>
+                <!-- Bản vẽ K/H -->
+                <td>
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'OPTION_YN'"
+                        [cdType]="'CM'"
+                        name="customeR_DRAWING" 
+                        [(ngModel)]="item.customeR_DRAWING">
+                    </all-code-select>
+                </td>
+                <!-- Nhận xét của kỹ thuật 
+                <td>
+                    <textarea [disabled]="disableInput"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('noteS_TECHNICAL',in)}}"
+                        [(ngModel)]="item.noteS_TECHNICAL">
+                    </textarea>
+                </td>-->
+                <!-- Ghi chú -->
+                <td>
+                    <textarea [disabled]="disableInput"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('notes',in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<div class="row">
+    <!-- Chọn làm mẫu -->
+    <div class="col-md-3" [hidden]="disableInput || !inputModel.grouP_PRODUCT_ID">
+        <div class="form-group">
+            <label (click)="PDE_GROUP_PRODUCT_PRODUCT_TEMPLATE_Upd()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Chọn làm mẫu')}}
+            </label>
+        </div>
+    </div>
+    <div class="col-md-12"></div>
+
+    
+</div>
+<!-- End -->
+
+<po-product-modal (onSelect)='onSelectPopupAdd($event)' #popupAdd [multiple]="true"></po-product-modal>
+

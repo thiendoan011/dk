@@ -1,0 +1,75 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Rút trích dữ liệu")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        
+        <po-report-data-extraction-producted-part
+            [branches]="_branches"
+            [title]="'Thông tin năng suất các công đoạn'">
+        </po-report-data-extraction-producted-part>
+
+        <po-report-data-extraction-group-product
+            [branches]="_branches"
+            [title]="'Thông tin hệ hàng bao gồm các PO'">
+        </po-report-data-extraction-group-product>
+
+        <po-report-data-extraction-customer
+            [branches]="_branches"
+            [title]="'Thông tin khách hàng bao gồm các PO'">
+        </po-report-data-extraction-customer>
+
+        <po-report-data-extraction-booking
+            [branches]="_branches"
+            [title]="'Thông tin booking'">
+        </po-report-data-extraction-booking>
+
+        <po-report-data-extraction-po-groupproduct-product
+            [branches]="_branches"
+            [title]="'Thông tin PO bao gồm các hệ hàng, sản phẩm'">
+        </po-report-data-extraction-po-groupproduct-product>
+
+        <po-report-data-extraction-po-modified-export-date
+            [branches]="_branches"
+            [title]="'Kế hoạch sản xuất điều chỉnh'">
+        </po-report-data-extraction-po-modified-export-date>
+
+        <po-report-data-extraction-producted-part-2
+            [branches]="_branches"
+            [title]="'Tiến độ công đoạn'">
+        </po-report-data-extraction-producted-part-2>
+
+        <po-report-data-extraction-producted-part-long-unprocess
+            [branches]="_branches"
+            [title]="'Thông tin công đoạn quá lâu chưa hoàn thành'">
+        </po-report-data-extraction-producted-part-long-unprocess>
+
+        <po-report-data-extraction-po-unprocess-loadedcont
+            [branches]="_branches"
+            [title]="'PO chưa hoàn thành - đã load cont'">
+        </po-report-data-extraction-po-unprocess-loadedcont>
+
+        <po-report-data-extraction-producted-part-factory
+            [branches]="_branches"
+            [title]="'Thông tin công đoạn PO gia công'">
+        </po-report-data-extraction-producted-part-factory>
+
+        <po-report-data-extraction-r-purchase
+            [branches]="_branches"
+            [title]="'Thông tin đơn hàng nguyên vật liệu theo lệnh sản xuất'">
+        </po-report-data-extraction-r-purchase>
+        
+    </div>
+</div>

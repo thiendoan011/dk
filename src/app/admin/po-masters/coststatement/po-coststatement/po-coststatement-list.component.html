@@ -1,0 +1,183 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin bảng chiết tính")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="row">
+                <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body">
+                            <form class="horizontal-form filter-form" autocomplete="off">
+                                <!-- Begin Filter -->
+                                <div class="m-form m-form--label-align-right">
+                                    <div class="row">
+                                        <!-- Mã Bảng chiết tính -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Mã Bảng chiết tính")}}</label>
+                                                <input [(ngModel)]="filterInput.coststatemenT_CODE" 
+                                                    name="coststatemenT_CODE"
+                                                    class="form-control m-input" type="text">
+                                            </div>
+                                        </div>
+                                        <!-- Tên Bảng chiết tính -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Tên Bảng chiết tính")}}</label>
+                                                <input [(ngModel)]="filterInput.coststatemenT_NAME" 
+                                                    name="coststatemenT_NAME"
+                                                    class="form-control m-input" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4"></div>
+
+                                        <!-- Tình trạng yêu cầu -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Tình trạng yêu cầu")}}</label>
+                                                <all-code-select
+                                                    [emptyText]="l('SelectAll')"
+                                                    [cdName]="'REQUEST_STATUS'"
+                                                    [cdType]="'CM'"
+                                                    [(ngModel)]="filterInput.coststatemenT_STATUS"
+                                                    name="coststatemenT_STATUS">
+                                                </all-code-select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Trạng thái duyệt -->
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>{{l("Trạng thái duyệt")}}</label>
+                                                <all-code-select
+                                                    #autH_STATUS="ngModel"
+                                                    name="autH_STATUS"
+                                                    [(ngModel)]="filterInput.autH_STATUS"
+                                                    [emptyText]="l('SelectAll')"
+                                                    [cdName]="'AUTH_STATUS1'"
+                                                    [cdType]="'AUTH_STATUS1'">
+                                                </all-code-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12"></div>
+                                        
+                                        <div class='col-md-3'>
+                                            <div class='form-group'>
+                                                <label class='btn btn-primary' 
+                                                        (click)="onSearch()"
+                                                        style="margin-top: 6px; color:white!important;">
+                                                    {{this.l('Tìm kiếm')}}
+                                                </label>
+                                            </div>        
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End filter-->
+
+                                <!-- Begin table-->
+                                <div class="editable-title-group">
+                                    <h5 class="popup-title col-md-12">{{l("Danh sách hệ hàng có Bảng chiết tính")}}</h5>
+                                </div>
+                                <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                                    <div class="spinner-border m-5" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                        <thead>
+                                            <tr>
+                                                <!-- Begin Table Column -->
+                                                <th class="center">
+                                                    <span style="width:40px">{{l("No")}}</span>
+                                                </th>
+                                                <!-- Mã Bảng chiết tính -->
+                                                <th sortField="coststatemenT_CODE" style="width: 25%">
+                                                    <span>{{l("Mã Bảng chiết tính")}}</span>
+                                                </th>
+                                                <!-- Tên hệ hàng -->
+                                                <th sortField="grouP_PRODUCT_NAME" style="width: 25%">
+                                                    <span >{{l("Tên hệ hàng")}}</span>
+                                                </th>
+                                                <!-- Tên Bảng chiết tính -->
+                                                <th sortField="coststatemenT_NAME" style="width: 25%">
+                                                    <span >{{l("Tên Bảng chiết tính")}}</span>
+                                                </th>
+                                                <!-- Ghi chú Bảng chiết tính -->
+                                                <th sortField="coststatemenT_NOTES" style="width: 25%">
+                                                    <span>{{l("Ghi chú Bảng chiết tính")}}</span>
+                                                </th>
+                                                <!-- Trạng thái duyệt -->
+                                                <th sortField="autH_STATUS_NAME" style="width: 25%">
+                                                    <span>{{l("Trạng thái duyệt")}}</span>
+                                                </th>
+                                                <!-- Tình trạng yêu cầu 
+                                                <th sortField="COSTSTATEMENT_STATUS_NAME" style="width: 25%">
+                                                    <span>{{l("Tình trạng yêu cầu")}}</span>
+                                                </th>-->
+                                                <!-- End Table Column -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let record of dataTable.records" class="selectable"
+                                                (dblclick)="onDblclick(record)" (click)="selectRow($event,record);onClickRow(record)">
+                                                <!-- Begin Table Value -->
+                                                <td class="center">
+                                                    <span class="mo-header"></span>
+                                                    {{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                                </td>
+                                                <!-- Mã Bảng chiết tính -->
+                                                <td><span class="mo-header"></span>{{record.coststatemenT_CODE}}</td>
+                                                <!-- Tên hệ hàng -->
+                                                <td><span class="mo-header"></span>{{record.grouP_PRODUCT_NAME}}</td>
+                                                <!-- Tên Bảng chiết tính -->
+                                                <td><span class="mo-header"></span>{{record.coststatemenT_NAME}}</td>
+                                                <!-- Ghi chú Bảng chiết tính -->
+                                                <td><span class="mo-header"></span>{{record.notes}}</td>
+                                                <!-- Trạng thái duyệt -->
+                                                <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                                <!-- Tình trạng yêu cầu 
+                                                <td><span class="mo-header"></span>{{record.coststatemenT_STATUS_NAME}}</td>-->
+                                                <!-- End Table Value -->
+                                            </tr>
+                                        </tbody>
+                                    </core-table>
+                                </div>
+                                <!-- End table-->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                    <div class="m-portlet m-portlet--mobile">
+                        <div class="m-portlet__body">
+                            <form class="horizontal-form filter-form" autocomplete="off">
+                                <!-- Danh sách các file đính kèm -->
+                                <po-coststatement-dt 
+                                    #pocoststatementdt
+                                    [disableInput]='true'>
+                                </po-coststatement-dt>
+                                <!-- Danh sách các file đính kèm -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

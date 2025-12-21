@@ -1,0 +1,289 @@
+<!-- Begin -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l('Danh sách sản phẩm thuộc PO')}}</h5>
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- STT -->
+                <th style="width: 40px"><span >{{l("No")}}</span></th>
+
+                <!-- Mã hệ hàng -->
+                <th sortField="producT_CODE">
+                    <span style="width: 150px">{{l('Mã hệ hàng')}}</span>
+                </th>
+                <!-- Tên hệ hàng -->
+                <th sortField="producT_NAME">
+                    <span style="width: 150px">{{l('Tên hệ hàng')}}</span>
+                </th>
+                <!-- Màu hệ hàng -->
+                <th>
+                    <span style="width: 100px">{{l('Màu hệ hàng')}}</span>
+                </th>
+                <!-- Mã sản phẩm -->
+                <th>
+                    <span style="width: 100px">{{l('Mã sản phẩm')}}</span>
+                </th>
+                <!-- Tên sản phẩm -->
+                <th>
+                    <span style="width: 100px">{{l('Tên sản phẩm')}}</span>
+                </th>
+                <!-- Số lượng -->
+                <th>
+                    <span style="width: 100px">{{l('Số lượng')}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="width: 150px">{{l('Ghi chú')}}</span>
+                </th>
+                <!-- SL thành phẩm -->
+                <th>
+                    <span style="width: 100px">{{l('SL thành phẩm')}}</span>
+                </th>
+                <!-- Ghi chú thành phẩm -->
+                <th>
+                    <span style="width: 150px">{{l('Ghi chú thành phẩm')}}</span>
+                </th>
+                <!-- SL TPGC -->
+                <th>
+                    <span style="width: 100px">{{l('SL TPGC')}}</span>
+                </th>
+                <!-- Ghi chú TPGC-->
+                <th>
+                    <span style="width: 150px">{{l('Ghi chú TPGC')}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                [hidden]="item['page'] != editTable.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTable.selectRow($event,item);onClickGroupProduct(item);updateView()'>
+
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        [disabled]="true"
+                        name="{{editTable.name('no',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['no']">
+                </td>
+                <!-- Mã hệ hàng -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailGroupProduct(item)"
+                        name="{{editTable.name('grouP_PRODUCT_CODE',in)}}"
+                        [(ngModel)]="item.grouP_PRODUCT_CODE">
+                </td>
+                <!-- Tên hệ hàng -->
+                <td>
+                    <input
+                        readonly
+                        class="form-control transparent" type="text"
+                        name="{{editTable.name('grouP_PRODUCT_NAME',in)}}"
+                        [(ngModel)]="item.grouP_PRODUCT_NAME"/>
+                </td>
+                <!-- Màu hệ hàng -->
+                <td>
+                    <input
+                        readonly
+                        class="form-control transparent" type="text"
+                        name="{{editTable.name('color',in)}}"
+                        [(ngModel)]="item.color"/>
+                </td>
+                <!-- Mã sản phẩm -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailProduct(item)"
+                        name="{{editTable.name('producT_CODE',in)}}"
+                        [(ngModel)]="item.producT_CODE">
+                </td>
+                <!-- Tên sản phẩm -->
+                <td>
+                    <input
+                        readonly
+                        class="form-control transparent" type="text"
+                        name="{{editTable.name('producT_NAME',in)}}"
+                        [(ngModel)]="item.producT_NAME"/>
+                </td>
+                <!-- Số lượng -->
+                <td>
+                    <money-input
+                        [disabled]='true'
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantity">
+                    </money-input>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea readonly
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('notes',in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+                <!-- SL thành phẩm -->
+                <td>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD1'"
+                        name="{{editTable.name('quantitY_COMPLETED_EMBRYO',in)}}"
+                        [(ngModel)]="item.quantitY_COMPLETED_EMBRYO">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD2'"
+                        name="{{editTable.name('quantitY_COMPLETED_PART_2',in)}}"
+                        [(ngModel)]="item.quantitY_COMPLETED_PART_2">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD25'"
+                        name="{{editTable.name('quantitY_COMPLETED_PART_25',in)}}"
+                        [(ngModel)]="item.quantitY_COMPLETED_PART_25">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD3'"
+                        name="{{editTable.name('quantitY_COMPLETED_PART_3',in)}}"
+                        [(ngModel)]="item.quantitY_COMPLETED_PART_3">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD4'"
+                        name="{{editTable.name('quantitY_COMPLETED_PART_4',in)}}"
+                        [(ngModel)]="item.quantitY_COMPLETED_PART_4">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD5'"
+                        name="{{editTable.name('quantitY_COMPLETED_PART_5',in)}}"
+                        [(ngModel)]="item.quantitY_COMPLETED_PART_5">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD6'"
+                        name="{{editTable.name('quantitY_COMPLETED_PART_6',in)}}"
+                        [(ngModel)]="item.quantitY_COMPLETED_PART_6">
+                    </money-input>
+                </td>
+                <!-- Ghi chú thành phẩm -->
+                <td>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD1'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_COMPLETED_EMBRYO',in)}}"
+                        [(ngModel)]="item.noteS_COMPLETED_EMBRYO">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD2'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_COMPLETED_PART_2',in)}}"
+                        [(ngModel)]="item.noteS_COMPLETED_PART_2">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD25'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_COMPLETED_PART_25',in)}}"
+                        [(ngModel)]="item.noteS_COMPLETED_PART_25">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD3'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_COMPLETED_PART_3',in)}}"
+                        [(ngModel)]="item.noteS_COMPLETED_PART_3">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD4'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_COMPLETED_PART_4',in)}}"
+                        [(ngModel)]="item.noteS_COMPLETED_PART_4">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD5'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_COMPLETED_PART_5',in)}}"
+                        [(ngModel)]="item.noteS_COMPLETED_PART_5">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD6'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_COMPLETED_PART_6',in)}}"
+                        [(ngModel)]="item.noteS_COMPLETED_PART_6">
+                    </textarea>
+                </td>
+                <!-- SL TPGC -->
+                <td>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD1'"
+                        name="{{editTable.name('quantitY_OUTSOURCE_COMPLETED_EMBRYO',in)}}"
+                        [(ngModel)]="item.quantitY_OUTSOURCE_COMPLETED_EMBRYO">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD2'"
+                        name="{{editTable.name('quantitY_OUTSOURCE_COMPLETED_PART_2',in)}}"
+                        [(ngModel)]="item.quantitY_OUTSOURCE_COMPLETED_PART_2">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD25'"
+                        name="{{editTable.name('quantitY_OUTSOURCE_COMPLETED_PART_25',in)}}"
+                        [(ngModel)]="item.quantitY_OUTSOURCE_COMPLETED_PART_25">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD3'"
+                        name="{{editTable.name('quantitY_OUTSOURCE_COMPLETED_PART_3',in)}}"
+                        [(ngModel)]="item.quantitY_OUTSOURCE_COMPLETED_PART_3">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD4'"
+                        name="{{editTable.name('quantitY_OUTSOURCE_COMPLETED_PART_4',in)}}"
+                        [(ngModel)]="item.quantitY_OUTSOURCE_COMPLETED_PART_4">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD5'"
+                        name="{{editTable.name('quantitY_OUTSOURCE_COMPLETED_PART_5',in)}}"
+                        [(ngModel)]="item.quantitY_OUTSOURCE_COMPLETED_PART_5">
+                    </money-input>
+                    <money-input 
+                        [disabled]="disableInput" [hidden]="_producted_part_code !== 'CD6'"
+                        name="{{editTable.name('quantitY_OUTSOURCE_COMPLETED_PART_6',in)}}"
+                        [(ngModel)]="item.quantitY_OUTSOURCE_COMPLETED_PART_6">
+                    </money-input>
+                </td>
+                <!-- Ghi chú TPGC -->
+                <td>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD1'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_OUTSOURCE_COMPLETED_EMBRYO',in)}}"
+                        [(ngModel)]="item.noteS_OUTSOURCE_COMPLETED_EMBRYO">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD2'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_OUTSOURCE_COMPLETED_PART_2',in)}}"
+                        [(ngModel)]="item.noteS_OUTSOURCE_COMPLETED_PART_2">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD25'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_OUTSOURCE_COMPLETED_PART_25',in)}}"
+                        [(ngModel)]="item.noteS_OUTSOURCE_COMPLETED_PART_25">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD3'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_OUTSOURCE_COMPLETED_PART_3',in)}}"
+                        [(ngModel)]="item.noteS_OUTSOURCE_COMPLETED_PART_3">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD4'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_OUTSOURCE_COMPLETED_PART_4',in)}}"
+                        [(ngModel)]="item.noteS_OUTSOURCE_COMPLETED_PART_4">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD5'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_OUTSOURCE_COMPLETED_PART_5',in)}}"
+                        [(ngModel)]="item.noteS_OUTSOURCE_COMPLETED_PART_5">
+                    </textarea>
+                    <textarea class="form-control transparent" [hidden]="_producted_part_code !== 'CD6'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('noteS_OUTSOURCE_COMPLETED_PART_6',in)}}"
+                        [(ngModel)]="item.noteS_OUTSOURCE_COMPLETED_PART_6">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+<!-- End -->
+
+

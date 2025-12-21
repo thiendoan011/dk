@@ -1,0 +1,154 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin tiến độ làm mẫu")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+
+                                <!-- Ngày yêu cầu hoàn thành làm mẫu -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Ngày yêu cầu hoàn thành làm mẫu')}}</label>
+                                        <date-control
+                                            name="reQ_TEMPLATE_REQ_COMPLETE_DT"
+                                            [(ngModel)]="filterInput.reQ_TEMPLATE_REQ_COMPLETE_DT">
+                                        </date-control>
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái hệ hàng -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái hệ hàng")}}</label>
+                                        <all-code-select 
+                                            [emptyText]="l('SelectAll')"
+                                            name="grouP_PRODUCT_STATUS" 
+                                            [(ngModel)]="filterInput.grouP_PRODUCT_STATUS"
+                                            [cdName]="'PDE_GROUP_PRODUCT_STATUS'"
+                                            [cdType]="'PDE'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái hoàn thành làm mẫu -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái hoàn thành làm mẫu")}}</label>
+                                        <all-code-select 
+                                            [emptyText]="l('SelectAll')"
+                                            name="reQ_TEMPLATE_STATUS" 
+                                            [(ngModel)]="filterInput.reQ_TEMPLATE_STATUS"
+                                            [cdName]="'PDE_REQ_TEMPLATE_STATUS'"
+                                            [cdType]="'PDE'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+
+                                <!-- Tìm kiếm -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <button *ngIf="appToolbar.buttonSearchEnable" 
+                                            class="btn btn-primary btn-search"
+                                            (click)="onSearch()">{{l('Search')}}
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã hệ hàng -->
+                                        <th sortField="grouP_PRODUCT_CODE">
+                                            <span style="width: 120px">{{l("Mã hệ hàng")}}</span>
+                                        </th>
+                                        <!-- Người gửi yêu cầu -->
+                                        <th sortField="reQ_TEMPLATE_REQ_REQUESTER_NAME">
+                                            <span>{{l("Người gửi yêu cầu")}}</span>
+                                        </th>
+                                        <!-- Người dự kiến triển khai -->
+                                        <th sortField="reQ_TEMPLATE_PROGRESS_EXPECT_MAKER_NAME">
+                                            <span>{{l("Người dự kiến triển khai")}}</span>
+                                        </th>
+                                        <!-- Người nhận triển khai -->
+                                        <th sortField="reQ_TEMPLATE_PROGRESS_EXACT_MAKER_NAME">
+                                            <span>{{l("Người nhận triển khai")}}</span>
+                                        </th>
+                                        <!-- Ngày yêu cầu làm mẫu -->
+                                        <th sortField="reQ_TEMPLATE_REQ_DT">
+                                            <span>{{l("Ngày yêu cầu làm mẫu")}}</span>
+                                        </th>
+                                        <!-- Ngày dự kiến hoàn thành làm mẫu -->
+                                        <th sortField="reQ_TEMPLATE_REQ_COMPLETE_EXPECT_DT">
+                                            <span>{{l("Ngày dự kiến hoàn thành làm mẫu")}}</span>
+                                        </th>
+                                        <!-- Ngày thực tế hoàn thành làm mẫu -->
+                                        <th sortField="reQ_TEMPLATE_REQ_COMPLETE_EXACT_DT">
+                                            <span>{{l("Ngày thực tế hoàn thành làm mẫu")}}</span>
+                                        </th>
+                                        <!-- Trạng thái triển khai -->
+                                        <th sortField="reQ_TEMPLATE_PROGRESS_STATUS_NAME">
+                                            <span>{{l("Trạng thái triển khai")}}</span>
+                                        </th>
+                                        <!-- Trạng thái hoàn thành làm mẫu -->
+                                        <th sortField="reQ_TEMPLATE_STATUS_NAME">
+                                            <span>{{l("Trạng thái hoàn thành làm mẫu")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable"
+                                        (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.grouP_PRODUCT_CODE}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_REQ_REQUESTER_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_PROGRESS_EXPECT_MAKER_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_PROGRESS_EXACT_MAKER_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_REQ_DT | dateFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_REQ_COMPLETE_EXPECT_DT | dateFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_REQ_COMPLETE_EXACT_DT | dateFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_PROGRESS_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.reQ_TEMPLATE_STATUS_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

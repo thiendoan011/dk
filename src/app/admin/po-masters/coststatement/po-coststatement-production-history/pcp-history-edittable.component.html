@@ -1,0 +1,278 @@
+<!-- Begin Table-->
+<div class="editable-title-group mt-1" style="width: 100%">
+    <h5>
+        {{ this.l("Lịch sử yêu cầu") }}
+    </h5>
+</div>
+
+<ul *ngFor="let item of editTable; let in = index">
+    <!-- Người tạo thêm -->
+    <li *ngIf="isNullOrEmpty(item.pO_COSTSTATEMENT_HISTORY_DT_ID) && _type_upd == 'request'">
+        <!-- Audit -->
+        <div class="input-icons" style="width: 30%">
+            <i class="fa fa-question-circle icon" style="color: red;"></i>
+            <input class="input-field" type="text"
+                style="background-color: bisque; color: red; font-weight: bold;
+                border-style: solid; border-color: bisque;"
+                [disabled]="true"
+                name="{{item.makeR_NAME + in}}"
+                [ngModel]="item?.makeR_NAME" />
+        </div>
+        <div style="border-style: solid; border-color: bisque;">
+            <div class="row">
+                <!-- Bộ phận yêu cầu -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Bộ phận yêu cầu")}}</label>
+                        <input 
+                            [disabled]="false"
+                            class="form-control"
+                            name="{{item.objecT_REQUEST + in}}"
+                            [(ngModel)]="item.objecT_REQUEST">
+                    </div>
+                </div>
+                <!-- Sản phẩm -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Sản phẩm")}}</label>
+                        <div class='file-input-group'>
+                            <input readonly
+                                class="form-control"
+                                style="color: blue; cursor: pointer;"
+                                (click)="onViewDetailProduct(item)"
+                                name="{{item.producT_NAME + in}}"
+                                [(ngModel)]="item.producT_NAME">
+                            <button type="button" class="btn btn-primary"
+                                style="margin-left:0px;"
+                                [disabled]='disableInput'
+                                (click)="showProductModal(in)">{{l("...")}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Cụm chi tiết -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Cụm chi tiết")}}</label>
+                        <div class='file-input-group'>
+                            <input readonly
+                                class="form-control"
+                                style="color: blue; cursor: pointer;"
+                                (click)="onViewDetailProductGroupDetail(item)"
+                                name="{{item.producT_GROUP_DETAIL_NAME + in}}"
+                                [(ngModel)]="item.producT_GROUP_DETAIL_NAME">
+                            <button type="button" class="btn btn-primary"
+                                style="margin-left:0px;"
+                                [disabled]='disableInput'
+                                (click)="showProductGroupDetailModal(in)">{{l("...")}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mô tả chi tiết -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Mô tả chi tiết")}}</label>
+                        <div class='file-input-group'>
+                            <input readonly
+                                class="form-control"
+                                style="color: blue; cursor: pointer;"
+                                (click)="onViewDetailProductDetail(item)"
+                                name="{{item.producT_DETAIL_NAME + in}}"
+                                [(ngModel)]="item.producT_DETAIL_NAME">
+                            <button type="button" class="btn btn-primary"
+                                style="margin-left:0px;"
+                                [disabled]='disableInput'
+                                (click)="showProductDetailModal(in)">{{l("...")}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+            <!-- Nội dung -->
+            <textarea type="text"
+                class="form-control"
+                name="{{item.makeR_ID + in}}"
+                [disabled]="false"
+                [(ngModel)]="item.pO_COSTSTATEMENT_HISTORY_DT_DESC">
+            </textarea>
+        </div>
+    </li>
+    <!-- Người tạo đã gửi yêu cầu -->
+    <li *ngIf="!isNullOrEmpty(item.pO_COSTSTATEMENT_HISTORY_DT_ID) 
+        && !isNullOrEmpty(item.typE_DT) && item.typE_DT == 'REQUEST'">
+        <!-- Audit -->
+        <div class="input-icons" style="width: 30%">
+            <i class="fa fa-question-circle icon" style="color: red;"></i>
+            <input class="input-field" type="text"
+                style="background-color: bisque; color: red; font-weight: bold;
+                border-style: solid; border-color: bisque;"
+                [disabled]="true"
+                name="{{item.makeR_NAME + in}}"
+                [ngModel]="item?.makeR_NAME" />
+        </div>
+        <div style="border-style: solid; border-color: bisque;">
+            <div class="row">
+                <!-- Bộ phận yêu cầu -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Bộ phận yêu cầu")}}</label>
+                        <input 
+                            [disabled]="true"
+                            class="form-control"
+                            name="{{item.objecT_REQUEST + in}}"
+                            [(ngModel)]="item.objecT_REQUEST">
+                    </div>
+                </div>
+                <!-- Sản phẩm -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Sản phẩm")}}</label>
+                        <div class='file-input-group'>
+                            <input readonly
+                                class="form-control"
+                                style="color: blue; cursor: pointer;"
+                                (click)="onViewDetailProduct(item)"
+                                name="{{item.producT_NAME + in}}"
+                                [(ngModel)]="item.producT_NAME">
+                        </div>
+                    </div>
+                </div>
+                <!-- Cụm chi tiết -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Cụm chi tiết")}}</label>
+                        <div class='file-input-group'>
+                            <input readonly
+                                class="form-control"
+                                style="color: blue; cursor: pointer;"
+                                (click)="onViewDetailProductGroupDetail(item)"
+                                name="{{item.producT_GROUP_DETAIL_NAME + in}}"
+                                [(ngModel)]="item.producT_GROUP_DETAIL_NAME">
+                        </div>
+                    </div>
+                </div>
+                <!-- Mô tả chi tiết -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>{{l("Mô tả chi tiết")}}</label>
+                        <div class='file-input-group'>
+                            <input readonly
+                                class="form-control"
+                                style="color: blue; cursor: pointer;"
+                                (click)="onViewDetailProductDetail(item)"
+                                name="{{item.producT_DETAIL_NAME + in}}"
+                                [(ngModel)]="item.producT_DETAIL_NAME">
+                        </div>
+                    </div>
+                </div>
+            </div>    
+            <!-- Nội dung -->
+            <textarea type="text"
+                class="form-control"
+                name="{{item.pO_COSTSTATEMENT_HISTORY_DT_DESC + in}}"
+                [disabled]="true"
+                [(ngModel)]="item.pO_COSTSTATEMENT_HISTORY_DT_DESC">
+            </textarea>
+        </div>
+    </li>
+    <!-- Người trả lời thêm -->
+    <li *ngIf="isNullOrEmpty(item.pO_COSTSTATEMENT_HISTORY_DT_ID) && _type_upd == 'response'">
+        <!-- Audit -->
+        <div class="input-icons" style="width: 30%">
+            <i class="fa fa-reply icon" style="color: green;"></i>
+            <input class="input-field" type="text"
+                style="background-color: rgb(219, 246, 208); color: green; font-weight: bold;
+                border-style: solid; border-color: rgb(219, 246, 208);"
+                [disabled]="true"
+                name="{{item.makeR_NAME + in}}"
+                [ngModel]="item?.makeR_NAME" />
+        </div>
+        <div style="border-style: solid; border-color: rgb(219, 246, 208);">
+            <div class="row">
+                <!-- Phản hồi -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <all-code-select 
+                            [disabled]="false"
+                            [cdName]="'PO_COSTSTATEMENT_HIS_RESULT_STATUS'"
+                            [cdType]="'PO'"
+                            name="{{item.responsE_TYPE + in}}" 
+                            [(ngModel)]="item.responsE_TYPE">
+                        </all-code-select>
+                    </div>
+                </div>
+            </div>    
+            <!-- Nội dung -->
+            <textarea type="text"
+                class="form-control"
+                name="{{item.pO_COSTSTATEMENT_HISTORY_DT_DESC + in}}"
+                [disabled]="false"
+                [(ngModel)]="item.pO_COSTSTATEMENT_HISTORY_DT_DESC">
+            </textarea>
+        </div>
+    </li>
+    <!-- Người trả lời đã trả lời -->
+    <li *ngIf="!isNullOrEmpty(item.pO_COSTSTATEMENT_HISTORY_DT_ID) 
+        && !isNullOrEmpty(item.typE_DT) && item.typE_DT == 'RESPONSE'">
+        <!-- Audit -->
+        <div class="input-icons" style="width: 30%">
+            <i class="fa fa-reply icon" style="color: green;"></i>
+            <input class="input-field" type="text"
+                style="background-color: rgb(219, 246, 208); color: green; font-weight: bold;
+                border-style: solid; border-color: rgb(219, 246, 208);"
+                [disabled]="true"
+                name="{{item.makeR_NAME + in}}"
+                [ngModel]="item?.makeR_NAME" />
+        </div>
+        <div style="border-style: solid; border-color: rgb(219, 246, 208);">
+            <div class="row">
+                <!-- Phản hồi -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <all-code-select 
+                            [disabled]="true"
+                            [cdName]="'PO_COSTSTATEMENT_HIS_RESULT_STATUS'"
+                            [cdType]="'PO'"
+                            name="{{item.responsE_TYPE + in}}" 
+                            [(ngModel)]="item.responsE_TYPE">
+                        </all-code-select>
+                    </div>
+                </div>
+            </div>    
+            <!-- Nội dung -->
+            <textarea type="text"
+                class="form-control"
+                name="{{item.pO_COSTSTATEMENT_HISTORY_DT_DESC + in}}"
+                [disabled]="true"
+                [(ngModel)]="item.pO_COSTSTATEMENT_HISTORY_DT_DESC">
+            </textarea>
+        </div>
+    </li>
+</ul>
+<!-- End Table-->
+<style>
+    .input-icons i {
+        position: absolute;
+    }
+     
+    .input-icons {
+        width: 100%;
+    }
+     
+    .icon {
+        /**/padding: 14px 4px 14px 5px;
+        min-width: 40px;
+    }
+     
+    .input-field {
+        width: 100%;
+        padding: 10px 10px 10px 20px;
+        text-align: left;
+    }
+</style>
+
+
+<product-of-group-product-modal (onSelect)='onSelectProductModal($event)' #productModal [multiple]="false"></product-of-group-product-modal>
+<group-detail-of-product-modal-modal (onSelect)='onSelectProductGroupDetailModal($event)' #productGroupDetailModal [multiple]="false"></group-detail-of-product-modal-modal>
+<product-detail-of-product-group-detail-modal (onSelect)='onSelectProductDetailModal($event)' #productDetailModal [multiple]="false"></product-detail-of-product-group-detail-modal>

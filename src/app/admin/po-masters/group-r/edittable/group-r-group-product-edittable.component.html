@@ -1,0 +1,109 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Khách hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Khách hàng")}}</span>
+                </th>
+                <!-- Hệ hàng -->
+                <th>
+                    <span style="width: 150px;">{{l("Hệ hàng")}}</span>
+                </th>
+                <!-- Mã PO -->
+                <th>
+                    <span style="width: 150px;">{{l("Mã PO")}}</span>
+                </th>
+                <!-- SL cont -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL cont")}}</span>
+                </th>
+                <!-- Nhà máy -->
+                <th sortField="brancH_SHORT_NAME">
+                    <span style="white-space: nowrap;">{{l("Nhà máy")}}</span>
+                </th>
+                <!-- Ngày xuất -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày xuất")}}</span>
+                </th>
+                <!-- Mã lệnh sản xuất -->
+                <th>
+                    <span style="width: 150px;">{{l("Mã lệnh sản xuất")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Khách hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CUSTOMER_NAME',in)}}" 
+                        [(ngModel)]="item.pO_CUSTOMER_NAME"/>
+                </td>
+                <!-- Hệ hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('grouP_PRODUCT_CODE',in)}}" 
+                        [(ngModel)]="item.grouP_PRODUCT_CODE"/>
+                </td>
+                <!-- Mã PO -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailPO(item)"
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.pO_CODE"/>
+                </td>
+                <!-- SL cont -->
+                <td>
+                    <money-input
+                        [disabled]="true"
+                        name="{{editTable.name('qtY_CONT', in)}}"
+                        [(ngModel)]="item.qtY_CONT">
+                    </money-input>
+                </td>
+                <!-- Nhà máy -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('brancH_SHORT_NAME',in)}}" 
+                        [(ngModel)]="item.brancH_SHORT_NAME"/>
+                </td>
+                <!-- Ngày xuất -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('exporT_DATE', in)}}"
+                        [(ngModel)]="item.exporT_DATE">
+                    </date-control>
+                </td>
+                <!-- Mã lệnh sản xuất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('r_CODE',in)}}" 
+                        [(ngModel)]="item.r_CODE"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+
+<po-po-modal (onSelect)='onSelectPopup($event)' #popupModal [multiple]="true"></po-po-modal>

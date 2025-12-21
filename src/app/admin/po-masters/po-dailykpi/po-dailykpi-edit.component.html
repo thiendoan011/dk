@@ -1,0 +1,192 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Năng suất ngày")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Nhập nội dung xử lý 
+                        <div class="col-md-12">
+                            <po-history-create-modal
+                                [type]="'PO_DAILYKPI_INF'"
+                                [id]="inputModel.pO_DAILYKPI_ID"
+                                [page]="'PO_DAILYKPI_INF'"
+                                [stage]="'HC'"
+                                [process]="'INF'"
+                                [process_desc]="'Người tạo thêm nội dung xử lý phiếu'"
+                                [title]="'Bấm vào đây để nhập nội dung xử lý'"
+                                (complete)="getDataPages()">
+                            </po-history-create-modal>
+                        </div>-->
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-2-modal
+                                #history_modal
+                                [id]="inputModel.pO_DAILYKPI_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </po-history-2-modal>
+                        </div>
+
+                        <!-- Trạng thái duyệt -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Người duyệt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="checkeR_NAME"
+                                    [(ngModel)]="inputModel.checkeR_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'AUTH_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="autH_STATUS" 
+                                    [(ngModel)]="inputModel.autH_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- ID năng suất ngày -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("ID năng suất ngày")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="pO_DAILYKPI_ID"
+                                    [(ngModel)]="inputModel.pO_DAILYKPI_ID" />
+                            </div>
+                        </div>
+
+                        <!-- Ngày tính năng suất -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l('Ngày tính năng suất')}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="pO_DAILYKPI_DT"
+                                    [(ngModel)]="inputModel.pO_DAILYKPI_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Đơn vị quản lý -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l('Đơn vị quản lý')}}</label>
+                                <select2-custom 
+                                    [disabled]="disableInput" 
+                                    [(list)]="branches" 
+                                    [valueMember]="'brancH_ID'" 
+                                    [displayMember]="'brancH_CODE|brancH_NAME'"
+                                    name="brancH_ID" 
+                                    [(ngModel)]="inputModel.brancH_ID" >
+                                </select2-custom>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]='disableInput'
+                                    appTextareaAutoresize
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                        <!-- Bàn giao 
+                        <div class="col-md-4" *ngIf="inputModel.makeR_ID && inputModel.makeR_ID == appSession.user.userName">
+                            <div class="form-group">
+                                <label> {{ l("Người nhận phiếu") }}</label>
+                                <div class="input-group">
+                                    <select2-custom 
+                                        style="width: 60%;"
+                                        [(list)]="_users" 
+                                        [emptyText]="l('SelectAll')"
+                                        [valueMember]="'tlnanme'"
+                                        [displayMember]="'tlnanme|tlFullName|poS_NAME'" 
+                                        name="makE_HANDOVER"
+                                        [(ngModel)]="inputModel.makE_HANDOVER">
+                                    </select2-custom>
+                                    <span class="input-group-btn" style="width: 40%;">
+                                        <button *ngIf="inputModel.makeR_ID && inputModel.makeR_ID == appSession.user.userName"
+                                            type="button"
+                                            style="margin-left: 5px;"
+                                            class="btn btn-primary" 
+                                            (click)="RequestHandOver()">
+                                            <span>{{l("Bàn giao phiếu")}}</span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <po-dailykpi-producted-part-edittable
+                        #pODailyKPIProductedPartEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [title]="'Danh sách năng suất công đoạn đạt được theo ngày'">
+                    </po-dailykpi-producted-part-edittable>
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

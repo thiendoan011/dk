@@ -1,0 +1,169 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Tài xế")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <vhe-history-modal
+                                #history_modal
+                                [id]="inputModel.vhE_DRIVER_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </vhe-history-modal>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Nhân viên -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Nhân viên")}}</label>
+                                <select2-custom
+                                    [(list)]="_users"
+                                    [disabled]="disableInput"
+                                    [emptyText]="l('------ Bỏ trống ------')" 
+                                    name="vhE_USER_ID"
+                                    [(ngModel)]="inputModel.vhE_USER_ID"
+                                    [valueMember]="'tlnanme'"
+                                    [displayMember]="'tlnanme|tlFullName'">
+                                </select2-custom>
+                            </div>
+                        </div>
+
+                        <!-- Tên tài xế -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Tên tài xế")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="vhE_DRIVER_NAME"
+                                    [(ngModel)]="inputModel.vhE_DRIVER_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số điện thoại")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="vhE_DRIVER_PHONE"
+                                    [(ngModel)]="inputModel.vhE_DRIVER_PHONE" />
+                            </div>
+                        </div>
+
+                        <!-- Địa chỉ -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Địa chỉ")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="vhE_DRIVER_ADDRESS"
+                                    [(ngModel)]="inputModel.vhE_DRIVER_ADDRESS" />
+                            </div>
+                        </div>
+                        <!-- Độ tuổi -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Độ tuổi")}}</label>
+                                <money-input
+                                    [disabled]="disableInput"
+                                    [isDecimal]="true"
+                                    name="vhE_DRIVER_AGE"
+                                    [(ngModel)]="inputModel.vhE_DRIVER_AGE">
+                                </money-input>
+                            </div>
+                        </div>
+                        <!-- Số năm kinh nghiệm -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số năm kinh nghiệm")}}</label>
+                                <money-input
+                                    [disabled]="disableInput"
+                                    [isDecimal]="true"
+                                    name="vhE_DRIVER_EXPERIENCE"
+                                    [(ngModel)]="inputModel.vhE_DRIVER_EXPERIENCE">
+                                </money-input>
+                            </div>
+                        </div>
+
+                        <!-- Thuộc biên chế -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Thuộc biên chế")}}</label>
+                                <all-code-select
+                                    [disabled]='disableInput'
+                                    [cdName]="'OPTION_YN'"
+                                    [cdType]="'CM'"
+                                    name="vhE_DRIVER_IS_STAFF"
+                                    [(ngModel)]="inputModel.vhE_DRIVER_IS_STAFF">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]="disableInput"
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

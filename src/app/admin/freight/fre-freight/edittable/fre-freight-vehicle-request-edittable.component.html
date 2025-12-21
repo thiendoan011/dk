@@ -1,0 +1,212 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button type="button" (click)='exportExcel()' title="dowload"
+            class="btn btn-primary"><i class="pi pi-download"></i>{{l('Dowload')}}
+        </button>
+        <button type="button" [hidden]="disableInput || _disableUpdate || _disableSendAppr" class="btn btn-primary"
+            (click)="onOpenAdd()"><i class="pi pi-plus-circle"></i>{{l("Add")}}
+        </button>
+        <button type="button" [hidden]="disableInput || _disableUpdate || _disableSendAppr" class="btn btn-primary"
+            (click)="onShowVehicleRequest()"><i class="pi pi-plus"></i>{{l("Add")}}
+        </button>
+        <button type="button" [hidden]="disableInput || _disableUpdate || _disableSendAppr" class="btn btn-danger"
+            (click)="editTable.removeAllCheckedItem()"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <th class="center">
+                    <span style="width: 40px">
+                        <checkbox-control [disabled]="_disableInput || _disableUpdate || _disableSendAppr"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã phiếu xe -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã phiếu xe")}}</span>
+                </th>
+                <!-- Biển số -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Biển số")}}</span>
+                </th>
+                <!-- Tên xe -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên xe")}}</span>
+                </th>
+                <!-- Trọng tải -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trọng tải")}}</span>
+                </th>
+                <!-- Số khối -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số khối")}}</span>
+                </th>
+                <!-- Tài xế -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tài xế")}}</span>
+                </th>
+                <!-- Thời gian đi -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Thời gian đi")}}</span>
+                </th>
+                <!-- Thời gian đến -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Thời gian đến")}}</span>
+                </th>
+                <!-- Điểm khởi hành -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Điểm khởi hành")}}</span>
+                </th>
+                <!-- Điểm đến -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Điểm đến")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        name="{{editTable.name('isChecked',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã phiếu xe -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('vhE_VEHICLE_REQUEST_CODE',in)}}" 
+                        [(ngModel)]="item.vhE_VEHICLE_REQUEST_CODE"/>
+                </td>
+                <!-- Biển số -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('vhE_VEHICLE_CODE',in)}}" 
+                        [(ngModel)]="item.vhE_VEHICLE_CODE"/>
+                </td>
+                <!-- Tên xe -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('vhE_VEHICLE_NAME',in)}}" 
+                        [(ngModel)]="item.vhE_VEHICLE_NAME"/>
+                </td>
+                <!-- Trọng tải -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('vhE_VEHICLE_PAYLOAD',in)}}" 
+                        [(ngModel)]="item.vhE_VEHICLE_PAYLOAD"/>
+                </td>
+                <!-- Số khối -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('vhE_VEHICLE_FREIGHT_CAPCITY',in)}}" 
+                        [(ngModel)]="item.vhE_VEHICLE_FREIGHT_CAPCITY"/>
+                </td>
+                <!-- Tài xế -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('driveR_NAME',in)}}" 
+                        [(ngModel)]="item.driveR_NAME"/>
+                </td>
+                <!-- Thời gian đi -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        [hasTime]="true"
+                        name="{{editTable.name('froM_DT',in)}}" 
+                        [(ngModel)]="item.froM_DT">
+                    </date-control>
+                </td>
+                <!-- Thời gian đến -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        [hasTime]="true"
+                        name="{{editTable.name('tO_DT',in)}}" 
+                        [(ngModel)]="item.tO_DT">
+                    </date-control>
+                </td>
+                <!-- Điểm khởi hành -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('froM_LOCATION',in)}}" 
+                        [(ngModel)]="item.froM_LOCATION"/>
+                </td>
+                <!-- Điểm đến -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('tO_LOCATION',in)}}" 
+                        [(ngModel)]="item.tO_LOCATION"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<div class="row">
+    <div class="col-md-3" [hidden]="_disableInput || _disableUpdate || _disableSendAppr">
+        <div class="form-group">
+            <label (click)="onSave()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu')}}
+            </label>
+        </div>
+    </div>
+    <div class="col-md-3" [hidden]="_disableInput || !_disableUpdate || _disableSendAppr">
+        <div class="form-group">
+            <label (click)="onUnLock()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Mở khóa')}}
+            </label>
+        </div>
+    </div>
+    <div class="col-md-3" [hidden]="_disableInput || _disableUpdate || _disableSendAppr">
+        <div class="form-group">
+            <label (click)="onSaveAndLock()"
+                class='btn btn-danger' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu & Khóa')}}
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- 
+<vhe-vehicle-request-create-modal #vheVehicleRequestCreateModal
+    [title]="'Tạo nhanh phiếu yêu cầu xe'"
+    (onAccept)="onAcceptVehicleRequestCreate($event)">
+</vhe-vehicle-request-create-modal> -->
+
+<vhe-vehicle-request-modal #vheVehicleRequestModal
+    [title]="'Phiếu yêu cầu xe'"
+    (onSelect)="onSelectVehicleRequest($event)">
+</vhe-vehicle-request-modal>

@@ -1,0 +1,98 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Nhóm vật liệu")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+
+                        <!-- Mã nhóm vật liệu -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Mã nhóm vật liệu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="mW_GROUP_CODE"
+                                    [(ngModel)]="inputModel.mW_GROUP_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên nhóm vật liệu -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Tên nhóm vật liệu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="mW_GROUP_NAME"
+                                    [(ngModel)]="inputModel.mW_GROUP_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Loại vật tư -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Loại vật tư")}}</label>
+                                <all-code-select 
+                                    [disabled]='disableInput'
+                                    [cdName]="'MW_TYPE_TYPE'"
+                                    [cdType]="'MATERIAL'"
+                                    name="mW_TYPE_TYPE" 
+                                    [(ngModel)]="inputModel.mW_TYPE_TYPE">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12"></div>
+
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control" type="text"
+                                    [disabled]='disableInput'
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                    </div>
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

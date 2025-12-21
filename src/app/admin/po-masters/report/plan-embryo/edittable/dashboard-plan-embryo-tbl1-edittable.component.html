@@ -1,0 +1,142 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Tên khách hàng -->
+                <th>
+                    <span style="width: 120px;">{{l("Tên khách hàng")}}</span>
+                </th> 
+                <!-- Hệ hàng -->
+                <th>
+                    <span style="width: 130px;">{{l("Hệ hàng")}}</span>
+                </th>
+                <!-- Số PO -->
+                <th>
+                    <span style="width: 130px;">{{l("Số PO")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="width: 100px;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- Lệnh sản xuất -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Lệnh sản xuất")}}</span>
+                </th>
+                <!-- Ngày xuất theo khách hàng -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày xuất theo khách hàng")}}</span>
+                </th>
+                <!-- Số lượng cont -->
+                <th>
+                    <span style="width: 100px;">{{l("Số lượng cont")}}</span>
+                </th>
+                <!-- % hoàn thành -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("% hoàn thành")}}</span>
+                </th>
+                <!-- Ngày dự kiến hoàn thành -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày dự kiến hoàn thành")}}</span>
+                </th>
+                <!-- Ngày yêu cầu hoàn thành -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày yêu cầu hoàn thành")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Tên khách hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('customeR_NAME',in)}}" 
+                        [(ngModel)]="item.customeR_NAME"/>
+                </td>
+                <!-- Hệ hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('grouP_PRODUCT_NAME',in)}}" 
+                        [(ngModel)]="item.grouP_PRODUCT_NAME"/>
+                </td>
+                <!-- Số PO -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.pO_CODE"/>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="true"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes',in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+                <!-- Lệnh sản xuất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('r_NAME',in)}}" 
+                        [(ngModel)]="item.r_NAME"/>
+                </td>
+                <!-- Ngày xuất theo khách hàng -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('cusT_EXPORT_DATE',in)}}"
+                        [(ngModel)]="item.cusT_EXPORT_DATE">
+                    </date-control>
+                </td>
+                <!-- Số lượng cont -->
+                <td>
+                    <money-input
+                        [disabled]="true"
+                        name="{{editTable.name('numbeR_OF_CONT',in)}}"
+                        [(ngModel)]="item.numbeR_OF_CONT">
+                    </money-input>
+                </td>
+                <!-- % hoàn thành -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('percenT_COMPLETE',in)}}" 
+                        [(ngModel)]="item.percenT_COMPLETE"/>
+                </td>
+                <!-- Ngày dự kiến hoàn thành -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('expecteD_DT',in)}}"
+                        [(ngModel)]="item.expecteD_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày yêu cầu hoàn thành -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('requesT_DT',in)}}"
+                        [(ngModel)]="item.requesT_DT">
+                    </date-control>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

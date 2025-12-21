@@ -1,0 +1,131 @@
+<div id="content" class="m-content">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <div class="m-form m-form--label-align-right">
+                <div class="row">
+                    <!-- Begin -->
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend style='font-weight: bold!important; font-size: 15px; text-decoration:  underline'>{{_title}}</legend>
+                            <div class='row'>
+                                <!-- Phần trăm hoàn thành -->
+                                <div class="col-md-3">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Phần trăm hoàn thành")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ -->
+                                            <div class='col-sm-6'>
+                                                <div class="form-group">
+                                                    <label>{{l("Từ")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="FROM_PERCENT"
+                                                        [(ngModel)]="filterInput.FROM_PERCENT" />
+                                                </div>
+                                            </div>
+                                            <!-- Đến -->
+                                            <div class='col-sm-6'>
+                                                <div class="form-group">
+                                                    <label>{{l("Đến")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="TO_PERCENT"
+                                                        [(ngModel)]="filterInput.TO_PERCENT" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <!-- Công đoạn -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('Công đoạn')}}</label>
+                                        <all-code-select 
+                                            [cdName]="'PRODUCTED_PART_CODE'"
+                                            [cdType]="'PO'"
+                                            [emptyText]="l('SelectAll')" 
+                                            name="PRODUCTED_PART_CODE" 
+                                            [(ngModel)]="filterInput.PRODUCTED_PART_CODE">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Trạng thái công đoạn 
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái công đoạn")}}</label>
+                                        <all-code-select 
+                                            [emptyText]="l('SelectAll')" 
+                                            [cdName]="'IS_PRODUCTED_PART_START'"
+                                            [cdType]="'PO'"
+                                            name="PRODUCTED_PART_START_STATUS" 
+                                            [(ngModel)]="filterInput.PRODUCTED_PART_START_STATUS">
+                                        </all-code-select>
+                                    </div>
+                                </div>-->
+                                <!-- Trạng thái PO -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái PO")}}</label>
+                                        <all-code-select 
+                                            [emptyText]="l('SelectAll')" 
+                                            [cdName]="'PO_PROCESS'"
+                                            [cdType]="'PO'"
+                                            name="pO_PROCESS" 
+                                            [(ngModel)]="filterInput.pO_PROCESS">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="_branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+                    
+                                <!-- In báo cáo -->
+                                <div class="col-md-12 row">
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <label>{{l("")}}</label>
+                                        <div class="input-group">
+                                            <label (click)="exportToExcel()" class='btn btn-primary' style="color:white!important">
+                                                {{this.l('In báo cáo')}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <label>{{l("")}}</label>
+                                        <div class="input-group">
+                                            <label (click)="exportToExcel_AllProcess()" class='btn btn-primary' style="color:white!important">
+                                                {{this.l('In báo cáo tất cả công đoạn')}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <label>{{l("")}}</label>
+                                        <div class="input-group">
+                                            <label (click)="exportToExcel_Unprocess()" class='btn btn-primary' style="color:white!important">
+                                                {{this.l('In báo cáo chưa bắt đầu công đoạn')}}
+                                            </label>
+                                            <button class='btn btn-info' title="Chỉ lọc theo: Công đoạn, Đơn vị quản lý.">?</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <!-- End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

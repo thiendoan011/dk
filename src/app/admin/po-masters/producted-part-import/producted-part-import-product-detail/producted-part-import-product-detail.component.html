@@ -1,0 +1,103 @@
+<div id="content" class="m-content">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <div class="m-form m-form--label-align-right">
+                <div class="row">
+                    <!-- Begin -->
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend style='font-weight: bold!important; font-size: 15px; text-decoration:  underline'>{{_title}}</legend>
+                            <div class="row">
+                                <!-- Begin Filter -->
+                                <!-- Danh sách PO cách nhau bởi dấu phẩy -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Danh sách PO cách nhau bởi dấu phẩy")}}</label>
+                                        <input class="form-control"
+                                            name="PO_CODES"
+                                            [(ngModel)]="filterInput.PO_CODES" />
+                                    </div>
+                                </div>
+                                <!-- Danh sách hệ hàng cách nhau bởi dấu phẩy -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Danh sách hệ hàng cách nhau bởi dấu phẩy")}}</label>
+                                        <input class="form-control"
+                                            name="GROUP_PRODUCT_CODES"
+                                            [(ngModel)]="filterInput.GROUP_PRODUCT_CODES" />
+                                    </div>
+                                </div>
+                                <!-- Trạng thái SL sản phẩm -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('Trạng thái SL sản phẩm')}}</label>
+                                        <all-code-select 
+                                            [cdName]="'OPTION_YN_3'"
+                                            [cdType]="'CM'"
+                                            [emptyText]="l('SelectAll')" 
+                                            name="PRODUCT_STATUS" 
+                                            [(ngModel)]="filterInput.PRODUCT_STATUS">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Công đoạn -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('Công đoạn')}}</label>
+                                        <all-code-select 
+                                            [cdName]="'PRODUCTED_PART_CODE'"
+                                            [cdType]="'PO'"
+                                            name="PRODUCTED_PART_CODE" 
+                                            [(ngModel)]="filterInput.PRODUCTED_PART_CODE">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <!-- Đơn vị quản lý 
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="_branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>-->
+                                <!-- End Filter -->
+                                 <div class="row col-md-12">
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <label (click)="onExportTemplate()" class='btn btn-primary' 
+                                            style="margin-top: 6px; color:white!important">
+                                            {{this.l('In Template')}}
+                                        </label>
+                                    </div>
+                                    <!-- Import Template -->
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <label class='btn btn-primary' type="button"
+                                            for="file-upload-imports"
+                                            style="margin-top: 6px;color:white!important">
+                                            {{this.l('Import Template')}}
+                                            <import-excel [id]="'file-upload-imports'"
+                                                [hidden]="true"
+                                                [startPosition]="'A2'"
+                                                (toArrayObject)='onImportTemplate($event)'>
+                                            </import-excel>
+                                        </label>
+                                    </div>
+                                 </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <!-- End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

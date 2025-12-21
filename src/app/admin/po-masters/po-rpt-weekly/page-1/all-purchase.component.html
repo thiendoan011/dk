@@ -1,0 +1,140 @@
+<!-- Begin Danh sách đơn hàng-->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l('Danh sách đơn hàng của PO ') + po_name}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTablePurchase class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- STT -->
+                <th class="center">
+                    <span style="width: 40px">{{l("No")}}</span>
+                </th>
+                <!-- Mã đơn hàng -->
+                <th sortField="purchasE_CODE" class="center">
+                    <span style="width: 150px">{{l('Mã đơn hàng')}}</span>
+                </th>
+                <!-- Tên đơn hàng -->
+                <th sortField="purchasE_NAME" class="center" >
+                    <span style="width: 150px">{{l('Tên đơn hàng')}}</span>
+                </th>
+                <!-- Trạng thái đơn hàng -->
+                <th sortField="purchasE_PROCESS_NAME" class="center" >
+                    <span style="width: 150px">{{l('Trạng thái đơn hàng')}}</span>
+                </th>
+                <!-- Trạng thái giao hàng -->
+                <th sortField="purchasE_IMPORT_PROCESS_NAME" class="center" >
+                    <span style="width: 150px">{{l('Trạng thái giao hàng')}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTablePurchase.dataInPage; let in= index"
+                [hidden]="item['page'] != editTablePurchase.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTablePurchase.selectRow($event,item);getPoPurchase(item.purchasE_ID, item.pO_ID, item.purchasE_NAME, item.pO_NAME);updateView()'>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        name="{{editTablePurchase.name('no',in)}}"
+                        [(ngModel)]="editTablePurchase.dataInPage[in]['no']">
+                </td>
+                <!-- Mã Đơn hàng -->
+                <td><span class="mo-header"></span>{{item.purchasE_CODE}}</td>
+                <!-- Tên đơn hàng -->
+                <td><span class="mo-header"></span>{{item.purchasE_NAME}}</td>
+                <!-- Trạng thái đơn hàng -->
+                <td><span class="mo-header"></span>{{item.purchasE_PROCESS_NAME}}</td>
+                <!-- Trạng thái giao hàng -->
+                <td><span class="mo-header"></span>{{item.purchasE_IMPORT_PROCESS_NAME}}</td>
+                <!-- End Table Value -->
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+<!-- End Danh sách đơn hàng -->
+
+<!-- Begin Danh sách vật tư -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l('Danh sách vật tư thuộc ') + purchase_selected}}</h5>
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table
+        [requiredFields]=""
+        #editTablePurchaseState class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- STT -->
+                <th class="center">
+                    <span style="width: 40px">{{l("No")}}</span>
+                </th>
+                <!-- Tên PO -->
+                <th sortField="pO_NAME" class="center">
+                    <span style="width: 150px">{{l('Tên PO')}}</span>
+                </th>
+                <!-- Tên đơn hàng -->
+                <th sortField="purchasE_NAME" class="center">
+                    <span style="width: 150px">{{l('Tên đơn hàng')}}</span>
+                </th>
+                <!-- Tên vật tư -->
+                <th sortField="hardwarE_NAME" class="center" >
+                    <span style="width: 150px">{{l("Tên vật tư")}}</span>
+                </th>
+                <!-- Đơn vị tính -->
+                <th sortField="uniT_NAME" class="center" >
+                    <span style="width: 100px">{{l("Đơn vị tính")}}</span>
+                </th>
+                <!-- Số lượng đặt -->
+                <th sortField="quantitY_ORDER" class="center">
+                    <span style="width: 100px">{{l("Số lượng đặt")}}</span>
+                </th>
+                <!-- Số lượng nhập -->
+                <th sortField="quantitY_PURCHASED" class="center">
+                    <span style="width: 100px">{{l("Số lượng nhập")}}</span>
+                </th>
+                <!-- Số lượng còn lại -->
+                <th sortField="quantitY_REMAIN" class="center">
+                    <span style="width: 100px">{{l("Số lượng còn lại")}}</span>
+                </th>
+                <!-- Ghi chú đơn hàng -->
+                <th sortField="notes" class="center">
+                    <span style="width: 150px">{{l("Ghi chú đơn hàng")}}</span>
+                </th>
+                <!-- Ghi chú nhập kho -->
+                <th sortField="notes" class="center">
+                    <span style="width: 150px">{{l("Ghi chú nhập kho")}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTablePurchaseState.dataInPage; let in= index"
+                [hidden]="item['page'] != editTablePurchaseState.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTablePurchaseState.selectRow($event,item);updateView()'>
+
+                <!-- STT -->
+                <td><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã PO -->
+                <td><span class="mo-header"></span>{{item.pO_NAME}}</td>
+                <!-- Tên đơn hàng -->
+                <td><span class="mo-header"></span>{{item.purchasE_NAME}}</td>
+                <!-- Tên vật tư -->
+                <td><span class="mo-header"></span>{{item.hardwarE_NAME}}</td>
+                <!-- Đơn vị tính -->
+                <td><span class="mo-header"></span>{{item.uniT_NAME}}</td>
+                <!-- Số lượng đặt -->
+                <td><span class="mo-header"></span>{{item.quantitY_ORDER | moneyFormatPipe}}</td>
+                <!-- Số lượng nhập -->
+                <td><span class="mo-header"></span>{{item.quantitY_PURCHASED | moneyFormatPipe}}</td>
+                <!-- Số lượng còn lại -->
+                <td><span class="mo-header"></span>{{item.quantitY_REMAIN | moneyFormatPipe}}</td>
+                <!-- Ghi chú đơn hàng -->
+                <td><span class="mo-header"></span>{{item.notes}}</td>
+                <!-- Ghi chú nhập kho -->
+                <td><span class="mo-header"></span>{{item.noteS_IMPORT_WAREHOUSE}}</td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+<!-- End Danh sách vật tư -->

@@ -1,0 +1,114 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin cân đối năng lực")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+
+                                <!-- Năm -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Năm")}}</label>
+                                        <input type="text"
+                                            class="form-control m-input"
+                                            name="yeaR_RATE"
+                                            [(ngModel)]="filterInput.yeaR_RATE" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Nhà máy -->
+                                        <th sortField="factory">
+                                            <span>{{l("Nhà máy")}}</span>
+                                        </th>
+                                        <!-- Bộ phận -->
+                                        <th sortField="part">
+                                            <span>{{l("Bộ phận")}}</span>
+                                        </th>
+                                        <!-- BQ. N.SỰ HIỆN DIỆN -->
+                                        <th sortField="numbeR_OF_EMPLOYEE">
+                                            <span>{{l("BQ. N.SỰ HIỆN DIỆN")}}</span>
+                                        </th>
+                                        <!-- M3 HÀNG TRẮNG CHO 1 CONT/ THÁNG -->
+                                        <th sortField="m3_PER_CONT">
+                                            <span>{{l("M3 HÀNG TRẮNG CHO 1 CONT/ THÁNG")}}</span>
+                                        </th>
+                                        <!-- % CẦN ĐẠT -->
+                                        <th sortField="percenT_NEED">
+                                            <span>{{l("% CẦN ĐẠT")}}</span>
+                                        </th>
+                                        <!-- Tháng -->
+                                        <th sortField="montH_RATE">
+                                            <span>{{l("Tháng")}}</span>
+                                        </th>
+                                        <!-- Năm -->
+                                        <th sortField="yeaR_RATE">
+                                            <span>{{l("Năm")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.factory}}</td>
+                                        <td><span class="mo-header"></span>{{record.part}}</td>
+                                        <td><span class="mo-header"></span>{{record.numbeR_OF_EMPLOYEE}}</td>
+                                        <td><span class="mo-header"></span>{{record.m3_PER_CONT}}</td>
+                                        <td><span class="mo-header"></span>{{record.percenT_NEED}}</td>
+                                        <td><span class="mo-header"></span>{{record.montH_RATE}}</td>
+                                        <td><span class="mo-header"></span>{{record.yeaR_RATE}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

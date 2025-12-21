@@ -1,0 +1,63 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin lệnh sản xuất")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+
+                                <!-- Tháng xuất -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('Tháng xuất')}}</label>
+                                        <input [(ngModel)]="filterInput.exporT_MONTH" 
+                                            name="exporT_MONTH"
+                                            (focusout)="onchangeFilter()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+                                <!-- Năm xuất -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>{{l('Năm xuất')}}</label>
+                                        <input [(ngModel)]="filterInput.exporT_YEAR"
+                                            name="exporT_YEAR"
+                                            (focusout)="onchangeFilter()"
+                                            class="form-control m-input" type="text">
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-search"
+                                            (click)="exportToExcel()">{{l('In báo cáo')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

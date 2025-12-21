@@ -1,0 +1,263 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Tiến độ bảng màu")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <history-2-modal
+                                #history_modal
+                                [id]="inputModel.grouP_PRODUCT_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'"
+                                [trN_TYPE]="'TABLECOLOR'"
+                                [stage]="'mau'">
+                            </history-2-modal>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="editable-title-group">
+                                <h5 class="popup-title col-md-12">{{l("Thông tin triển khai từ bên kinh doanh")}}</h5>
+                            </div>
+                            <fieldset class="col-md-12">
+                                <div class="row">
+                                    <!-- Mã hệ hàng -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Mã hệ hàng")}}</label>
+                                            <input class="form-control" type="text"
+                                                readonly
+                                                style="color: blue; cursor: pointer;"
+                                                (click)="onViewDetailGroupProduct()"
+                                                name="grouP_PRODUCT_CODE"
+                                                [(ngModel)]="inputModel.grouP_PRODUCT_CODE" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Người gửi yêu cầu -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Người gửi yêu cầu")}}</label>
+                                            <input class="form-control" type="text"
+                                                [disabled]="true"
+                                                name="reQ_TABLECOLOR_REQ_REQUESTER_NAME"
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_REQ_REQUESTER_NAME" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Phòng ban nhận triển khai -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Phòng ban nhận triển khai")}}</label>
+                                            <input class="form-control" type="text"
+                                                [disabled]="true"
+                                                name="reQ_TABLECOLOR_REQ_DEP_NAME"
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_REQ_DEP_NAME" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Ngày yêu cầu bảng màu -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày yêu cầu bảng màu")}}</label>
+                                            <date-control
+                                                [disabled]="true"
+                                                name="reQ_TABLECOLOR_REQ_DT"
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_REQ_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ngày khách xem mẫu -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày khách xem mẫu")}}</label>
+                                            <date-control
+                                                [disabled]="true"
+                                                name="cuS_VIEW_TEMPLATE_DT"
+                                                [(ngModel)]="inputModel.cuS_VIEW_TEMPLATE_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ngày yêu cầu hoàn thành bảng màu -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày yêu cầu hoàn thành bảng màu")}}</label>
+                                            <date-control
+                                                [disabled]="true"
+                                                name="reQ_TABLECOLOR_REQ_COMPLETE_DT"
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_REQ_COMPLETE_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="editable-title-group">
+                                <h5 class="popup-title col-md-12">{{l("Báo cáo cho bên kinh doanh")}}</h5>
+                            </div>
+                            <fieldset class="col-md-12">
+                                <div class="row">
+                                    <!-- Mã hệ hàng -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Mã hệ hàng")}}</label>
+                                            <input class="form-control" type="text"
+                                                readonly
+                                                style="color: blue; cursor: pointer;"
+                                                (click)="onViewDetailGroupProduct()"
+                                                name="grouP_PRODUCT_CODE2"
+                                                [(ngModel)]="inputModel.grouP_PRODUCT_CODE" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Người đảm nhận triển khai và báo cáo -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Người đảm nhận triển khai và báo cáo")}}</label>
+                                            <input class="form-control" type="text"
+                                                [disabled]="true"
+                                                name="reQ_TABLECOLOR_PROGRESS_EXACT_MAKER_ID"
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_PROGRESS_EXACT_MAKER_ID" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Ngày tiếp nhận -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày tiếp nhận")}}</label>
+                                            <date-control
+                                                [disabled]="true"
+                                                name="reQ_TABLECOLOR_PROGRESS_EXACT_DT"
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_PROGRESS_EXACT_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ngày dự kiến hoàn thành -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày dự kiến hoàn thành")}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                name="reQ_TABLECOLOR_REQ_COMPLETE_EXPECT_DT"
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_REQ_COMPLETE_EXPECT_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ngày thực tế hoàn thành -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày thực tế hoàn thành")}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                name="reQ_TABLECOLOR_REQ_COMPLETE_EXACT_DT"
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_REQ_COMPLETE_EXACT_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+
+                                    <!-- Trạng thái hoàn thành bảng màu -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Trạng thái hoàn thành bảng màu")}}</label>
+                                            <all-code-select 
+                                                [disabled]="true"
+                                                name="reQ_TABLECOLOR_STATUS" 
+                                                [(ngModel)]="inputModel.reQ_TABLECOLOR_STATUS"
+                                                [cdName]="'PDE_REQ_PRICE_STATUS'"
+                                                [cdType]="'PDE'">
+                                            </all-code-select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </fieldset>
+                        </div>
+                        
+                        <div class="col-md-12"></div>
+                        <!-- Xác nhận yêu cầu  -->
+                        <div class="col-md-2" *ngIf="showButtonConfirmProgressTablecolor">
+                            <label></label>
+                            <div class="form-group">
+                                <label  (click)="onConfirmProgressTablecolor()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Xác nhận yêu cầu')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Hoàn thành bảng màu  -->
+                        <div class="col-md-2" *ngIf="showCompleteButton">
+                            <label></label>
+                            <div class="form-group">
+                                <label  (click)="onComplete()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Hoàn thành bảng màu')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Thông tin yêu cầu từ khách -->
+                    <pde-infor-request-cus-attach-file
+                        #pdeInforRequestCusAttachFile
+                        [disableInput]='true'>
+                    </pde-infor-request-cus-attach-file>
+                    <!-- Bản vẽ kỹ thuật từ khách 
+                    <pde-tech-request-cus-attach-file
+                        #pdeTechRequestCusAttachFile
+                        [disableInput]='true'>
+                    </pde-tech-request-cus-attach-file>-->
+                    <!-- Thông tin bảng màu từ bên bộ phận dự án mẫu gửi -->
+                    <pde-progress-tablecolor-attach-file
+                        #pdeProgressTablecolorAttachFileEdittable
+                        [title]="'Thông tin gửi cho kinh doanh'"
+                        [disableInput]='disableInput'>
+                    </pde-progress-tablecolor-attach-file>
+                    <!-- Danh sách sản phẩm -->
+                    <pde-req-tablecolor-product-edittable
+                        #pdeProductEditTable
+                        [inputModel]="inputModel"
+                        [title]="'Danh sách sản phẩm'"
+                        [is_request]="false"
+                        [is_progress]="true"
+                        (edit_completed)="onCompleteEditProduct()"
+                        [disableInput]='disableInput'>
+                    </pde-req-tablecolor-product-edittable>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

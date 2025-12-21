@@ -1,0 +1,173 @@
+<!-- Thông tin file văn bản -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách file văn bản")}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAddAttachFile()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='removeAttachFile()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTableAttachFile class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTableAttachFile.checkAll($event.target.checked)"
+                            [checked]="editTableAttachFile.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã văn bản -->
+                <th sortField="DOCUMENT_CODE">
+                    <span style="white-space: nowrap;">{{l("Mã văn bản")}}</span>
+                </th>
+                <!-- Tên văn bản -->
+                <th sortField="DOCUMENT_NAME">
+                    <span style="white-space: nowrap;">{{l("Tên văn bản")}}</span>
+                </th>
+                <!-- Ngày ban hành -->
+                <th sortField="DOCUMENT_DT">
+                    <span style="white-space: nowrap;">{{l("Ngày ban hành")}}</span>
+                </th>
+                <!-- Phòng ban ban hành -->
+                <th sortField="DEP_DOCUMENT_ID">
+                    <span style="white-space: nowrap;">{{l("Phòng ban ban hành")}}</span>
+                </th>
+                <!-- Form mẫu file đính kèm -->
+                <th sortField="makeR_DOCUMENT_ID">
+                    <span style="white-space: nowrap;">{{l("Form mẫu file đính kèm")}}</span>
+                </th>
+                <!-- File đính kèm -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("File đính kèm")}}</span>
+                </th>
+                <!-- Trạng thái văn bản -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Trạng thái văn bản")}}</span>
+                </th>
+                <!-- Tạo yêu cầu -->
+                <th sortField="brancH_ID">
+                    <span style="white-space: nowrap;">{{l("Tạo yêu cầu")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTableAttachFile.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTableAttachFile.currentPage"
+                (click)="editTableAttachFile.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã văn bản -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['documenT_CODE']"
+                        name="{{editTableAttachFile.name('documenT_CODE',in)}}" />
+                </td>
+                <!-- Tên văn bản -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['documenT_NAME']"
+                        name="{{editTableAttachFile.name('documenT_NAME',in)}}" />
+                </td>
+                <!-- Ngày ban hành -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['documenT_DT']"
+                        name="{{editTableAttachFile.name('documenT_DT',in)}}" />
+                </td>
+                <!-- Phòng ban ban hành -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['deP_DOCUMENT_ID']"
+                        name="{{editTableAttachFile.name('deP_DOCUMENT_ID',in)}}" />
+                </td>
+                <!-- Form mẫu file đính kèm -->
+                <td style="min-width: 120px;">
+                    <file-picker [multiFile]="false" type="text"
+                        [folderUpload]="'TemplateDocument'"
+                        [inpCss]="'form-control'"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['filE_ATTACHMENT_TEMPLATE']"
+                        [disabled]="disableInput"
+                        name="{{editTableAttachFile.name('filE_ATTACHMENT_TEMPLATE', in)}}"
+                        [accept]=" '.xlsx,.xls,.doc,.docx,.pdf,.rar,.jpeg,.png,.jpg'">
+                    </file-picker>
+                </td>
+                <!-- File đính kèm -->
+                <td style="min-width: 120px;">
+                    <file-picker [multiFile]="false" type="text"
+                        [folderUpload]="'Document'"
+                        [inpCss]="'form-control'"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['filE_ATTACHMENT']"
+                        [disabled]="disableInput"
+                        name="{{editTableAttachFile.name('filE_ATTACHMENT', in)}}"
+                        [accept]=" '.xlsx,.xls,.doc,.docx,.pdf,.rar,.jpeg,.png,.jpg'">
+                    </file-picker>
+                </td>
+                <!-- Trạng thái văn bản -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        [disabled]="disableInput"
+                        [(ngModel)]="editTableAttachFile.dataInPage[in]['notes']"
+                        name="{{editTableAttachFile.name('notes',in)}}" />
+                </td>
+                <!-- Tạo -->
+                <td>
+                    <div class="user-group">
+                        <span class="disableInput">
+                            <!-- Thêm -->
+                            <button type="button"
+                                class="btn btn-primary"
+                                [disabled]="item.doC_CONFIRM_ID"
+                                (click)="onAddReqConfirm(item)">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                            <!-- Gửi gửi yêu cầu -->
+                            <button type="button" 
+                                class="btn btn-primary"
+                                [disabled]="item.doC_CONFIRM_ID && item.iS_SEND_REQ_CONFIRM == 'Y'"
+                                (click)="onSendReqConfirm(item)">
+                                <i class="fa fa-paper-plane"></i>
+                            </button>
+                            <!-- Xem chi tiết-->
+                            <button type="button" 
+                                class="btn btn-primary"
+                                [disabled]="!item.doC_CONFIRM_ID"
+                                (click)="conViewReqConfirm(item)">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<branch-modal (onSelect)="onSelectBranch($event)" [multiple]="false"
+    #branchModal></branch-modal>
+<dep-modal (onSelect)="onSelectDep($event)" [multiple]="false" #depModal></dep-modal>
+<document-role-modal (onSelect)="onSelectDocumentRole($event)" [multiple]="false" #docRoleModal></document-role-modal>

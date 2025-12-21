@@ -1,0 +1,77 @@
+<div class="m-login__signin" [@routerTransition]>
+    <div class="m-login__head">
+        <h3 class="m-login__title">
+            {{ 'LogInSystem' | localize }}
+        </h3>
+    </div>
+    <form *ngIf="s('gAMSProCore.LoginMethod') != LoginMethod.adfs" #loginForm="ngForm" class="m-login__form m-form login-form" method="post" novalidate (ngSubmit)="login()">
+
+        <div class="form-group m-form__group">
+            <label>{{l('UserName')}}</label>
+            <input #userNameOrEmailAddressInput="ngModel" [(ngModel)]="loginService.authenticateModel.userNameOrEmailAddress" autoFocus class="form-control m-input" type="text" autocomplete="off" placeholder="{{l('UserNameOrEmail')}}" name="userNameOrEmailAddress"
+                required />
+            <validation-messages [labelName]="l('UserName')" [formCtrl]="userNameOrEmailAddressInput"></validation-messages>
+        </div>
+
+        <div class="form-group m-form__group">
+            <label>{{l('Password')}}</label>
+            <input #passwordInput="ngModel" [(ngModel)]="loginService.authenticateModel.password" class="form-control m-input" type="password" autocomplete="off" placeholder="{{l('Password')}}" name="password" required maxlength="32" />
+            <validation-messages [labelName]="l('Password')" [formCtrl]="passwordInput"></validation-messages>
+        </div>
+
+        <div class="m-login__form-sub">
+            <div class="col m--align-left">
+                <label class="m-checkbox m-checkbox--primary">
+                    <input class="form-control"
+                        [(ngModel)]="loginService.rememberMe"
+                        type="checkbox"
+                        name="rememberMe"
+                        value="true" />{{"RememberMe" | localize}}
+                    <span></span>
+                </label>
+            </div>
+            <div class="col m--align-right">
+                <button type="submit" class="btn btn-primary m-btn m-btn--pill m-btn--custom m-btn--air">{{"LogIn" | localize}}</button>
+            </div>
+        </div>
+
+        <div class="m-login__form-action">
+            <a routerLink="/account/forgot-password" *ngIf="canFogotPassword" id="forget-password" class="m-link forget-password">{{"ForgotPassword" | localize}}</a>
+        </div>
+    </form>
+
+    <div class="adfs-section" *ngIf="s('gAMSProCore.LoginMethod') == LoginMethod.adfs && hasAdfsError">
+        <label class="adfs-error">{{l('InvalidLoginAdfs')}}</label>
+    </div>
+
+    <div class="adfs-section" *ngIf="s('gAMSProCore.LoginMethod') == LoginMethod.adfs">
+        <a href="{{adfsRemoteUrl}}" class="btn-btn-primary btn-try-again-adfs">{{l('TryAgain')}}</a>
+    </div>
+
+    <!-- <div class="login-options" *ngIf="(multiTenancySideIsTeanant || !isMultiTenancyEnabled) && loginService.externalLoginProviders.length > 0">
+        <h4>{{"LoginWith" | localize}}</h4>
+        <ul class="social-icons">
+            <li *ngFor="let provider of loginService.externalLoginProviders">
+                <a class="social-login-icon social-icon-color {{provider.icon}}" (click)="externalLogin(provider)" title="{{provider.name}}"></a>
+            </li>
+        </ul>
+    </div> -->
+
+    <div class="m-stack__item m-stack__item--center">
+        <div class="m-login__account">
+            <span *ngIf="false && isSelfRegistrationAllowed">
+                <a routerLink="/account/register"
+                    id="register-btn"
+                    class="m-link m-link--primary m-login__account-link">{{"CreateAnAccount" | localize}}</a>
+                <span class="pipe-divider"> | </span>
+            </span>
+            <span *ngIf="false && !multiTenancySideIsTeanant && isTenantSelfRegistrationAllowed">
+                <a routerLink="/account/select-edition"
+                    id="register-btn"
+                    class="m-link m-link--primary m-login__account-link">{{"NewTenant" | localize}}</a>
+                <span class="pipe-divider"> | </span>
+            </span>
+            <a *ngIf="canEmailActive" routerLink="/account/email-activation" id="email-activation-btn" class="m-link m-link--primary m-login__account-link">{{"EmailActivation" | localize}}</a>
+        </div>
+    </div>
+</div>

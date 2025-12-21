@@ -1,0 +1,85 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách PO đã chọn hệ hàng này")}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span >{{l("No")}}</span></th>
+                <!-- Mã PO -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã PO")}}</span>
+                </th> 
+                <!-- Tên PO -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên PO")}}</span>
+                </th> 
+                <!-- Ngày tạo PO -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ngày tạo PO")}}</span>
+                </th>
+                <!-- Ngày xuất PO -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ngày xuất PO")}}</span>
+                </th>
+                <!-- Trạng thái -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã PO -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.pO_CODE"/>
+                </td>
+                <!-- Tên PO -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_NAME',in)}}" 
+                        [(ngModel)]="item.pO_NAME"/>
+                </td>
+                <!-- Ngày tạo PO -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('creatE_DT',in)}}"
+                        [(ngModel)]="item.creatE_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày xuất PO -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('exporT_DATE',in)}}"
+                        [(ngModel)]="item.exporT_DATE">
+                    </date-control>
+                </td>
+                <!-- Trạng thái -->
+                <td>
+                    <all-code-select 
+                        [disabled]="true"
+                        [cdName]="'PO_PROCESS'"
+                        [cdType]="'PO'"
+                        name="{{editTable.name('pO_PROCESS',in)}}" 
+                        [(ngModel)]="item.pO_PROCESS">
+                    </all-code-select>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

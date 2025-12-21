@@ -1,0 +1,79 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- ID đơn hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("ID đơn hàng")}}</span>
+                </th>
+                <!-- Trạng thái phiếu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái phiếu")}}</span>
+                </th>
+                <!-- Trạng thái xử lý -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Trạng thái xử lý")}}</span>
+                </th>
+                <!-- Xóa -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Xóa")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- ID đơn hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('puR_ORDER_ID',in)}}" 
+                        [(ngModel)]="item.puR_ORDER_ID"/>
+                </td>
+                <!-- Trạng thái phiếu -->
+                <td>
+                    <all-code-select 
+                        [disabled]="true"
+                        [cdName]="'AUTH_STATUS'"
+                        [cdType]="'CM'"
+                        name="{{editTable.name('autH_STATUS',in)}}" 
+                        [(ngModel)]="item.autH_STATUS">
+                    </all-code-select>
+                </td>
+                <!-- Trạng thái xử lý -->
+                <td>
+                    <all-code-select 
+                        [disabled]="true"
+                        [cdName]="'REQUEST_STATUS'"
+                        [cdType]="'CM'"
+                        name="{{editTable.name('procesS_STATUS',in)}}" 
+                        [(ngModel)]="item.procesS_STATUS">
+                    </all-code-select>
+                </td>
+                <!-- Xóa -->
+                <td>
+                    <button type="button" 
+                        [hidden]="inputModel.makeR_ID != appSession.user.userName  || inputModel.autH_STATUS != 'A'"
+                        [disabled]="inputModel.makeR_ID != appSession.user.userName || inputModel.autH_STATUS != 'A'"
+                        (click)="onDelOrder(item)" 
+                        class="btn btn-danger">
+                        <i class="pi pi-times"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+

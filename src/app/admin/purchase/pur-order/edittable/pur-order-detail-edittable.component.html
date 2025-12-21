@@ -1,0 +1,87 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã vật tư -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã vật tư")}}</span>
+                </th>
+                <!-- Số lượng đặt -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số lượng đặt")}}</span>
+                </th>
+                <!-- Số lượng đã về -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số lượng đã về")}}</span>
+                </th>
+                <!-- Đơn giá -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Đơn giá")}}</span>
+                </th>
+                <!-- Thành tiền -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Thành tiền")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã vật tư -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('materiaL_CODE',in)}}" 
+                        [(ngModel)]="item.materiaL_CODE"/>
+                </td>
+                <!-- Số lượng đặt -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_ORDER',in)}}"
+                        [(ngModel)]="item.quantitY_ORDER">
+                    </money-input-5>
+                </td>
+                <!-- Số lượng đã về -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_RECEIVED',in)}}"
+                        [(ngModel)]="item.quantitY_RECEIVED">
+                    </money-input-5>
+                </td>
+                <!-- Đơn giá -->
+                <td>
+                    <money-input
+                        [disabled]="true"
+                        name="{{editTable.name('uniT_PRICE',in)}}"
+                        [(ngModel)]="item.uniT_PRICE">
+                    </money-input>
+                </td>
+                <!-- Thành tiền -->
+                <td>
+                    <money-input
+                        [disabled]="true"
+                        name="{{editTable.name('totaL_PRICE',in)}}"
+                        [(ngModel)]="item.totaL_PRICE">
+                    </money-input>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+

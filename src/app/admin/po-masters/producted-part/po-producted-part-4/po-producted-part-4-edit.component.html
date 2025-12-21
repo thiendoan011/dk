@@ -1,0 +1,376 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>{{l('Tiến độ công đoạn Sơn 2')}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+
+                    <div class="row col-md-12 modal-body">
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-modal #history_modal
+                                [id]="inputModel.pO_ID"
+                                [title]="'Bấm vào đây để xem lịch sử thay đổi số lượng sản phẩm'"
+                                [process_id]="'CHANGE_QUANTITY_PRODUCT'"
+                                [trN_TYPE]="'PO_MASTER'" 
+                                [stage] = "'HC'">
+                            </po-history-modal>
+                        </div>
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã công đoạn -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Mã công đoạn')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="producT_CODE"
+                                    [(ngModel)]="inputModel.producteD_PART_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên công đoạn -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Tên công đoạn')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="producT_NAME"
+                                    [(ngModel)]="inputModel.producteD_PART_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Khách hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Khách hàng")}}</label>
+                                <div class='file-input-group'>
+                                    <input [disabled]="true"
+                                        class="form-control" type="text"
+                                        #customeR_NAME="ngModel" name="customeR_NAME"
+                                        [(ngModel)]="inputModel.customeR_NAME">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mã PO -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Mã PO')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="pO_CODE"
+                                    [(ngModel)]="inputModel.pO_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên PO -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Tên PO')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="pO_NAME"
+                                    [(ngModel)]="inputModel.pO_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- R -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('R')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="r_CODE"
+                                    [(ngModel)]="inputModel.r_CODE" />
+                            </div>
+                        </div>
+                        
+                        <!-- Ngày tạo 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày tạo')}}</label>
+                                <date-control
+                                    [inpCss]="'form-control'"
+                                    name="creatE_DATE"
+                                    [disabled]="disableInput"
+                                    [(ngModel)]="inputModel.creatE_DATE">
+                                </date-control>
+                                
+                            </div>
+                        </div>-->
+
+                        <!-- Ngày xuất 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày xuất')}}</label>
+                                <date-control
+                                    [inpCss]="'form-control'"
+                                    name="exporT_DATE"
+                                    [disabled]="disableInput"
+                                    [(ngModel)]="inputModel.exporT_DATE">
+                                </date-control>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>-->
+                        
+
+                        <!-- Trạng thái 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái")}}</label>
+                                <all-code-select 
+                                    name="pO_PROCESS" 
+                                    [(ngModel)]="inputModel.pO_PROCESS"
+                                    [disabled]="true"
+                                    [emptyText]="l('SelectAll')" 
+                                    [cdName]="'PO_PROCESS'"
+                                    [cdType]="'PO'">
+                                </all-code-select>
+                            </div>
+                        </div>-->
+
+                        <!-- Số lượng cont -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Số lượng cont")}}</label>
+                                <money-input 
+                                    [disabled]="true"
+                                    [isDecimal_round3]="true" 
+                                    name="qtY_CONT"
+                                    [(ngModel)]="inputModel.qtY_CONT">
+                                </money-input>
+                            </div>
+                        </div>
+
+                        <!-- Phần trăm hoàn thành -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Phần trăm hoàn thành")}}</label>
+                                <input
+                                    class="form-control" type="text"
+                                    name="percenT_COMPLETED"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.percenT_COMPLETED" />
+                            </div>
+                        </div>
+
+                        <!-- Ngày dự kiến hoàn thành -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày dự kiến hoàn thành')}}</label>
+                                <date-control
+                                    [inpCss]="'form-control'"
+                                    name="exporT_DATE"
+                                    [disabled]="disableInput"
+                                    [(ngModel)]="inputModel.expecteD_DT">
+                                </date-control>
+                                
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>Ghi chú</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="notes"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Đính kèm file -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{l("FileAttachment")}}</label>
+                                <file-picker [disabled]="disableInput"
+                                    [folderUpload]="'PoProductedPart4'"
+                                    name="filE_ATTACHMENT"
+                                    [inpCss]="'form-control'"
+                                    [accept]="'.xlsx,.xls,.doc,.docx,.pdf,.jpeg,.png,.jpg,.txt'"
+                                    [(ngModel)]="inputModel['filE_ATTACHMENT']">
+                                </file-picker>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Bắt đầu công đoạn -->
+                        <div class="col-md-3" [hidden]="hiddenButtonStartProductedPart">
+                            <div class="form-group">
+                                <label (click)="onStartProductedPart()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Bắt đầu công đoạn')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+<!-- Begin Danh sách tiến độ -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l('Chi tiết tiến độ PO')}}</h5>
+                        <!--<div class="action-button">
+                            <button type="button" [disabled]="disableInput"
+                                class="btn btn-primary"
+                                (click)="onAddProductedPartDetail()"><i class="pi pi-plus"></i>{{l("Add")}}</button>
+                            <button type="button" [disabled]="disableInput"
+                                class="btn btn-danger"
+                                (click)="editTableProductedPartDetail.removeAllCheckedItem()"><i
+                                    class="pi pi-times"></i>{{l("Delete")}}</button>
+                        </div>-->
+                    </div>
+
+                    <div class="primeng-datatable-container">
+                        <editable-table [requiredFields]=""  #editTableProductedPartDetail class="custom-table ui-table">
+                            <thead>
+                                <tr>
+                                    <!-- Checkbox -->
+                                    <th  style="width: 10%" class="center">
+                                        <span>
+                                            <checkbox-control
+                                                (onchange)="editTableProductedPartDetail.checkAll($event.target.checked)"
+                                                [checked]="editTableProductedPartDetail.isCheckAll">
+                                            </checkbox-control>
+                                        </span>
+                                    </th>
+                                    <!-- STT -->
+                                    <th style="width: 10%"><span >{{l("STT")}}</span></th>
+                                    <!-- Ngày cập nhật -->
+                                    <th sortField="updatE_DT" class="center"style="width: 30%" >
+                                        <span style="width: 250px">{{l('Ngày cập nhật')}}</span>
+                                    </th>
+                                    <!-- Phần trăm hoàn thành -->
+                                    <th sortField="percenT_COMPLETED" class="center" style="width: 30%">
+                                        <span style="width: 350px">{{l('Phần trăm hoàn thành')}}</span>
+                                    </th>
+                                    <!-- Ghi chú -->
+                                    <th sortField="notes" class="center" style="width: 20%">
+                                        <span style="width: 150px">{{l('Ghi chú')}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editTableProductedPartDetail.dataInPage; let in= index"
+                                    [hidden]="item['page'] != editTableProductedPartDetail.currentPage"
+                                    class="selectable {{item['editableSelected']? 'selected' :''}}"
+                                    (click)='editTableProductedPartDetail.selectRow($event,item);updateView()'>
+                                    <!-- Checkbox -->
+                                    <td [attr.dataindex]="in" class="center">
+                                        <span class="mo-header"></span>
+                                        <checkbox-control
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartDetail.name('isChecked',in)}}"
+                                            [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['isChecked']">
+                                        </checkbox-control>
+                                    </td>
+
+                                    <!-- STT -->
+                                    <td class="center"><span class="mo-header"></span>
+                                        <input class="label"
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartDetail.name('no',in)}}"
+                                            [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['no']">
+                                    </td>
+                                    <!-- Ngày cập nhật -->
+                                    <td>
+                                        <date-control
+                                            #updatE_DT="ngModel"
+                                            [disabled]='disableInput'
+                                            [inpCss]="'form-control'"
+                                            [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['updatE_DT']"
+                                            name="{{editTableProductedPartDetail.name('updatE_DT',in)}}">
+                                        </date-control>
+                                    </td>
+                                    <!-- Phần trăm hoàn thành -->
+                                    <td>
+                                        <div class='file-input-group'>
+                                            <input
+                                                [disabled]="disableInput"
+                                                (focusout)="onChangePercentCompleted()"
+                                                name="{{editTableProductedPartDetail.name('percenT_COMPLETED',in)}}"
+                                                class="form-control transparent" type="text"
+                                                [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['percenT_COMPLETED']"/>
+                                        </div>
+                                    </td>
+                                    <!-- Ghi chú -->
+                                    <td>
+                                        <textarea [disabled]="disableInput"
+                                            class="form-control transparent"
+                                            type="text"
+                                            name="{{editTableProductedPartDetail.name('notes',in)}}"
+                                            [(ngModel)]="editTableProductedPartDetail.dataInPage[in]['notes']">
+                                        </textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </editable-table>
+                    </div>
+<!-- End Danh sách tiến độ -->
+                    <!-- Danh sách hệ hàng 
+                    <pppe-group-product-edittable
+                        #pppeGroupProductEditTable
+                        [inputModel]="inputModel"
+                        [disableInput]='disableInput'>
+                    </pppe-group-product-edittable>-->
+                    <!-- Danh sách sản phẩm thuộc PO -->
+                        <pp-product-of-po-edittable
+                        #ppProductOfPOEditTable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput">
+                    </pp-product-of-po-edittable>
+                    <!-- Chi tiết tiến độ hệ hàng -->
+                    <pppe-part-detail-edittable
+                        #pppePartDetailEditTable
+                        [inputModel]="inputModel"
+                        [producted_part_code]="'CD4'"
+                        [producted_part_name]="'Sơn 2'"
+                        [disableInput]='disableInput'>
+                    </pppe-part-detail-edittable>
+                    <!-- Chi tiết tiến độ sản phẩm -->
+                    <product-producted-part-edittable
+                        #ppePartDetailEditTable
+                        [inputModel]="inputModel"
+                        [producted_part_code]="'CD4'"
+                        [producted_part_name]="'Sơn 2'"
+                        (edit_completed)="getPoProductedPartDetail()"
+                        [disableInput]='disableInput'>
+                    </product-producted-part-edittable>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

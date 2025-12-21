@@ -1,0 +1,84 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Import đơn hàng")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+
+                                <!-- <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold;
+                                            text-decoration: underline'>{{l("Ngày tạo đơn hàng")}}</legend>
+                                        <div class='row'>
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="frmdate"
+                                                        [(ngModel)]="filterInput.frmdate"
+                                                        autoFocus>
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="todate"
+                                                        [(ngModel)]="filterInput.todate"
+                                                        autoFocus>
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-12"></div> -->
+                                <!-- End Filter -->
+
+                                <!-- In Template thêm mới -->
+                                <div class="form-group" style="padding-left: 15px">
+                                    <label (click)="onExportTemplate()" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                        {{this.l('In Template')}}
+                                    </label>
+                                </div>
+                                <!-- Import thêm mới -->
+                                <div class="form-group" style="padding-left: 15px">
+                                    <label class='btn btn-primary' type="button"
+                                        for="file-upload-insert"
+                                        style="margin-top: 6px;color:white!important">
+                                        {{this.l('Import đơn hàng')}}
+                                        <import-excel [id]="'file-upload-insert'"
+                                            [hidden]="true"
+                                            [startPosition]="'A2'"
+                                            (toArrayObject)='onInsertImport($event)'>
+                                        </import-excel>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

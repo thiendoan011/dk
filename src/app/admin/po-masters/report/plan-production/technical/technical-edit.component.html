@@ -1,0 +1,231 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Báo cáo kế hoạch sản xuất")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã lệnh sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã lệnh sản xuất")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="r_CODE"
+                                    [(ngModel)]="inputModel.r_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên lệnh sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên lệnh sản xuất")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="r_NAME"
+                                    [(ngModel)]="inputModel.r_NAME" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <fieldset class="col-md-12 ml">
+                                <legend>{{l("Cung cấp hồ sơ sản phẩm cho các phòng ban liên quan")}}</legend>
+                                <div class="col-md-12 row">
+                                    <!-- Ngày yêu cầu hoàn thành -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày yêu cầu hoàn thành")}}</label>
+                                            <date-control
+                                                [disabled]="true"
+                                                name="tecH_PRODUCT_PROFILE_REQUEST_DT"
+                                                [(ngModel)]="inputModel.tecH_PRODUCT_PROFILE_REQUEST_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ngày thực tế hoàn thành -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày thực tế hoàn thành")}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                name="tecH_PRODUCT_PROFILE_REQUEST_EXACT_DT"
+                                                [(ngModel)]="inputModel.tecH_PRODUCT_PROFILE_REQUEST_EXACT_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+    
+                                    <!-- Tình trạng hoàn thành -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{ l("Tình trạng hoàn thành") }}</label>
+                                            <all-code-select
+                                                [disabled]='disableInput'
+                                                [cdName]="'OPTION_YN_3'"
+                                                [cdType]="'CM'"
+                                                name="tecH_PRODUCT_PROFILE_REQUEST_STATUS"
+                                                [(ngModel)]="inputModel.tecH_PRODUCT_PROFILE_REQUEST_STATUS">
+                                            </all-code-select>
+                                        </div>
+                                    </div>
+                                    <!-- Nguyên nhân chủ quan -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Nguyên nhân chủ quan")}}</label>
+                                            <textarea class="form-control"
+                                                [disabled]='disableInput'
+                                                appTextareaAutoresize
+                                                name="tecH_PRODUCT_PROFILE_REQUEST_SUBJECTIVE_REASONS"
+                                                [(ngModel)]="inputModel.tecH_PRODUCT_PROFILE_REQUEST_SUBJECTIVE_REASONS">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <!-- Nguyên nhân khách quan -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Nguyên nhân khách quan")}}</label>
+                                            <textarea class="form-control"
+                                                [disabled]='disableInput'
+                                                appTextareaAutoresize
+                                                name="tecH_PRODUCT_PROFILE_REQUEST_OBJECTIVE_REASONS"
+                                                [(ngModel)]="inputModel.tecH_PRODUCT_PROFILE_REQUEST_OBJECTIVE_REASONS">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <!-- Hướng khắc phục -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Hướng khắc phục")}}</label>
+                                            <textarea class="form-control"
+                                                [disabled]='disableInput'
+                                                appTextareaAutoresize
+                                                name="tecH_PRODUCT_PROFILE_REQUEST_REMEDIATION"
+                                                [(ngModel)]="inputModel.tecH_PRODUCT_PROFILE_REQUEST_REMEDIATION">
+                                            </textarea>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-md-12">
+                            <fieldset class="col-md-12 ml">
+                                <legend>{{l("Triển khai PPS")}}</legend>
+                                <div class="col-md-12 row">
+                                    <!-- Ngày yêu cầu hoàn thành -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày yêu cầu hoàn thành")}}</label>
+                                            <date-control
+                                                [disabled]="true"
+                                                name="tecH_REQUEST_DT"
+                                                [(ngModel)]="inputModel.tecH_REQUEST_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ngày thực tế hoàn thành -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Ngày thực tế hoàn thành")}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                name="tecH_REQUEST_EXACT_DT"
+                                                [(ngModel)]="inputModel.tecH_REQUEST_EXACT_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+    
+                                    <!-- Tình trạng hoàn thành -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{ l("Tình trạng hoàn thành") }}</label>
+                                            <all-code-select
+                                                [disabled]='disableInput'
+                                                [cdName]="'OPTION_YN_3'"
+                                                [cdType]="'CM'"
+                                                name="tecH_REQUEST_STATUS"
+                                                [(ngModel)]="inputModel.tecH_REQUEST_STATUS">
+                                            </all-code-select>
+                                        </div>
+                                    </div>
+                                    <!-- Nguyên nhân chủ quan -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Nguyên nhân chủ quan")}}</label>
+                                            <textarea class="form-control"
+                                                [disabled]='disableInput'
+                                                appTextareaAutoresize
+                                                name="tecH_REQUEST_SUBJECTIVE_REASONS"
+                                                [(ngModel)]="inputModel.tecH_REQUEST_SUBJECTIVE_REASONS">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <!-- Nguyên nhân khách quan -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Nguyên nhân khách quan")}}</label>
+                                            <textarea class="form-control"
+                                                [disabled]='disableInput'
+                                                appTextareaAutoresize
+                                                name="tecH_REQUEST_OBJECTIVE_REASONS"
+                                                [(ngModel)]="inputModel.tecH_REQUEST_OBJECTIVE_REASONS">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <!-- Hướng khắc phục -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("Hướng khắc phục")}}</label>
+                                            <textarea class="form-control"
+                                                [disabled]='disableInput'
+                                                appTextareaAutoresize
+                                                name="tecH_REQUEST_REMEDIATION"
+                                                [(ngModel)]="inputModel.tecH_REQUEST_REMEDIATION">
+                                            </textarea>
+                                        </div>
+                                    </div>
+    
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

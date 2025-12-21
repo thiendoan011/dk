@@ -1,0 +1,197 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin đơn xin nghỉ")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Từ ngày -->
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày bắt đầu nghỉ")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="froM_FROM_LEAVE_DT"
+                                                        [(ngModel)]="filterInput.froM_FROM_LEAVE_DT">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-4'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="tO_FROM_LEAVE_DT"
+                                                        [(ngModel)]="filterInput.tO_FROM_LEAVE_DT">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <!-- Số ngày nghỉ -->
+                                <div class='col-md-4'>
+                                    <div class='form-group'>
+                                        <label>{{l('Số ngày nghỉ')}}</label>
+                                        <money-input
+                                            [isDecimal_round2]="true"
+                                            name="numbeR_OF_DAY_LEAVE"
+                                            [(ngModel)]="filterInput.numbeR_OF_DAY_LEAVE">
+                                        </money-input>
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái")}}</label>
+                                        <all-code-select 
+                                            [emptyText]="l('SelectAll')"
+                                            name="autH_STATUS" 
+                                            [(ngModel)]="filterInput.autH_STATUS"
+                                            [cdName]="'AUTH_STATUS'"
+                                            [cdType]="'CM'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái NS -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái NS")}}</label>
+                                        <all-code-select 
+                                            [emptyText]="l('SelectAll')"
+                                            name="autH2_STATUS" 
+                                            [(ngModel)]="filterInput.autH2_STATUS"
+                                            [cdName]="'AUTH2_STATUS'"
+                                            [cdType]="'CM'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Người nộp đơn -->
+                                        <th sortField="useR_LEAVE_NAME">
+                                            <span>{{l("Người nộp đơn")}}</span>
+                                        </th>
+                                        <!-- Ngày nộp đơn -->
+                                        <th sortField="leavE_DT">
+                                            <span>{{l("Ngày nộp đơn")}}</span>
+                                        </th>
+                                        <!-- Từ ngày -->
+                                        <th sortField="froM_LEAVE_DT">
+                                            <span>{{l("Từ ngày")}}</span>
+                                        </th>
+                                        <!-- Đến ngày -->
+                                        <th sortField="tO_LEAVE_DT">
+                                            <span>{{l("Đến ngày")}}</span>
+                                        </th>
+                                        <!-- Số ngày nghỉ -->
+                                        <th sortField="numbeR_OF_DAY_LEAVE">
+                                            <span>{{l("Số ngày nghỉ")}}</span>
+                                        </th>
+                                        <!-- Loại nghỉ -->
+                                        <th sortField="leavE_TYPE">
+                                            <span>{{l("Loại nghỉ")}}</span>
+                                        </th>
+                                        <!-- Trạng thái -->
+                                        <th sortField="autH_STATUS_NAME">
+                                            <span>{{l("Trạng thái")}}</span>
+                                        </th>
+                                        <!-- Trạng thái NS -->
+                                        <th sortField="autH2_STATUS_NAME">
+                                            <span>{{l("Trạng thái NS")}}</span>
+                                        </th>
+                                        <!-- Lý do nghỉ -->
+                                        <th>
+                                            <span>{{l("Lý do nghỉ")}}</span>
+                                        </th>
+                                        <!-- Người duyệt -->
+                                        <th>
+                                            <span>{{l("Người duyệt")}}</span>
+                                        </th>
+                                        <!-- Người xử lý NS-->
+                                        <th>
+                                            <span>{{l("Người xử lý NS")}}</span>
+                                        </th>
+                                        <!-- Người duyệt NS -->
+                                        <th >
+                                            <span>{{l("Người duyệt NS")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.useR_LEAVE_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.leavE_DT | dateFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.froM_LEAVE_DT | dateFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.tO_LEAVE_DT | dateFormatPipe}}</td>
+                                        <td><span class="mo-header"></span>{{record.numbeR_OF_DAY_LEAVE}}</td>
+                                        <td><span class="mo-header"></span>{{record.leavE_TYPE_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.autH2_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.leavE_REASON}}</td>
+                                        <td><span class="mo-header"></span>{{record.checkeR_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.makeR2_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.checkeR2_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

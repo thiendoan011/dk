@@ -1,0 +1,199 @@
+<!-- Thông tin vật tư đóng gói thuộc sản phẩm -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách vật tư đóng gói thuộc sản phẩm")}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã vật tư đóng gói -->
+                <th sortField="hardwaredG_CODE">
+                    <span style="white-space: nowrap;">{{l("Mã vật tư đóng gói")}}</span>
+                </th> 
+                <!-- Tên vật tư đóng gói -->
+                <th sortField="hardwaredG_NAME">
+                    <span style="white-space: nowrap;">{{l("Tên vật tư đóng gói")}}</span>
+                </th>
+                <!-- Dày -->
+                <th sortField="height">
+                    <span style="white-space: nowrap;">{{l("Dày")}}</span>
+                </th>
+                <!-- Rộng 1 -->
+                <th sortField="widtH1">
+                    <span style="white-space: nowrap;">{{l("Rộng 1")}}</span>
+                </th>
+                <!-- Rộng 2 -->
+                <th sortField="widtH2">
+                    <span style="white-space: nowrap;">{{l("Rộng 2")}}</span>
+                </th>
+                <!-- Dài -->
+                <th sortField="length">
+                    <span style="white-space: nowrap;">{{l("Dài")}}</span>
+                </th>
+                <!-- Số lượng -->
+                <th sortField="quantity">
+                    <span style="white-space: nowrap;">{{l("Số lượng")}}</span>
+                </th>
+                <!-- Đơn vị tính -->
+                <th sortField="unit">
+                    <span style="white-space: nowrap;">{{l("Đơn vị tính")}}</span>
+                </th>
+                <!-- Định lượng -->
+                <th sortField="quantify">
+                    <span style="white-space: nowrap;">{{l("Định lượng")}}</span>
+                </th>
+                <!-- Màu sắc -->
+                <th sortField="color">
+                    <span style="white-space: nowrap;">{{l("Màu sắc")}}</span>
+                </th>
+                <!-- Bộ phận -->
+                <th sortField="part">
+                    <span style="white-space: nowrap;">{{l("Bộ phận")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã vật tư đóng gói -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('hardwaredG_CODE',in)}}" 
+                        [(ngModel)]="item.hardwaredG_CODE"/>
+                </td>
+                <!-- Tên vật tư đóng gói -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('hardwaredG_NAME',in)}}" 
+                        [(ngModel)]="item.hardwaredG_NAME"/>
+                </td>
+                <!-- Dày -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='true'
+                        name="{{editTable.name('height',in)}}"
+                        [(ngModel)]="item.height">
+                    </money-input>
+                </td>
+                <!-- Rộng 1 -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='true'
+                        name="{{editTable.name('widtH1',in)}}"
+                        [(ngModel)]="item.widtH1">
+                    </money-input>
+                </td>
+                <!-- Rộng 2 -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='true'
+                        name="{{editTable.name('widtH2',in)}}"
+                        [(ngModel)]="item.widtH2">
+                    </money-input>
+                </td>
+                <!-- Dài -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='true'
+                        name="{{editTable.name('length',in)}}"
+                        [(ngModel)]="item.length">
+                    </money-input>
+                </td>
+                <!-- Số lượng -->
+                <td>
+                    <money-input [inputCss]="'form-control'"
+                        [disabled]='disableInput'
+                        name="{{editTable.name('quantity',in)}}"
+                        [(ngModel)]="item.quantity">
+                    </money-input>
+                </td>
+                <!-- Đơn vị tính -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('unit',in)}}" 
+                        [(ngModel)]="item.unit"/>
+                </td>
+                <!-- Định lượng -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('quantify',in)}}" 
+                        [(ngModel)]="item.quantify"/>
+                </td>
+                <!-- Màu sắc -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('color',in)}}" 
+                        [(ngModel)]="item.color"/>
+                </td>
+                <!-- Bộ phận-->
+                <td>
+                    <all-code-select 
+                        [cdName]="'PO_PRODUCT_HARDWAREVT-PART'"
+                        [cdType]="'PO'"
+                        [disabled]="disableInput"
+                        name="part" 
+                        [(ngModel)]="item.part">
+                    </all-code-select>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<po-hardwaredg-modal (onSelect)='onSelectHardwareDG($event)' #poHardwareDGModal [multiple]="true"></po-hardwaredg-modal>

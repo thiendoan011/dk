@@ -1,0 +1,481 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>Hệ hàng</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+
+                    <div class="row col-md-12 modal-body">
+
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <history-2-modal
+                                #history_modal
+                                [id]="inputModel.grouP_PRODUCT_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý hệ hàng'"
+                                [trN_TYPE]="''"
+                                [stage]="'mau'">
+                            </history-2-modal>
+                        </div>
+
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+
+                        <!-- Mã hệ hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Mã Hệ hàng')}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="grouP_PRODUCT_CODE"
+                                    [(ngModel)]="inputModel.grouP_PRODUCT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên Hệ hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Tên Hệ hàng')}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="grouP_PRODUCT_NAME"
+                                    [(ngModel)]="inputModel.grouP_PRODUCT_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Mã hệ hàng sản xuất 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Mã Hệ hàng sản xuất')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="sX_GROUP_PRODUCT_CODE"
+                                    [(ngModel)]="inputModel.sX_GROUP_PRODUCT_CODE" />
+                            </div>
+                        </div>-->
+
+                        <!-- Tên Hệ hàng sản xuất 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Tên Hệ hàng sản xuất')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="sX_GROUP_PRODUCT_NAME"
+                                    [(ngModel)]="inputModel.sX_GROUP_PRODUCT_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>-->
+
+                        <!-- Màu hệ hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Màu hệ hàng')}}</label>
+                                <input [disabled]="disableInput"
+                                    class="form-control" type="text"
+                                    name="color"
+                                    [(ngModel)]="inputModel.color" />
+                            </div>
+                        </div>
+
+                        <!-- Ngày chuyển giao sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày chuyển giao sản xuất')}}</label>
+                                <date-control
+                                    name="transfeR_PRODUCTION_DT"
+                                    [disabled]="true"
+                                    [(ngModel)]="inputModel.transfeR_PRODUCTION_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12"></div>
+
+                        <!-- Trạng thái hoàn thành mẫu 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái hoàn thành mẫu")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    name="grouP_PRODUCT_TEMPLATE_STATUS" 
+                                    [(ngModel)]="inputModel.grouP_PRODUCT_TEMPLATE_STATUS"
+                                    [cdName]="'PDE_GROUP_PRODUCT__grouP_PRODUCT_TEMPLATE_STATUS'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>-->
+
+                        <!-- Ngày khách xem mẫu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày khách xem mẫu')}}</label>
+                                <date-control
+                                    name="cuS_VIEW_TEMPLATE_DT"
+                                    [disabled]="disableInput"
+                                    [(ngModel)]="inputModel.cuS_VIEW_TEMPLATE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu hoàn thành báo giá -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành báo giá")}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="reQ_PRICE_REQ_COMPLETE_DT"
+                                    [(ngModel)]="inputModel.reQ_PRICE_REQ_COMPLETE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ngày yêu cầu hoàn thành làm mẫu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành làm mẫu")}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="reQ_TEMPLATE_REQ_COMPLETE_DT"
+                                    [(ngModel)]="inputModel.reQ_TEMPLATE_REQ_COMPLETE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu hoàn thành bảng hardware -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành bảng hardware")}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="reQ_TABLEHARDWARE_REQ_COMPLETE_DT"
+                                    [(ngModel)]="inputModel.reQ_TABLEHARDWARE_REQ_COMPLETE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ngày yêu cầu hoàn thành bảng màu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành bảng màu")}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="reQ_TABLECOLOR_REQ_COMPLETE_DT"
+                                    [(ngModel)]="inputModel.reQ_TABLECOLOR_REQ_COMPLETE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        
+                        <!-- Trạng thái hệ hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('')}}</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{l('Trạng thái hệ hàng')}}</label>
+                                        </div>
+                                    </div>
+                                    <label class="m-radio" for="mau">
+                                        {{l('Mẫu')}}
+                                        <input id="mau"    
+                                            type="radio"
+                                            disabled
+                                            ng-control="options"
+                                            value="mau" 
+                                            name="grouP_PRODUCT_STATUS"
+                                            [(ngModel)]="inputModel.grouP_PRODUCT_STATUS" >
+                                            <span></span>
+                                    </label>
+                                    <label class="m-radio" for="sanxuat" style="margin-left: 5px;">
+                                        {{l('Sản xuất')}}
+                                        <input id="sanxuat"    
+                                            type="radio" 
+                                            disabled
+                                            ng-control="options"
+                                            value="sanxuat" 
+                                            name="grouP_PRODUCT_STATUS"
+                                            [(ngModel)]="inputModel.grouP_PRODUCT_STATUS" >
+                                            <span></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Loại hệ hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Loại hệ hàng")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    (onChangeSelect2)="onChangeTypeGroupProduct()"
+                                    name="typE_GROUP_PRODUCT" 
+                                    [(ngModel)]="inputModel.typE_GROUP_PRODUCT"
+                                    [cdName]="'TYPE_GROUP_PRODUCT'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Hệ hàng cha -->
+                        <div class="col-md-4" [hidden]="is_group_product_dk">
+                            <div class="form-group">
+                                <label>{{l("Hệ hàng cha")}}</label>
+                                <div class='file-input-group'>
+                                    <input readonly
+                                        class="form-control"
+                                        style="color: blue; cursor: pointer;"
+                                        (click)="onViewDetail_Group_PRODUCT_PARENT()"
+                                        name="grouP_PRODUCT_PARENT_NAME"
+                                        [(ngModel)]="inputModel.grouP_PRODUCT_PARENT_NAME">
+                                    <button type="button" class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='disableInput'
+                                        (click)="showGroupProduct()">{{l("...")}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Khách hàng -->
+                        <div class="col-md-4" [hidden]="is_group_product_dk">
+                            <div class="form-group">
+                                <label>{{l("Khách hàng")}}</label>
+                                <div class='file-input-group'>
+                                    <input readonly
+                                        class="form-control"
+                                        style="color: blue; cursor: pointer;"
+                                        (click)="onViewDetailCustomer()"
+                                        name="customeR_NAME"
+                                        [(ngModel)]="inputModel.customeR_NAME">
+                                    <button type="button" class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='disableInput'
+                                        (click)="showCusModal()">{{l("...")}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l('Ghi chú')}}</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="notes"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Yêu cầu xử lý -->
+                        <div class="col-md-12" [hidden]="!this.inputModel.grouP_PRODUCT_ID">
+                            <pde-choose-request-edittable #pdeChooseRequestEdittable
+                                [inputModel]="inputModel"
+                                [editPageState]="editPageState"
+                                (edit_history)="onChangePDEChooseRequestEdittable()"
+                                [disableInput]='disableInput'>
+                            </pde-choose-request-edittable>
+                        </div>
+
+                        <!-- Tạo hệ hàng khách hàng -->
+                        <div class="col-md-4" [hidden]="is_group_product_dk || this.inputModel.grouP_PRODUCT_ID">
+                            <div class="form-group">
+                                <label (click)="saveInput()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Tạo hệ hàng khách hàng')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Tạo hệ hàng Dũng Khanh -->
+                        <div class="col-md-4" [hidden]="!is_group_product_dk || this.inputModel.grouP_PRODUCT_ID">
+                            <div class="form-group">
+                                <label (click)="saveInput()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Tạo hệ hàng Dũng Khanh')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Gửi yêu cầu báo giá -->
+                        <div class="col-md-4" *ngIf="showButtonSendRequestPrice">
+                            <div class="form-group">
+                                <label (click)="sendRequestPrice()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi yêu cầu báo giá')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Gửi yêu cầu làm mẫu -->
+                        <div class="col-md-4" *ngIf="showButtonSendRequestTemplate">
+                            <div class="form-group">
+                                <label (click)="sendRequestTemplate()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi yêu cầu làm mẫu')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Gửi yêu cầu bảng hardware -->
+                        <div class="col-md-4" *ngIf="showButtonSendRequestTablehardware">
+                            <div class="form-group">
+                                <label (click)="sendRequestTablehardware()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi yêu cầu bảng hardware')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Gửi yêu cầu bảng màu -->
+                        <div class="col-md-4" *ngIf="showButtonSendRequestTablecolor">
+                            <div class="form-group">
+                                <label (click)="sendRequestTablecolor()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi yêu cầu bảng màu')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Gửi yêu cầu mua hardware -->
+                        <div class="col-md-4" *ngIf="showButtonSendRequestHardware">
+                            <div class="form-group">
+                                <label (click)="sendRequestHardware()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi yêu cầu mua hardware')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Hoàn tất làm mẫu 
+                        <div class="col-md-4" *ngIf="showButtonOnCompleteTempalte">
+                            <div class="form-group">
+                                <label (click)="onCompleteTempalte()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Hoàn tất làm mẫu')}}
+                                </label>
+                            </div>
+                        </div>-->
+
+                        <!-- Ngưng hệ hàng -->
+                        <div class="col-md-4" *ngIf="showButtonOnPauseGroupProduct">
+                            <div class="form-group">
+                                <label (click)="onPauseGroupProduct()"
+                                    class='btn btn-danger' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Ngưng hệ hàng')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Chuyển giao sản xuất -->
+                        <div class="col-md-4" *ngIf="showButtonOnTransferProduct">
+                            <div class="form-group">
+                                <label (click)="onTransferProduct()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Chuyển giao sản xuất')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin báo giá cho khách -->
+                        <pde-price-cus-attach-file
+                            #pdePriceCusAttachFile
+                            [disableInput]='disableInput'>
+                        </pde-price-cus-attach-file>
+                    <!-- Thông tin yêu cầu từ khách -->
+                        <pde-infor-request-cus-attach-file
+                            #pdeInforRequestCusAttachFile
+                            [disableInput]='disableInput'>
+                        </pde-infor-request-cus-attach-file>
+                    <!-- Bản vẽ kỹ thuật từ khách -->
+                        <pde-tech-request-cus-attach-file
+                            #pdeTechRequestCusAttachFile
+                            [disableInput]='disableInput'>
+                        </pde-tech-request-cus-attach-file>
+                    <!-- Bản vẽ kỹ thuật dũng khanh -->
+                        <pde-tech-attach-file
+                            #pdeTechAttachFile
+                            [disableInput]='true'>
+                        </pde-tech-attach-file>
+
+                    <!-- Danh sách sản phẩm -->
+                    <pde-product-edittable
+                        #pdeProductEditTable
+                        [inputModel]="inputModel"
+                        (choose_product_template_complated)="onCompleteChooseProductTempalte()"
+                        [disableInput]='disableInput'>
+                    </pde-product-edittable>
+
+                    <!-- Danh sách sản phẩm chọn làm mẫu -->
+                    <pde-product-template-edittable
+                        #pdeProductTemplateEditTable
+                        [inputModel]="inputModel"
+                        [disableInput]='disableInput'>
+                    </pde-product-template-edittable>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<po-customer-modal (onSelect)='onSelectCustomer($event)' #poCusModal
+    [multiple]="false"></po-customer-modal>
+<po-group-product-modal (onSelect)='onSelectGroupProduct($event)' #poGroupProductModal
+[multiple]="false"></po-group-product-modal>
+
+<cm-send-with-combobox-modal 
+    #cmSendWithCombobox_SendReq
+    [title_combobox]="'Chọn phòng ban nhận'"
+    [combobox_list]="combobox_list"
+    [combobox_valueMember]="'deP_ID'"
+    [combobox_displayMember]="'brancH_NAME|deP_CODE|deP_NAME'"
+    (onSendEvent)='onSendReq($event)'>
+</cm-send-with-combobox-modal>

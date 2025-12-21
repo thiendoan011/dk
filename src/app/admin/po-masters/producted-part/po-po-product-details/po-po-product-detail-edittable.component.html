@@ -1,0 +1,168 @@
+<div class="editable-title-group">
+    <h5 class="popup-title" style="flex: none !important; margin-right: 8px;">{{l('Chi tiết nhập kho sản phẩm')}}</h5>
+    <div class="action-button">
+        <button [disabled]="disableInput" type="button" (click)="initData()" class="btn btn-primary">
+            <i class="fa fa-sync"></i>
+        </button>
+        <button [disabled]="disableInput" style="margin-left: 5px;" type="button" (click)="save()" class="btn btn-success">
+            <i class="fa fa-save"></i>
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Mã hệ hàng -->
+    <div class="col-md-2">
+        <label>{{l('Mã hệ hàng')}}</label>
+        <div class='user-group'>
+            <input class='form-control'
+                readonly
+                name="grouP_PRODUCT_CODE"
+                [(ngModel)]="record.grouP_PRODUCT_CODE">
+            <button type="button" class="btn btn-primary"
+                [disabled]='disableInput'
+                (click)="showGroupProduct()">{{l("...")}}
+            </button>
+        </div>
+    </div>
+
+    <!-- Mã sản phẩm -->
+    <div class="col-md-2">
+        <label>{{l('Mã sản phẩm')}}</label>
+        <div class='user-group'>
+            <input class='form-control'
+                readonly
+                name="producT_CODE"
+                [(ngModel)]="record.producT_CODE">
+            <button type="button" class="btn btn-primary"
+                [disabled]='disableInput'
+                (click)="showProduct()">{{l("...")}}
+            </button>
+        </div>
+    </div>
+
+    <!-- Thêm -->
+    <div class="form-group" style="margin-bottom: 5px;">
+        <label>{{l('')}}</label>
+        <button type="button" class="btn btn-primary"
+            [disabled]='disableInput'
+            (click)="onFind()">{{l("Tìm kiếm")}}
+        </button>
+    </div>
+
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]="['quantitY_CURRENT']" #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <th style="width: 40px" class="center">{{l("No")}}</th>
+                
+                <th sortField="grouP_PRODUCT_CODE" style="width: 120px">{{l('Mã hệ hàng')}}</th>
+                <th sortField="producT_CODE" style="width: 120px">{{l('Mã sản phẩm')}}</th>
+                <th sortField="producT_GROUP_DETAIL_NAME" style="width: 150px">{{l('Cụm chi tiết')}}</th>
+                <th sortField="producT_DETAIL_NAME" style="width: 150px">{{l('Chi tiết')}}</th>
+
+                <th style="width: 80px">{{l('SLSP/PO')}}</th>
+                <th style="width: 80px">{{l('SLDM')}}</th>
+
+                <th style="width: 100px">{{l('Tổng Y/C')}}</th>
+                <th style="width: 100px">{{l('Đã nhập')}}</th>
+                <th style="width: 100px">{{l('Còn lại')}}</th>
+
+                <th style="width: 120px" class="required">{{l('SL hoàn thành')}}</th>
+                <th style="width: 120px" class="required">{{l('SL gia công')}}</th>
+                <th style="width: 120px" class="required">{{l('Ngày cập nhật')}}</th>
+                <th style="width: 120px" class="required">{{l('Nhà máy')}}</th>
+                <!-- <th style="width: 200px">{{l('Ghi chú')}}</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in = index"
+                [hidden]="item['page'] != editTable.currentPage"
+                class="selectable {{item['editableSelected'] ? 'selected' : ''}}"
+                (click)="editTable.selectRow($event, item)">
+                
+                <td class="center"> <span class="mo-header"></span> {{in + 1}} </td>
+
+                <td>{{item.grouP_PRODUCT_CODE}}</td>
+                <td>{{item.producT_CODE}}</td>
+                <td>{{item.producT_GROUP_DETAIL_NAME}}</td>
+                <td>{{item.producT_DETAIL_NAME}}</td>
+
+                <td class="right">{{item.pO_Qty | moneyFormatPipe}}</td>
+                <td class="right">{{item.boM_Qty | moneyFormatPipe}}</td>
+
+                <td class="right">
+                    <money-input [disabled]="true" [ngModel]="item.totaL_REQUIRED"></money-input>
+                </td>
+                <td class="right">
+                    <money-input [disabled]="true" [ngModel]="item.accumulateD_PREVIOUS"></money-input>
+                </td>
+                <td class="right">
+                    <money-input [disabled]="true" [ngModel]="item.remaininG_PREVIOUS"></money-input>
+                </td>
+
+                <td>
+                    <money-input
+                        id="quantitY_COMPLETED_{{in}}"
+                        (keydown.enter)="editTable.onEnterMoveDown($event, 'quantitY_COMPLETED', in)"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('quantitY_COMPLETED', in)}}"
+                        [(ngModel)]="item.quantitY_COMPLETED"
+                        [isNegative]="true">
+                    </money-input>
+                </td>
+
+                <td>
+                    <money-input
+                        id="quantitY_OUTSOURCED_{{in}}"
+                        (keydown.enter)="editTable.onEnterMoveDown($event, 'quantitY_OUTSOURCED', in)"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('quantitY_OUTSOURCED', in)}}"
+                        [(ngModel)]="item.quantitY_OUTSOURCED"
+                        [isNegative]="true">
+                    </money-input>
+                </td>
+
+                <!-- Ngày cập nhật -->
+                <td class="center"><span class="mo-header"></span>
+                    <date-control
+                        [disabled]="disableInput"
+                        name="{{editTable.name('productioN_DT',in)}}"
+                        [(ngModel)]="item.productioN_DT">
+                    </date-control>
+                </td>
+
+                <!-- Nhà máy -->
+                <td>
+                    <div class="form-group">
+                        <all-code-select 
+                            [disabled]="disableInput"
+                            [cdName]="'FACTORY'"
+                            [cdType]="'CM'"
+                            name="{{editTable.name('factory',in)}}" 
+                            [(ngModel)]="item.factory">
+                        </all-code-select>
+                    </div>
+                </td>
+
+                <!-- <td>
+                    <textarea 
+                        class="form-control"
+                        rows="1"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('notes', in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td> -->
+
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<po-group-product-of-po-modal (onSelect)='onSelectGroupProduct($event)' #poGroupProductOfPOModal
+[multiple]="false"></po-group-product-of-po-modal>
+<product-of-group-product-modal [group_product_id]="record.grouP_PRODUCT_ID" (onSelect)='onSelectProductModal($event)' #productModal [multiple]="false">
+</product-of-group-product-modal>

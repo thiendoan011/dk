@@ -1,0 +1,103 @@
+<!-- Thông tin layout thuộc sản phẩm -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{_title}}</h5>
+    <div class="action-button">
+        <button [hidden]="false" type="button" (click)='onAdd()'
+            [disabled]="false" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <!-- <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button> -->
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="width: 40px;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="width: 40px;">{{l("No")}}</span></th>
+                <!-- File đính kèm -->
+                <th>
+                    <span style="width: 250px;">{{l("File đính kèm")}}</span>
+                </th>
+                <!-- Ngày đính kèm -->
+                <th sortField="attacH_DT">
+                    <span style="width: 120px;">{{l("Ngày đính kèm")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th sortField="notes">
+                    <span style="width: 150px;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <checkbox-control 
+                        [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- File đính kèm -->
+                <td>
+                    <file-picker type="text"
+                        [multiFile]="false"
+                        [folderUpload]="_folder_upload"
+                        (attach_infor_out)="l_UploadFileComplete($event, item)"
+                        [accept]=" '.xlsx,.xls,.doc,.docx,.pdf,.rar,.jpeg,.png,.jpg'"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('filE_ATTACHMENT', in)}}"
+                        [(ngModel)]="item['filE_ATTACHMENT']">
+                    </file-picker>
+                </td>
+                <!-- Ngày đính kèm -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('attacH_DT', in)}}"
+                        [(ngModel)]="item.attacH_DT">
+                    </date-control>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="disableInput"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes', in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+
+    <div class="col-md-3" [hidden]="_disableInput">
+        <div class="form-group">
+            <label (click)="onUpdateFile()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu')}}
+            </label>
+        </div>
+    </div>
+</div>

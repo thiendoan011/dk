@@ -1,0 +1,280 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Tên khách hàng -->
+                <th>
+                    <span style="width: 130px;">{{l("Tên khách hàng")}}</span>
+                </th> 
+                <!-- Hệ hàng -->
+                <th>
+                    <span style="width: 130px;">{{l("Hệ hàng")}}</span>
+                </th>
+                <!-- Số PO -->
+                <th>
+                    <span style="width: 130px;">{{l("Số PO")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="width: 150px;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- Lệnh sản xuất -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Lệnh sản xuất")}}</span>
+                </th>
+                <!-- Ngày xuất theo khách hàng -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày xuất theo khách hàng")}}</span>
+                </th>
+                <!-- Số lượng cont -->
+                <th>
+                    <span style="width: 80px;">{{l("Số lượng cont")}}</span>
+                </th>
+                <!-- Phôi -->
+                <th>
+                    <span style="width: 80px;">{{l("Phôi")}}</span>
+                </th>
+                <!-- Ngày dự kiến hoàn thành phôi -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày dự kiến hoàn thành phôi")}}</span>
+                </th>
+                <!-- Ngày yêu cầu hoàn thành phôi -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày yêu cầu hoàn thành phôi")}}</span>
+                </th>
+                <!-- Định hình -->
+                <th>
+                    <span style="width: 100px;">{{l("Định hình")}}</span>
+                </th>
+                <!-- Ngày dự kiến hoàn thành định hình -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày dự kiến hoàn thành định hình")}}</span>
+                </th>
+                <!-- Ngày yêu cầu hoàn thành định hình -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày yêu cầu hoàn thành định hình")}}</span>
+                </th>
+                <!-- Lắp ráp -->
+                <th>
+                    <span style="width: 100px;">{{l("Lắp ráp")}}</span>
+                </th>
+                <!-- Ngày dự kiến hoàn thành lắp ráp -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày dự kiến hoàn thành lắp ráp")}}</span>
+                </th>
+                <!-- Ngày yêu cầu hoàn thành lắp ráp -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày yêu cầu hoàn thành lắp ráp")}}</span>
+                </th>
+                <!-- Sơn 1 -->
+                <th>
+                    <span style="width: 80px;">{{l("Sơn 1")}}</span>
+                </th>
+                <!-- Sơn 2 -->
+                <th>
+                    <span style="width: 80px;">{{l("Sơn 2")}}</span>
+                </th>
+                <!-- Sơn 3 -->
+                <th>
+                    <span style="width: 80px;">{{l("Sơn 3")}}</span>
+                </th>
+                <!-- Đóng gói -->
+                <th>
+                    <span style="width: 80px;">{{l("Đóng gói")}}</span>
+                </th>
+                <!-- Ngày dự kiến hoàn thành sơn + đóng gói -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày dự kiến hoàn thành sơn + đóng gói")}}</span>
+                </th>
+                <!-- Ngày yêu cầu hoàn thành sơn + đóng gói -->
+                <th>
+                    <span style="width: 120px;">{{l("Ngày yêu cầu hoàn thành sơn + đóng gói")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Tên khách hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('customeR_NAME',in)}}" 
+                        [(ngModel)]="item.customeR_NAME"/>
+                </td>
+                <!-- Hệ hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('grouP_PRODUCT_NAME',in)}}" 
+                        [(ngModel)]="item.grouP_PRODUCT_NAME"/>
+                </td>
+                <!-- Số PO -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('pO_CODE',in)}}" 
+                        [(ngModel)]="item.pO_CODE"/>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="true"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('notes',in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+                <!-- Lệnh sản xuất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('r_NAME',in)}}" 
+                        [(ngModel)]="item.r_NAME"/>
+                </td>
+                <!-- Ngày xuất theo khách hàng -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('cusT_EXPORT_DATE',in)}}"
+                        [(ngModel)]="item.cusT_EXPORT_DATE">
+                    </date-control>
+                </td>
+                <!-- Số lượng cont -->
+                <td>
+                    <money-input
+                        [disabled]="true"
+                        name="{{editTable.name('numbeR_OF_CONT',in)}}"
+                        [(ngModel)]="item.numbeR_OF_CONT">
+                    </money-input>
+                </td>
+                <!-- Phôi -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('embryO_PERCENT',in)}}" 
+                        [(ngModel)]="item.embryO_PERCENT"/>
+                </td>
+                <!-- Ngày dự kiến hoàn thành phôi -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('embryO_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.embryO_EXPECTED_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày yêu cầu hoàn thành phôi -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('embryO_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.embryO_REQUEST_DT">
+                    </date-control>
+                </td>
+                <!-- Định hình -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('strucT_PERCENT',in)}}" 
+                        [(ngModel)]="item.strucT_PERCENT"/>
+                </td>
+                <!-- Ngày dự kiến hoàn thành định hình -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('strucT_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.strucT_EXPECTED_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày yêu cầu hoàn thành định hình -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('strucT_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.strucT_REQUEST_DT">
+                    </date-control>
+                </td>
+                <!-- Lắp ráp -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('assemblY_PERCENT',in)}}" 
+                        [(ngModel)]="item.assemblY_PERCENT"/>
+                </td>
+                <!-- Ngày dự kiến hoàn thành lắp ráp -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('assemblY_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.assemblY_EXPECTED_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày yêu cầu hoàn thành lắp ráp -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('assemblY_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.assemblY_REQUEST_DT">
+                    </date-control>
+                </td>
+                <!-- Sơn 1 -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('painT_1_PERCENT',in)}}" 
+                        [(ngModel)]="item.painT_1_PERCENT"/>
+                </td>
+                <!-- Sơn 2 -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('painT_2_PERCENT',in)}}" 
+                        [(ngModel)]="item.painT_2_PERCENT"/>
+                </td>
+                <!-- Sơn 3 -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('painT_3_PERCENT',in)}}" 
+                        [(ngModel)]="item.painT_3_PERCENT"/>
+                </td>
+                <!-- Đóng gói -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('wraP_PERCENT',in)}}" 
+                        [(ngModel)]="item.wraP_PERCENT"/>
+                </td>
+                <!-- Ngày dự kiến hoàn thành sơn + đóng gói -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('painT_AND_WRAP_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.painT_AND_WRAP_EXPECTED_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày yêu cầu hoàn thành sơn + đóng gói -->
+                <td>
+                    <date-control
+                        [disabled]="true"
+                        name="{{editTable.name('painT_AND_WRAP_REQUEST_DT',in)}}"
+                        [(ngModel)]="item.painT_AND_WRAP_REQUEST_DT">
+                    </date-control>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>

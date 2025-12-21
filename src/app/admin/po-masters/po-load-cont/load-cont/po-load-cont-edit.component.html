@@ -1,0 +1,201 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Load cont")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-modal #history_modal
+                                [id]="inputModel.pO_ID"
+                                [process_id]="'LOADCONT'"
+                                [trN_TYPE]="'PO_MASTER'" 
+                                [stage] = "'HC'">
+                            </po-history-modal>
+                        </div>
+                        <!-- Mã phiếu load cont -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã phiếu load cont")}}</label>
+                                <input class="form-control" type="text"
+                                    readonly
+                                    name="pO_LOAD_CONT_CODE"
+                                    [(ngModel)]="inputModel.pO_LOAD_CONT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên phiếu load cont -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên phiếu load cont")}}</label>
+                                <input class="form-control" type="text"
+                                    readonly
+                                    name="pO_LOAD_CONT_NAME"
+                                    [(ngModel)]="inputModel.pO_LOAD_CONT_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Mã PO -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Mã PO")}}</label>
+                                <div class='file-input-group'>
+                                    <input readonly
+                                        class="form-control"
+                                        name="pO_CODE"
+                                        [(ngModel)]="inputModel.pO_CODE">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    name="pO_LOAD_CONT_STATUS" 
+                                    [(ngModel)]="inputModel.pO_LOAD_CONT_STATUS"
+                                    [cdName]="'PO_LOAD_CONT'"
+                                    [cdType]="'PO'">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu load cont 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày yêu cầu load cont')}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="pO_LOAD_CONT_REQUEST_DT"
+                                    [(ngModel)]="inputModel.pO_LOAD_CONT_REQUEST_DT">
+                                </date-control>
+                            </div>
+                        </div>-->
+
+                        <!-- Ngày Booking -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày Booking')}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="bookinG_DT"
+                                    [(ngModel)]="inputModel.bookinG_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày thực tế load cont -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày thực tế load cont')}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="pO_LOAD_CONT_EXACT_DT"
+                                    [(ngModel)]="inputModel.pO_LOAD_CONT_EXACT_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Số lượng cont đã load -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Số lượng cont đã load")}}</label>
+                                <money-input-5
+                                    [disabled]='true'
+                                    [isDecimal_round5]="true" 
+                                    name="qtY_CONT_PROCESSED"
+                                    [(ngModel)]="inputModel.qtY_CONT_PROCESSED">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <!-- Ngày xuất PO thực tế -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày xuất PO thực tế')}}</label>
+                                <date-control
+                                    [disabled]="disableInput"
+                                    name="exacT_EXPORT_DATE"
+                                    [(ngModel)]="inputModel.exacT_EXPORT_DATE">
+                                </date-control>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ghi chú booking -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú booking")}}</label>
+                                <textarea class="form-control"
+                                    disabled
+                                    appTextareaAutoresize
+                                    name="bookingdt"
+                                    [(ngModel)]="inputModel.bookingdt">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]='disableInput'
+                                    appTextareaAutoresize
+                                    name="pO_LOAD_CONT_NOTES"
+                                    [(ngModel)]="inputModel.pO_LOAD_CONT_NOTES">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <po-load-cont-group-product-edittable
+                        #poLoadContGroupProductEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="true"
+                        [title]="'Danh sách hệ hàng'">
+                    </po-load-cont-group-product-edittable>
+
+                    <po-load-cont-product-edittable
+                        #poLoadContProductEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [title]="'Danh sách sản phẩm'">
+                    </po-load-cont-product-edittable>
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

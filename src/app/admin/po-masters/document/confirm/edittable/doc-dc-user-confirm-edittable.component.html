@@ -1,0 +1,115 @@
+<!-- Thông tin file văn bản -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách người nhận văn bản")}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Username -->
+                <th sortField="DOCUMENT_CODE">
+                    <span style="white-space: nowrap;">{{l("Username")}}</span>
+                </th>
+                <!-- Tên đầy đủ -->
+                <th sortField="DOCUMENT_NAME">
+                    <span style="white-space: nowrap;">{{l("Tên đầy đủ")}}</span>
+                </th>
+                <!-- Email -->
+                <th sortField="DOCUMENT_DT">
+                    <span style="white-space: nowrap;">{{l("Email")}}</span>
+                </th>
+                <!-- Trạng thái xác nhận -->
+                <th sortField="DEP_DOCUMENT_ID">
+                    <span style="white-space: nowrap;">{{l("Trạng thái xác nhận")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Username -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        readonly
+                        [(ngModel)]="item.username"
+                        name="{{editTable.name('username',in)}}" />
+                </td>
+                <!-- Tên đầy đủ -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        readonly
+                        [(ngModel)]="item.fullname"
+                        name="{{editTable.name('fullname',in)}}" />
+                </td>
+                <!-- Email -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        readonly
+                        [(ngModel)]="item.email"
+                        name="{{editTable.name('email',in)}}" />
+                </td>
+                <!-- Trạng thái xác nhận -->
+                <td>
+                    <input class="form-control transparent" type="text"
+                        readonly
+                        [(ngModel)]="item.iS_CONFIRM"
+                        name="{{editTable.name('iS_CONFIRM',in)}}" />
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+    <div class="row col-md-12 modal-body">
+        <!-- Lưu -->
+        <div class="col-md-3" *ngIf="inputModel.makeR_ID && inputModel.autH_STATUS != 'P' && inputModel.autH_STATUS != 'A'">
+            <div class="form-group">
+                <label  (click)="onUpd()" class='btn btn-primary' style="color:white!important">
+                    {{this.l('Lưu')}}
+                </label>
+            </div>
+        </div>
+        <!-- Gửi yêu cầu -->
+        <div class="col-md-3" *ngIf="inputModel.makeR_ID && inputModel.autH_STATUS != 'P' && inputModel.autH_STATUS != 'A'">
+            <div class="form-group">
+                <label  (click)="onSend()" class='btn btn-primary' style="color:white!important">
+                    {{this.l('Gửi yêu cầu')}}
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<user-modal [removeAllCheckOnShow]="false" (onSelect)="onSelect($event)" [multiple]="true" #userModal></user-modal>

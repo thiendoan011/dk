@@ -1,0 +1,116 @@
+<popup-frame [title]="l('SearchPoInfo')" (onSearchEvent)="buttonSearch()" (onSelectEvent)="accept()" #popupFrame>
+    <div class="horizontal-form filter-form" autocomplete="off">
+        <form class="m-form m-form--label-align-right">
+            <div class="row m--margin-bottom-30">
+<!-- Begin Filter -->
+                <!-- Mã loại văn bản -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Mã loại văn bản")}}</label>
+                        <input class="form-control m-input" type="text"
+                        name="documenT_TYPE_CODE"
+                        [(ngModel)]="filterInput.documenT_TYPE_CODE">
+                    </div>
+                </div>
+
+                <!-- Tên loại văn bản -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Tên loại văn bản")}}</label>
+                        <input class="form-control m-input" type="text"
+                        name="documenT_TYPE_NAME"
+                        [(ngModel)]="filterInput.documenT_TYPE_NAME" >
+                    </div>
+                </div>
+                <div class="col-md-12"></div>
+
+                <!-- Mã văn bản -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Mã văn bản")}}</label>
+                        <input class="form-control m-input" type="text"
+                        name="documenT_CODE"
+                        [(ngModel)]="filterInput.documenT_CODE" >
+                    </div>
+                </div>
+
+                <!-- Tên văn bản -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Tên văn bản")}}</label>
+                        <input class="form-control m-input" type="text"
+                        name="documenT_NAME"
+                        [(ngModel)]="filterInput.documenT_NAME">
+                    </div>
+                </div>
+<!-- End Filter -->
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div isLoading="dataTable.isLoading" class="primeng-datatable-container">
+            <div class="spinner-border m-5" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <core-table [reloadPageOnInit]="false" #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                <thead>
+                    <tr>
+                        <!-- Begin Table Column -->
+                        <!-- multiple -->
+                        <th class="center" *ngIf="multiple">
+                            <span style="width: 40px">
+                                <checkbox-control #checkAllElement
+                                    (change)="onCheckAll(checkAllElement.inputRef.nativeElement)" [checked]="checkAll">
+                                </checkbox-control>
+                            </span>
+                        </th>
+                        <!-- STT -->
+                        <th class="center">
+                            <span style="width: 40px">{{l("No")}}</span>
+                        </th>
+                        <!-- Mã văn bản -->
+                        <th style="width:50%" sortField="documenT_CODE">
+                            <span style="width: 150px">{{l("Mã văn bản")}}</span>
+                        </th>
+                        <!-- Tên văn bản -->
+                        <th style="width:50%" sortField="documenT_NAME">
+                            <span style="width: 250px">{{l("Tên văn bản")}}</span>
+                        </th>
+                        <!-- Mã loại văn bản -->
+                        <th style="width:50%" sortField="documenT_TYPE_CODE">
+                            <span style="width: 150px">{{l("Mã loại văn bản")}}</span>
+                        </th>
+                        <!-- Tên loại văn bản -->
+                        <th style="width:50%" sortField="documenT_TYPE_NAME">
+                            <span style="width: 250px">{{l("Tên loại văn bản")}}</span>
+                        </th>
+                        <!-- End Table Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- multiple dblclick -->
+                    <tr *ngFor="let record of dataTable.records; let no = index;" class="selectable" (click)="selectRow($event,record)" (dblclick)="onDoubleClick(record)">
+                        <!-- Begin Table Value -->
+                        <!-- multiple -->
+                        <td class="center" *ngIf="multiple">
+                            <span class="mo-header"></span>
+                            <checkbox-control (onchange)="setChecked($event.target.checked, record)" [checked]="record['isChecked']"></checkbox-control>
+                        </td>
+                        <!-- STT -->
+                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                        </td>
+                        <!-- Mã văn bản -->
+                        <td><span class="mo-header"></span>{{record.documenT_CODE}}</td>
+                        <!-- Tên văn bản -->
+                        <td><span class="mo-header"></span>{{record.documenT_NAME}}</td>
+                        <!-- Mã loại văn bản -->
+                        <td><span class="mo-header"></span>{{record.documenT_TYPE_CODE}}</td>
+                        <!-- Tên loại văn bản -->
+                        <td><span class="mo-header"></span>{{record.documenT_TYPE_NAME}}</td>
+                        <!-- End Table Value -->
+                    </tr>
+                </tbody>
+            </core-table>
+        </div>
+    </div>
+</popup-frame>

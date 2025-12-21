@@ -1,0 +1,97 @@
+<div>
+    <div class="accordion md-accordion form-group" id="accordionFilter_pde_choose_request" role="tablist">
+        <div class="card">
+            <div class="card-header black lighten-3 z-depth-1" style="padding: 1px 5px !important" role="tab">
+                <a aria-controls="viewProcess2" href="#viewProcess_pde_choose_request" class="white-text font-weight-bold" data-toggle="collapse" aria-expanded="true" >
+                    <h6 class="mb-0 py-1">
+                        <i class="fas fa-angle-right" style="padding-right: 5px"></i>
+                        {{ this.l('Bấm vào đây để chọn phiếu yêu cầu') }}
+                    </h6>
+                </a>
+            </div>
+            <div id="viewProcess_pde_choose_request" data-parent="#accordionFilter_pde_choose_request" class="collapse" role="tabpanel" aria-labelledby="heading">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <!-- Begin Table-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+                                <checkbox-control 
+                                    [label]="l('Phiếu yêu cầu báo giá')" 
+                                    [checked]="true" 
+                                    [TrueValue]="'Y'" 
+                                    [FalseValue]="'N'" 
+                                    [(ngModel)]="inputModel.usE_REQ_PRICE"
+                                    name="usE_REQ_PRICE" >
+                                </checkbox-control>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+                                <checkbox-control 
+                                    [label]="l('Phiếu yêu cầu làm mẫu')" 
+                                    [checked]="true" 
+                                    [TrueValue]="'Y'" 
+                                    [FalseValue]="'N'" 
+                                    [(ngModel)]="inputModel.usE_REQ_TEMPLATE"
+                                    name="usE_REQ_TEMPLATE" >
+                                </checkbox-control>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+                                <checkbox-control 
+                                    [label]="l('Phiếu yêu cầu bảng hardware')" 
+                                    [checked]="true" 
+                                    [TrueValue]="'Y'" 
+                                    [FalseValue]="'N'" 
+                                    [(ngModel)]="inputModel.usE_REQ_TABLEHARDWARE"
+                                    name="usE_REQ_TABLEHARDWARE" >
+                                </checkbox-control>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+                                <checkbox-control 
+                                    [label]="l('Phiếu yêu cầu bảng màu')" 
+                                    [checked]="true" 
+                                    [TrueValue]="'Y'" 
+                                    [FalseValue]="'N'" 
+                                    [(ngModel)]="inputModel.usE_REQ_TABLECOLOR"
+                                    name="usE_REQ_TABLECOLOR" >
+                                </checkbox-control>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label></label>
+                                <checkbox-control 
+                                    [label]="l('Phiếu yêu cầu mua hardware')" 
+                                    [checked]="true" 
+                                    [TrueValue]="'Y'" 
+                                    [FalseValue]="'N'" 
+                                    [(ngModel)]="inputModel.usE_REQ_HARDWARE"
+                                    name="usE_REQ_HARDWARE" >
+                                </checkbox-control>
+                            </div>
+                        </div>
+                        <!-- End Table-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .collapse:not(.in) {
+        display: none !important;
+    }
+
+    .collapse:not(.show) {
+        display: initial;
+    }
+</style>

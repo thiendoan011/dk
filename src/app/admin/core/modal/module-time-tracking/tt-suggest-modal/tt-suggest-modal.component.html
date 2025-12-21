@@ -1,0 +1,49 @@
+<div bsModal #popupFrameModal="bs-modal" (onShown)="onShown()" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="popupFrameModal" aria-hidden="true" [config]="{backdrop: 'static' }">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <span>{{title}}</span>
+                </h4>
+                <button type="button" class="close" (click)="close()" [attr.aria-label]="l('Close')" [disabled]="waiting">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <!-- Nội dung đề xuất từ chối -->
+            <div class="col-md-12 modal-body">
+                <div class="form-group">
+                    <label>{{this.title}}</label>
+                    <textarea
+                        name="reason"
+                        #reason="ngModel"
+                        class="form-control"
+                        type="text"
+                        maxlength="4000"
+                        placeholder="Nhập lý do đề xuất từ chối"
+                        [(ngModel)]="rejectLogInput.reason">
+                    </textarea>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button  
+                        [disabled]="waiting" 
+                        type="button" 
+                        class="btn btn-primary" 
+                        (click)="onAccept()"
+                        [buttonBusy]="true"  
+                        [busyText]="l('SavingWithThreeDot')">
+                    <span>{{l("Đồng ý gửi")}}</span>
+                </button>
+                <button  
+                        [disabled]="waiting"
+                        type="button" 
+                        class="btn btn-primary" 
+                        (click)="onCancel();">
+                    <span>{{l("Hủy")}}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

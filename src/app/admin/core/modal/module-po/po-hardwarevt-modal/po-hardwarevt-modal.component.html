@@ -1,0 +1,109 @@
+<popup-frame [title]="l('Tìm kiếm thông tin vật tư hardawre')" (onSearchEvent)="buttonSearch()" (onSelectEvent)="accept()" #popupFrame>
+    <div class="horizontal-form filter-form" autocomplete="off">
+        <form class="m-form m-form--label-align-right">
+            <div class="row m--margin-bottom-30">
+<!-- Begin Filter -->
+                <!-- Mã vật tư hardawre -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Mã vật tư hardawre")}}</label>
+                        <input class="form-control m-input"
+                            type="text"
+                            name="hardwarevT_CODE"
+                            [(ngModel)]="filterInput.hardwarevT_CODE">
+                    </div>
+                </div>
+
+                <!-- Tên vật tư hardawre -->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{l("Tên vật tư hardawre")}}</label>
+                        <input class="form-control m-input"
+                            type="text"
+                            name="hardwarevT_NAME"
+                            [(ngModel)]="filterInput.hardwarevT_NAME">
+                    </div>
+                </div>
+
+<!-- End Filter -->
+                <div style="display:none;" class="col-md-12">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-primary btn-search" (click)="search()"></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div isLoading="dataTable.isLoading" class="primeng-datatable-container">
+            <div class="spinner-border m-5" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <core-table [reloadPageOnInit]="false" #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                <thead>
+                    <tr>
+                        <!-- Begin Table Column -->
+                        <!-- multiple -->
+                        <th class="center" *ngIf="multiple">
+                            <span style="width: 40px">
+                                <checkbox-control #checkAllElement
+                                    (change)="onCheckAll(checkAllElement.inputRef.nativeElement)" [checked]="checkAll">
+                                </checkbox-control>
+                            </span>
+                        </th>
+                        <!-- STT -->
+                        <th class="center">
+                            <span style="width: 40px">{{l("No")}}</span>
+                        </th>
+                        <!-- Mã vật tư hardawre -->
+                        <th style="width:50%" sortField="hardwarevT_CODE">
+                            <span style="width: 150px">{{l("Mã vật tư hardawre")}}</span>
+                        </th>
+                        <!-- Tên vật tư hardawre -->
+                        <th style="width:50%" sortField="hardwarevT_NAME">
+                            <span style="width: 150px">{{l("Tên vật tư hardawre")}}</span>
+                        </th>
+                        <!-- Đơn vị tính -->
+                        <th style="width:50%" sortField="unit">
+                            <span style="width: 150px">{{l("Đơn vị tính")}}</span>
+                        </th>
+                        <!-- Màu sắc -->
+                        <th style="width:50%" sortField="color">
+                            <span style="width: 150px">{{l("Màu sắc")}}</span>
+                        </th>
+                        <!-- Ghi chú -->
+                        <th sortField="notes">
+                            <span style="width: 150px">{{l("Ghi chú")}}</span>
+                        </th>
+                        <!-- End Table Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- multiple dblclick -->
+                    <tr *ngFor="let record of dataTable.records; let no = index;" class="selectable" (click)="selectRow($event,record)" (dblclick)="onDoubleClick(record)">
+                        <!-- Begin Table Value -->
+                        <!-- multiple -->
+                        <td class="center" *ngIf="multiple">
+                            <span class="mo-header"></span>
+                            <checkbox-control (onchange)="setChecked($event.target.checked, record)" [checked]="record['isChecked']"></checkbox-control>
+                        </td>
+                        <!-- STT -->
+                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                        </td>
+                        <!-- Mã vật tư hardawre -->
+                        <td><span class="mo-header"></span>{{record.hardwarevT_CODE}}</td>
+                        <!-- Tên vật tư hardawre -->
+                        <td><span class="mo-header"></span>{{record.hardwarevT_NAME}}</td>
+                        <!-- Đơn vị tính -->
+                        <td><span class="mo-header"></span>{{record.unit}}</td>
+                        <!-- Màu sắc -->
+                        <td><span class="mo-header"></span>{{record.color}}</td>
+                        <!-- Ghi chú -->
+                         <td><span class="mo-header"></span>{{record.notes}}</td>
+                        <!-- End Table Value -->
+                    </tr>
+                </tbody>
+            </core-table>
+        </div>
+    </div>
+</popup-frame>

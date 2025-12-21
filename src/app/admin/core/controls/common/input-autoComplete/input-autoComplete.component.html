@@ -1,0 +1,7 @@
+<p-autoComplete [size]="30"
+placeholder="Countries" [minLength]="1"
+    [(ngModel)]="_ngModel" 
+    [suggestions]="list_suggestion" 
+    (completeMethod)="filterInput($event)"
+    field="item">
+</p-autoComplete>

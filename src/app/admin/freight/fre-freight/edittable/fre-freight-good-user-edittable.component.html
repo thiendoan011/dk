@@ -1,0 +1,146 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button type="button" [hidden]="disableInput || _disableUpdate || _disableSendAppr" class="btn btn-primary"
+            (click)="editTable.addNewItem()"><i class="pi pi-plus"></i>{{l("Add")}}
+        </button>
+        <button type="button" [hidden]="disableInput || _disableUpdate || _disableSendAppr" class="btn btn-danger"
+            (click)="editTable.removeAllCheckedItem()"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <th class="center">
+                    <span style="width: 40px">
+                        <checkbox-control [disabled]="_disableInput || _disableUpdate || _disableSendAppr"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- PYC xe -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("PYC xe")}}</span>
+                </th>
+                <!-- Họ tên -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Họ tên")}}</span>
+                </th>
+                <!-- Phòng ban -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Phòng ban")}}</span>
+                </th>
+                <!-- Số điện thoại -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số điện thoại")}}</span>
+                </th>
+                <!-- Chức vụ -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Chức vụ")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        name="{{editTable.name('isChecked',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- PYC xe -->
+                <td>
+                    <select2-custom
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        name="{{editTable.name('producT_ID',in)}}"
+                        [(ngModel)]="item.vhE_VEHICLE_REQUEST_ID"
+                        [(list)]="_inputModel.frE_FREIGHT_VEHICLE_REQUESTs"
+                        [valueMember]="'vhE_VEHICLE_REQUEST_ID'"
+                        [displayMember]="'vhE_VEHICLE_REQUEST_CODE'">
+                    </select2-custom>
+                </td>
+                <!-- Họ tên -->
+                <td>
+                    <div class="file-input-group">
+                        <input class="form-control transparent"
+                            [disabled]="true" 
+                            name="{{editTable.name('tlnamE_ID',in)}}"
+                            [(ngModel)]="item.tlnamE_ID"/>
+                        <button class="btn btn-primary ng-star-inserted" type="button" 
+                            [disabled]="disableInput || _disableUpdate || _disableSendAppr" 
+                            (click)="currentDetail= item;
+                            onShowTLUserModal()">{{l("...")}}
+                        </button>
+                    </div>
+                </td>
+                <!-- Phòng ban -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('tlnamE_DEP_NAME',in)}}" 
+                        [(ngModel)]="item.tlnamE_DEP_NAME"/>
+                </td>
+                <!-- Số điện thoại -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('tlnamE_PHONE',in)}}" 
+                        [(ngModel)]="item.tlnamE_PHONE"/>
+                </td>
+                <!-- Chức vụ -->
+                <td>
+                    <input class="form-control transparent" 
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        name="{{editTable.name('tlnamE_ROLE',in)}}" 
+                        [(ngModel)]="item.tlnamE_ROLE"/>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea class="form-control transparent" 
+                        [disabled]="disableInput || _disableUpdate || _disableSendAppr"
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<div class="row">
+    <div class="col-md-3" [hidden]="_disableInput || _disableUpdate || _disableSendAppr">
+        <div class="form-group">
+            <label (click)="onSave()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu')}}
+            </label>
+        </div>
+    </div>
+</div>
+
+<tl-user-modal #tlUserModal [multiple]="false"
+    [title]="'Danh sách nhân viên'"
+    (onSelect)="onSelectTLUserModal($event)">
+</tl-user-modal>

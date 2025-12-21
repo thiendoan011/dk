@@ -1,0 +1,294 @@
+<!-- Begin -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(_title)}}</h5>
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <th><span style="width: 40px">{{l("No")}}</span></th>
+
+                <!-- Mã sản phẩm -->
+                <th sortField="producT_CODE">
+                    <span style="width: 100px">{{l('Mã sản phẩm')}}</span>
+                </th>
+                <!-- Tên sản phẩm -->
+                <th sortField="producT_NAME">
+                    <span style="width: 180px">{{l('Tên sản phẩm')}}</span>
+                </th>
+                <!-- Số lượng -->
+                <th sortField="quantity">
+                    <span style="width: 80px">{{l('Số lượng')}}</span>
+                </th>
+                <!-- Tiêu chuẩn K/H -->
+                <th [hidden]="!_is_hidden_progress">
+                    <span style="white-space: nowrap;">{{l('Tiêu chuẩn K/H')}}</span>
+                </th>
+                <!-- Tiêu chuẩn Test -->
+                <th [hidden]="!_is_hidden_progress">
+                    <span style="white-space: nowrap;">{{l('Tiêu chuẩn Test')}}</span>
+                </th>
+                <!-- YC đóng gói -->
+                <th [hidden]="!_is_hidden_progress">
+                    <span style="white-space: nowrap;">{{l('YC đóng gói')}}</span>
+                </th>
+                <!-- Mẫu K/H tham chiếu -->
+                <th [hidden]="!_is_hidden_progress">
+                    <span style="white-space: nowrap;">{{l('Mẫu K/H tham chiếu')}}</span>
+                </th>
+                <!-- Bản vẽ K/H -->
+                <th [hidden]="!_is_hidden_progress">
+                    <span style="white-space: nowrap;">{{l('Bản vẽ K/H')}}</span>
+                </th>
+                <!-- Nhận xét của kỹ thuật -->
+                <th [hidden]="!_is_hidden_progress">
+                    <span style="white-space: nowrap;">{{l('Nhận xét của kỹ thuật')}}</span>
+                </th>
+                <!-- Phôi -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 80px">{{l('Phôi')}}</span></th>
+                <!-- Lịch sử phôi -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 130px">{{l('Lịch sử Phôi')}}</span></th>
+                <!-- Định hình -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 80px">{{l('Định hình')}}</span></th>
+                <!-- Lịch sử Định hình -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 130px">{{l('Lịch sử Định hình')}}</span></th>
+                <!-- Lắp ráp hoàn thiện -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 80px">{{l('Lắp ráp hoàn thiện')}}</span></th>
+                <!-- Lịch sử Lắp ráp hoàn thiện -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 130px">{{l('Lịch sử Lắp ráp hoàn thiện')}}</span></th>
+                <!-- Duyệt hàng trắng -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 80px">{{l('Duyệt hàng trắng')}}</span></th>
+                <!-- Lịch sử Duyệt hàng trắng -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 130px">{{l('Lịch sử Duyệt hàng trắng')}}</span></th>
+                <!-- Sơn -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 80px">{{l('Sơn')}}</span></th>
+                <!-- Lịch sử Sơn -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 130px">{{l('Lịch sử Sơn')}}</span></th>
+                <!-- Duyệt sơn -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 80px">{{l('Duyệt sơn')}}</span></th>
+                <!-- Lịch sử Duyệt sơn -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 130px">{{l('Lịch sử Duyệt sơn')}}</span></th>
+                <!-- Đóng gói -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 80px">{{l('Đóng gói')}}</span></th>
+                <!-- Lịch sử Đóng gói -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 130px">{{l('Lịch sử Đóng gói')}}</span></th>
+                <!-- Ghi chú tiến độ -->
+                <th [hidden]="_is_hidden_progress"><span style="width: 100px">{{l('Ghi chú tiến độ')}}</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                [hidden]="item['page'] != editTable.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTable.selectRow($event,item);updateView()'>
+
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        [disabled]="true"
+                        name="{{editTable.name('no',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['no']">
+                </td>
+                <!-- Mã sản phẩm -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        readonly
+                        style="color: blue; cursor: pointer;"
+                        (click)="onViewDetailProduct(item)"
+                        name="{{editTable.name('producT_CODE',in)}}"
+                        [(ngModel)]="item.producT_CODE">
+                </td>
+                <!-- Tên sản phẩm -->
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            [disabled]="true"
+                            name="{{editTable.name('producT_NAME',in)}}"
+                            class="form-control transparent" type="text"
+                            [(ngModel)]="item.producT_NAME"/>
+                    </div>
+                </td>
+                <!-- Số lượng -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [disabled]="true"
+                            [isDecimal_round3]="true"
+                            class="transparent"
+                            name="{{editTable.name('quantity',in)}}"
+                            [(ngModel)]="item.quantity">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- Tiêu chuẩn K/H -->
+                <td [hidden]="!_is_hidden_progress">
+                    <textarea [disabled]="true"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('customeR_STANDARD',in)}}"
+                        [(ngModel)]="item.customeR_STANDARD">
+                    </textarea>
+                </td>
+                <!-- Tiêu chuẩn Test -->
+                <td [hidden]="!_is_hidden_progress">
+                    <textarea [disabled]="true"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('tesT_STANDART',in)}}"
+                        [(ngModel)]="item.tesT_STANDART">
+                    </textarea>
+                </td>
+                <!-- Yêu cầu đóng gói -->
+                <td [hidden]="!_is_hidden_progress">
+                    <textarea [disabled]="true"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('requiremenT_PACKAGING',in)}}"
+                        [(ngModel)]="item.requiremenT_PACKAGING">
+                    </textarea>
+                </td>
+                <!-- Mẫu K/H tham chiếu -->
+                <td [hidden]="!_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="true"
+                        [cdName]="'OPTION_YN'"
+                        [cdType]="'CM'"
+                        name="customeR_TEMPLATE_REF" 
+                        [(ngModel)]="item.customeR_TEMPLATE_REF">
+                    </all-code-select>
+                </td>
+                <!-- Bản vẽ K/H -->
+                <td [hidden]="!_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="true"
+                        [cdName]="'OPTION_YN'"
+                        [cdType]="'CM'"
+                        name="customeR_DRAWING" 
+                        [(ngModel)]="item.customeR_DRAWING">
+                    </all-code-select>
+                </td>
+                <!-- Nhận xét của kỹ thuật -->
+                <td [hidden]="!_is_hidden_progress">
+                    <textarea [disabled]="disableNoteTech"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('noteS_TECHNICAL',in)}}"
+                        [(ngModel)]="item.noteS_TECHNICAL">
+                    </textarea>
+                </td>
+                <!-- Phôi -->
+                <td [hidden]="_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PDE_PROGRESS_TEMPLATE_PART_PERCENT'"
+                        [cdType]="'PDE'"
+                        name="progresS_1" 
+                        [(ngModel)]="item.progresS_1">
+                    </all-code-select>
+                </td>
+                <!-- Lịch sử Phôi -->
+                <td [hidden]="_is_hidden_progress">
+                    <textarea name="{{editTable.name('notE_PROGRESS_1',in)}}" [(ngModel)]="item.notE_PROGRESS_1" [disabled]="true" style="width: 100%;" appTextareaAutoresize class="form-control transparent" type="text"></textarea>
+                </td>
+                <!-- Định hình -->
+                <td [hidden]="_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PDE_PROGRESS_TEMPLATE_PART_PERCENT'"
+                        [cdType]="'PDE'"
+                        name="progresS_2" 
+                        [(ngModel)]="item.progresS_2">
+                    </all-code-select>
+                </td>
+                <!-- Lịch sử Định hình -->
+                <td [hidden]="_is_hidden_progress">
+                    <textarea name="{{editTable.name('notE_PROGRESS_2',in)}}" [(ngModel)]="item.notE_PROGRESS_2" [disabled]="true" style="width: 100%;" appTextareaAutoresize class="form-control transparent" type="text"></textarea>
+                </td>
+                <!-- Lắp ráp hoàn thiện -->
+                <td [hidden]="_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PDE_PROGRESS_TEMPLATE_PART_PERCENT'"
+                        [cdType]="'PDE'"
+                        name="progresS_3" 
+                        [(ngModel)]="item.progresS_3">
+                    </all-code-select>
+                </td>
+                <!-- Lịch sử Lắp ráp hoàn thiện -->
+                <td [hidden]="_is_hidden_progress">
+                    <textarea name="{{editTable.name('notE_PROGRESS_3',in)}}" [(ngModel)]="item.notE_PROGRESS_3" [disabled]="true" style="width: 100%;" appTextareaAutoresize class="form-control transparent" type="text"></textarea>
+                </td>
+                <!-- Duyệt hàng trắng -->
+                <td [hidden]="_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PDE_PROGRESS_TEMPLATE_PART_PERCENT'"
+                        [cdType]="'PDE'"
+                        name="progresS_4" 
+                        [(ngModel)]="item.progresS_4">
+                    </all-code-select>
+                </td>
+                <!-- Lịch sử Duyệt hàng trắng -->
+                <td [hidden]="_is_hidden_progress">
+                    <textarea name="{{editTable.name('notE_PROGRESS_4',in)}}" [(ngModel)]="item.notE_PROGRESS_4" [disabled]="true" style="width: 100%;" appTextareaAutoresize class="form-control transparent" type="text"></textarea>
+                </td>
+                <!-- Sơn -->
+                <td [hidden]="_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PDE_PROGRESS_TEMPLATE_PART_PERCENT'"
+                        [cdType]="'PDE'"
+                        name="progresS_5" 
+                        [(ngModel)]="item.progresS_5">
+                    </all-code-select>
+                </td>
+                <!-- Lịch sử Sơn -->
+                <td [hidden]="_is_hidden_progress">
+                    <textarea name="{{editTable.name('notE_PROGRESS_5',in)}}" [(ngModel)]="item.notE_PROGRESS_5" [disabled]="true" style="width: 100%;" appTextareaAutoresize class="form-control transparent" type="text"></textarea>
+                </td>
+                <!-- Duyệt sơn -->
+                <td [hidden]="_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PDE_PROGRESS_TEMPLATE_PART_PERCENT'"
+                        [cdType]="'PDE'"
+                        name="progresS_6" 
+                        [(ngModel)]="item.progresS_6">
+                    </all-code-select>
+                </td>
+                <!-- Lịch sử Duyệt sơn -->
+                <td [hidden]="_is_hidden_progress">
+                    <textarea name="{{editTable.name('notE_PROGRESS_6',in)}}" [(ngModel)]="item.notE_PROGRESS_6" [disabled]="true" style="width: 100%;" appTextareaAutoresize class="form-control transparent" type="text"></textarea>
+                </td>
+                <!-- Đóng gói -->
+                <td [hidden]="_is_hidden_progress">
+                    <all-code-select 
+                        [disabled]="disableInput"
+                        [cdName]="'PDE_PROGRESS_TEMPLATE_PART_PERCENT'"
+                        [cdType]="'PDE'"
+                        name="progresS_7" 
+                        [(ngModel)]="item.progresS_7">
+                    </all-code-select>
+                </td>
+                <!-- Lịch sử Đóng gói -->
+                <td [hidden]="_is_hidden_progress">
+                    <textarea name="{{editTable.name('notE_PROGRESS_7',in)}}" [(ngModel)]="item.notE_PROGRESS_7" [disabled]="true" class="form-control transparent" type="text"></textarea>
+                </td>
+                <!-- Ghi chú tiến độ -->
+                <td [hidden]="_is_hidden_progress">
+                    <textarea [disabled]="disableInput"
+                        class="form-control transparent"
+                        style="width: 100%;"
+                        appTextareaAutoresize
+                        name="{{editTable.name('noteS_PROGRESS',in)}}"
+                        [(ngModel)]="item.noteS_PROGRESS">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+<!-- End -->
+
+

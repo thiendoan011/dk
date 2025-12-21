@@ -1,0 +1,159 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button type="button" (click)='exportExcel()' title="dowload"
+            class="btn btn-primary"><i class="pi pi-download"></i>{{l('Add')}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã vật tư -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã vật tư")}}</span>
+                </th>
+                <!-- SL yêu cầu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL yêu cầu")}}</span>
+                </th>
+                <!-- SL đã đặt -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL đã đặt")}}</span>
+                </th>
+                <!-- SL đã mua -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL đã mua")}}</span>
+                </th>
+                <!-- SL đặt -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL đặt")}}</span>
+                </th>
+                <!-- SL đã về -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL đã về")}}</span>
+                </th>
+                <!-- SL từ kho -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL từ kho")}}</span>
+                </th>
+                <!-- SL đã bàn giao từ kho -->
+                <th>
+                    <span style="width: 100px;">{{l("SL đã bàn giao từ kho")}}</span>
+                </th>
+                <!-- Thành tiền(đã về) 
+                <th>
+                    <span style="white-space: nowrap;">{{l("Thành tiền(đã về)")}}</span>
+                </th>-->
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã vật tư -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('materiaL_CODE',in)}}" 
+                        [(ngModel)]="item.materiaL_CODE"/>
+                </td>
+                <!-- SL yêu cầu -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_REQUEST',in)}}"
+                        [(ngModel)]="item.quantitY_REQUEST">
+                    </money-input-5>
+                </td>
+                <!-- SL đã đặt -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_ORDERED',in)}}"
+                        [(ngModel)]="item.quantitY_ORDERED">
+                    </money-input-5>
+                </td>
+                <!-- SL đã mua -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_PURCHASED',in)}}"
+                        [(ngModel)]="item.quantitY_PURCHASED">
+                    </money-input-5>
+                </td>
+                <!-- SL đặt -->
+                <td>
+                    <money-input-5
+                        [disabled]='disableInput'
+                        [isDecimal_round5]="true"
+                        (focusout)="onChangeQuantityOrder(item)"
+                        name="{{editTable.name('quantitY_ORDER',in)}}"
+                        [(ngModel)]="item.quantitY_ORDER">
+                    </money-input-5>
+                </td>
+                <!-- SL đã về -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_RECEIVED',in)}}"
+                        [(ngModel)]="item.quantitY_RECEIVED">
+                    </money-input-5>
+                </td>
+                <!-- SL từ kho -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_INVENTORY',in)}}"
+                        [(ngModel)]="item.quantitY_INVENTORY">
+                    </money-input-5>
+                </td>
+                <!-- SL đã bàn giao từ kho -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_INVENTORY_RECEIVED',in)}}"
+                        [(ngModel)]="item.quantitY_INVENTORY_RECEIVED">
+                    </money-input-5>
+                </td>
+                <!-- Thành tiền(đã về) 
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('totaL_PRICE',in)}}"
+                        [(ngModel)]="item.totaL_PRICE">
+                    </money-input-5>
+                </td>-->
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<div class="row">
+    <div class="col-md-3" [hidden]="disableInput">
+        <div class="form-group">
+            <label (click)="onUpd()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu')}}
+            </label>
+        </div>
+    </div>
+</div>
+

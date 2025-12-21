@@ -1,0 +1,122 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button type="button" [hidden]="disableInput" class="btn btn-primary"
+            (click)="editTable.addNewItem()"><i class="pi pi-plus"></i>{{l("Add")}}
+        </button>
+        <button type="button" [hidden]="disableInput" class="btn btn-danger"
+            (click)="editTable.removeAllCheckedItem()"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- PYC xe -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("PYC xe")}}</span>
+                </th>
+                <!-- Tên xe -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên xe")}}</span>
+                </th>
+                <!-- Điểm bắt đầu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Điểm bắt đầu")}}</span>
+                </th>
+                <!-- Điểm kết thúc -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Điểm kết thúc")}}</span>
+                </th>
+                <!-- Ngày bắt đầu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ngày bắt đầu")}}</span>
+                </th>
+                <!-- Ngày kết thúc -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ngày kết thúc")}}</span>
+                </th>
+                <!-- Số km -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Số km")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- PYC xe -->
+                <td>
+                    <select2-custom
+                        [disabled]="disableInput"
+                        name="{{editTable.name('producT_ID',in)}}"
+                        [(ngModel)]="item.vhE_VEHICLE_REQUEST_ID"
+                        [(list)]="_inputModel.frE_FREIGHT_VEHICLE_REQUESTs"
+                        [valueMember]="'producT_ID'"
+                        [displayMember]="'producT_NAME'">
+                    </select2-custom>
+                </td>
+                <!-- Tên xe -->
+                <td>
+                    <input class="form-control transparent" 
+                        [disabled]="disableInput"
+                        name="{{editTable.name('vhE_VEHICLE_NAME',in)}}" 
+                        [(ngModel)]="item.vhE_VEHICLE_NAME"/>
+                </td>
+                <!-- Điểm bắt đầu -->
+                <td>
+                    <input class="form-control transparent" 
+                        [disabled]="disableInput"
+                        name="{{editTable.name('departurE_LOCATION_ID',in)}}" 
+                        [(ngModel)]="item.departurE_LOCATION_ID"/>
+                </td>
+                <!-- Điểm kết thúc -->
+                <td>
+                    <input class="form-control transparent" 
+                        [disabled]="disableInput"
+                        name="{{editTable.name('arrivaL_LOCATION_ID',in)}}" 
+                        [(ngModel)]="item.arrivaL_LOCATION_ID"/>
+                </td>
+                <!-- Ngày bắt đầu -->
+                <td>
+                    <date-control
+                        [disabled]="disableInput"
+                        [hasTime]="true"
+                        name="froM_DT"
+                        [(ngModel)]="item.froM_DT">
+                    </date-control>
+                </td>
+                <!-- Ngày kết thúc -->
+                <td>
+                    <date-control
+                        [disabled]="disableInput"
+                        [hasTime]="true"
+                        name="tO_DT"
+                        [(ngModel)]="item.tO_DT">
+                    </date-control>
+                </td>
+                <!-- Số km -->
+                <td>
+                    <money-input-5
+                        [disabled]="disableInput"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('distancE_KM',in)}}"
+                        [(ngModel)]="item.distancE_KM">
+                    </money-input-5>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+

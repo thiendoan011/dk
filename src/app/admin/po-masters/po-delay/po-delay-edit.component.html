@@ -1,0 +1,136 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("PO chậm sản xuất")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Trạng thái duyệt -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- ID phiếu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("ID phiếu")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="pO_DELAY_ID"
+                                    [(ngModel)]="inputModel.pO_DELAY_ID" />
+                            </div>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Người duyệt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="checkeR_NAME"
+                                    [(ngModel)]="inputModel.checkeR_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'AUTH_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="autH_STATUS" 
+                                    [(ngModel)]="inputModel.autH_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]='disableInput'
+                                    appTextareaAutoresize
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Chấp nhận đề nghị -->
+                        <div class="col-md-3" style="display: none;" *ngIf="editPageState == EditPageState.viewDetail && inputModel.autH_STATUS == 'U'">
+                            <div class="form-group">
+                                <label (click)="onApprove('P')"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Chấp nhận đề nghị')}}
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Từ chối đề nghị -->
+                        <div class="col-md-3" style="display: none;" *ngIf="editPageState == EditPageState.viewDetail && inputModel.autH_STATUS == 'U'">
+                            <div class="form-group">
+                                <label (click)="onApprove('R')"
+                                    class='btn btn-danger' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Từ chối đề nghị')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <po-delay-dt-edittable
+                        #poDelayDTEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [title]="'Danh sách PO chậm sản xuất'">
+                    </po-delay-dt-edittable>
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

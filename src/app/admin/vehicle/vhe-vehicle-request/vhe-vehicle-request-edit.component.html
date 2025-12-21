@@ -1,0 +1,276 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Phiếu yêu cầu xe")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Lịch sử trả về 
+                        <div class="col-md-12">
+                            <vhe-reject-modal
+                                [id]="inputModel.vhE_VEHICLE_REQUEST_ID"
+                                #reject_modal
+                                [page]="'VEHICLE'"
+                                [stage]="'HC'"
+                                [process]="'REJECT'"
+                                [showEnterRejectLog]="rejectInput"
+                                [showRejectLog]="true"
+                                (reject_out)="onReject($event)">
+                            </vhe-reject-modal>
+                        </div>-->
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <vhe-history-modal
+                                #history_modal
+                                [id]="inputModel.vhE_VEHICLE_REQUEST_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </vhe-history-modal>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Người duyệt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="checkeR_NAME"
+                                    [(ngModel)]="inputModel.checkeR_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái phiếu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái phiếu")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'AUTH_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="autH_STATUS" 
+                                    [(ngModel)]="inputModel.autH_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Mã phiếu yêu cầu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã phiếu yêu cầu")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="vhE_VEHICLE_REQUEST_CODE"
+                                    [(ngModel)]="inputModel.vhE_VEHICLE_REQUEST_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Phiếu vận chuyển hàng hóa 
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Phiếu vận chuyển hàng hóa'"
+                                [disableInput]="true"
+                                [displayText]="inputModel.frE_FREIGHT_CODE"
+                                (showModal)="onShowFREFreightModal()"
+                                (deleteDisplayText)="onDeleteFREFreight()"
+                                name="frE_FREIGHT_CODE">
+                            </input-select>
+                        </div>-->
+
+                        <!-- Biển số -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Biển số'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.vhE_VEHICLE_CODE"
+                                (showModal)="onShowVHEVehicleModal()"
+                                (deleteDisplayText)="onDeleteVHEVehicle()"
+                                name="vhE_VEHICLE_CODE">
+                            </input-select>
+                        </div>
+
+                        <!-- Tên xe -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên xe")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="vhE_VEHICLE_NAME"
+                                    [(ngModel)]="inputModel.vhE_VEHICLE_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- user yêu cầu -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'User yêu cầu'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.useR_REQUEST_ID"
+                                (showModal)="onShowTLUserModal()"
+                                (deleteDisplayText)="onDeleteTLUser()"
+                                name="useR_REQUEST_ID">
+                            </input-select>
+                        </div>
+                        
+                        <!-- Tài xế -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Tài xế'"
+                                [disableInput]="disableInput"
+                                [displayText]="inputModel.driveR_NAME"
+                                (showModal)="onShowVHEDriverModal()"
+                                (deleteDisplayText)="onDeleteVHEDriver()"
+                                name="driveR_NAME">
+                            </input-select>
+                        </div>
+                        <div class="col-md-12">
+                            <fieldset>
+                                <legend style='font-weight: bold; text-decoration:  underline'>{{l("Thời gian đi")}}</legend>
+                                <div class='row'>
+                                    <!-- Từ ngày -->
+                                    <div class='col-sm-6'>
+                                        <div class='form-group'>
+                                            <label>{{l('Từ ngày')}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                [hasTime]="true"
+                                                name="froM_DT"
+                                                [(ngModel)]="inputModel.froM_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                    <!-- Đến ngày -->
+                                    <div class='col-sm-6'>
+                                        <div class='form-group'>
+                                            <label>{{l('Đến ngày')}}</label>
+                                            <date-control
+                                                [disabled]="disableInput"
+                                                [hasTime]="true"
+                                                name="tO_DT"
+                                                [(ngModel)]="inputModel.tO_DT">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                         <!-- Điểm đi -->
+                         <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{l("Điểm đi")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="froM_LOCATION"
+                                    [(ngModel)]="inputModel.froM_LOCATION" />
+                            </div>
+                        </div>
+                         <!-- Điểm đến -->
+                         <div class="col-md-6">
+                            <div class="form-group">
+                                <label>{{l("Điểm đến")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="tO_LOCATION"
+                                    [(ngModel)]="inputModel.tO_LOCATION" />
+                            </div>
+                        </div>
+
+                        <!-- Lý do -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("Lý do")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]="disableInput"
+                                    name="reason"
+                                    [(ngModel)]="inputModel.reason">
+                                </textarea>
+                            </div>
+                        </div>
+                        <!-- Ghi chú -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]="disableInput"
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Gửi phê duyệt 
+                        <div class="col-md-3" [hidden]="disableSendAppr">
+                            <div class="form-group">
+                                <label (click)="onSendAppr()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi phê duyệt')}}
+                                </label>
+                            </div>
+                        </div>-->
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>
+
+<vhe-vehicle-modal [title]="'Tìm kiếm xe'" 
+(onSelect)='onSelectVHEVehicle($event)' #vheVehicleModal [multiple]="false">
+</vhe-vehicle-modal>  
+<fre-freight-modal [title]="'Tìm kiếm phiếu vận chuyển hàng hóa'" 
+(onSelect)='onSelectFREFreight($event)' #freFreightModal [multiple]="false">
+</fre-freight-modal>  
+<tl-user-modal [title]="'Tìm kiếm user'" 
+(onSelect)='onSelectTLUser($event)' #tlUserModal [multiple]="false">
+</tl-user-modal>  
+<vhe-driver-modal [title]="'Tìm kiếm tài xế'" 
+(onSelect)='onSelecVHEDriver($event)' #vheDriverModal [multiple]="false">
+</vhe-driver-modal>  

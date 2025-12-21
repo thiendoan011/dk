@@ -1,0 +1,546 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Mô tả chi tiết")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã mô tả chi tiết -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã mô tả chi tiết")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="producT_DETAIL_CODE"
+                                    [(ngModel)]="inputModel.producT_DETAIL_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên mô tả chi tiết -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên mô tả chi tiết")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="disableInput"
+                                    name="producT_DETAIL_NAME"
+                                    [(ngModel)]="inputModel.producT_DETAIL_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Loại vật liệu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Loại vật liệu")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    (onChangeSelect2)="onChangeProp()"
+                                    [cdName]="'MATERIAL_NN_TYPE'"
+                                    [cdType]="'PRODUCT'"
+                                    name="producT_DETAIL_TYPE" 
+                                    [(ngModel)]="inputModel.producT_DETAIL_TYPE">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Quy cách mô tả chi tiêt(MM) -->
+                        <div class="col-md-4">
+                            <div class="col-md-12">
+                                <label style="font-weight: bold;">{{l("")}}</label>
+                            </div>
+                            <label style="font-weight: bold;">{{l("Quy cách mô tả chi tiêt(MM)")}}</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Dày")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChangeProp()"
+                                            name="height"
+                                            [(ngModel)]="inputModel.height">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Rộng")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChangeProp()"
+                                            name="width"
+                                            [(ngModel)]="inputModel.width">
+                                        </money-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Dài")}}</label>
+                                        <money-input
+                                            [disabled]='disableInput'
+                                            (focusout)="onChangeProp()"
+                                            name="length"
+                                            [(ngModel)]="inputModel.length">
+                                        </money-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- M3 tinh chế -->
+                        <div class="col-md-4">
+                            <div class="col-md-12">
+                                <label style="font-weight: bold;">{{l("")}}</label>
+                            </div>
+                            <label style="font-weight: bold;">{{l("M3 tinh chế")}}</label>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Gỗ")}}</label>
+                                        <money-input-5
+                                            [disabled]='true'
+                                            [isDecimal_round5]="true" 
+                                            name="m3_WOOD"
+                                            [(ngModel)]="inputModel.m3_WOOD">
+                                        </money-input-5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("MDF")}}</label>
+                                        <money-input-5
+                                            [disabled]='true'
+                                            [isDecimal_round5]="true" 
+                                            name="m3_MDF"
+                                            [(ngModel)]="inputModel.m3_MDF">
+                                        </money-input-5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Ván ép")}}</label>
+                                        <money-input-5
+                                            [disabled]='true'
+                                            [isDecimal_round5]="true" 
+                                            name="m3_PLANK"
+                                            [(ngModel)]="inputModel.m3_PLANK">
+                                        </money-input-5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("M3_OKAL_PB")}}</label>
+                                        <money-input-5
+                                            [disabled]='disableInput'
+                                            [isDecimal_round5]="true" 
+                                            name="m3_OKAL_PB"
+                                            [(ngModel)]="inputModel.m3_OKAL_PB">
+                                        </money-input-5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GHI CHÚ NGUYÊN LIỆU -->
+                        <div class="col-md-4">
+                            <fieldset class="col-md-12 ml">
+                                <legend style="font-weight: bold!important;">{{l("GHI CHÚ NGUYÊN LIỆU")}}</legend>
+                                <div class="col-md-12 row">
+                                    <!-- Ghi chú phần gỗ -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{l("Ghi chú phần gỗ")}}</label>
+                                            <textarea class="form-control" type="text"
+                                                [disabled]='disableInput'
+                                                style="width: 100%;"
+                                                appTextareaAutoresize
+                                                name="nN_NOTES_WOOD"
+                                                [(ngModel)]="inputModel.nN_NOTES_WOOD">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <!-- Ghi chú phần ván -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{l("Ghi chú phần ván")}}</label>
+                                            <textarea class="form-control" type="text"
+                                                [disabled]='disableInput'
+                                                style="width: 100%;"
+                                                appTextareaAutoresize
+                                                name="nN_NOTES_PLANK"
+                                                [(ngModel)]="inputModel.nN_NOTES_PLANK">
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Yêu cầu chất lượng")}}</label>
+                                <textarea class="form-control" type="text"
+                                    [disabled]='disableInput'
+                                    style="width: 100%;"
+                                    appTextareaAutoresize
+                                    name="qualitY_REQUIREMENT"
+                                    [(ngModel)]="inputModel.qualitY_REQUIREMENT">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mô tả nguyên liệu")}}</label>
+                                <textarea class="form-control" type="text"
+                                    [disabled]='disableInput'
+                                    style="width: 100%;"
+                                    appTextareaAutoresize
+                                    name="materiaL_DESCRIPTION"
+                                    [(ngModel)]="inputModel.materiaL_DESCRIPTION">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- M2 DÁN VENEER CÁC MẶT CỦA MỘT CHI TIẾT -->
+                        <div class="col-md-12">
+                            <fieldset class="col-md-12 ml">
+                                <legend style="font-weight: bold!important;">{{l("M2 DÁN VENEER CÁC MẶT CỦA MỘT CHI TIẾT")}}</legend>
+                                <div class="col-md-12 row">
+                                    <!-- SỐ MẶT DÁN VENEER -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("SỐ MẶT DÁN VENEER")}}</label>
+                                            <all-code-select 
+                                                [disabled]="disableInput"
+                                                (onChangeSelect2)="onChangeProp()"
+                                                [cdName]="'VENEER_SPECIFI'"
+                                                [cdType]="'PRODUCT'"
+                                                name="veneeR_SPECIFI" 
+                                                [(ngModel)]="inputModel.veneeR_SPECIFI">
+                                            </all-code-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12"></div>
+                                    
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt chính 1.1(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="veneeR_11"
+                                                [(ngModel)]="inputModel.veneeR_11">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt chính 1.2(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="veneeR_12"
+                                                [(ngModel)]="inputModel.veneeR_12">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt phụ 2.1(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="veneeR_21"
+                                                [(ngModel)]="inputModel.veneeR_21">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt phụ 2.2(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="veneeR_22"
+                                                [(ngModel)]="inputModel.veneeR_22">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt cạnh ngắn 3.1(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="veneeR_31"
+                                                [(ngModel)]="inputModel.veneeR_31">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt cạnh ngắn 3.2(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="veneeR_32"
+                                                [(ngModel)]="inputModel.veneeR_32">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt cạnh dài 4.1(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="veneeR_41"
+                                                [(ngModel)]="inputModel.veneeR_41">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt cạnh dài 4.2(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="veneeR_42"
+                                                [(ngModel)]="inputModel.veneeR_42">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <!-- THÔNG TIN TIÊU CHUẨN DÁN VENEER CÁC MẶT CỦA MỘT CHI TIẾT -->
+                                    <div class="col-md-12">
+                                        <fieldset class="col-md-12 ml">
+                                            <legend style="font-weight: bold!important;">{{l("THÔNG TIN TIÊU CHUẨN DÁN VENEER CÁC MẶT CỦA MỘT CHI TIẾT")}}</legend>
+                                            <div class="col-md-12 row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>{{l("Mặt chính")}}</label>
+                                                        <textarea class="form-control" type="text"
+                                                            [disabled]='disableInput'
+                                                            style="width: 100%;"
+                                                            appTextareaAutoresize
+                                                            name="maiN_SIDE"
+                                                            [(ngModel)]="inputModel.maiN_SIDE">
+                                                        </textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>{{l("Mặt phụ")}}</label>
+                                                        <textarea class="form-control" type="text"
+                                                            [disabled]='disableInput'
+                                                            style="width: 100%;"
+                                                            appTextareaAutoresize
+                                                            name="seconD_SIDE"
+                                                            [(ngModel)]="inputModel.seconD_SIDE">
+                                                        </textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>{{l("Mặt dán cạnh")}}</label>
+                                                        <textarea class="form-control" type="text"
+                                                            [disabled]='disableInput'
+                                                            style="width: 100%;"
+                                                            appTextareaAutoresize
+                                                            name="edgE_SIDE"
+                                                            [(ngModel)]="inputModel.edgE_SIDE">
+                                                        </textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!-- THÔNG TIN SƠN CÁC MẶT CỦA MỘT CHI TIẾT -->
+                        <div class="col-md-12">
+                            <fieldset class="col-md-12 ml">
+                                <legend style="font-weight: bold!important;">{{l("THÔNG TIN SƠN CÁC MẶT CỦA MỘT CHI TIẾT")}}</legend>
+                                <div class="col-md-12 row">
+                                    <!-- SỐ MẶT DÁN SƠN -->
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>{{l("SỐ MẶT DÁN SƠN")}}</label>
+                                            <all-code-select 
+                                                [disabled]="disableInput"
+                                                (onChangeSelect2)="onChangeProp()"
+                                                [cdName]="'PAINT_SPECIFI'"
+                                                [cdType]="'PRODUCT'"
+                                                name="painT_SPECIFI" 
+                                                [(ngModel)]="inputModel.painT_SPECIFI">
+                                            </all-code-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12"></div>
+                                    
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt chính + phụ 1.1(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="painT_11"
+                                                [(ngModel)]="inputModel.painT_11">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt chính + phụ 1.2(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="painT_12"
+                                                [(ngModel)]="inputModel.painT_12">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt 2 - cạnh dài 2.1(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="painT_21"
+                                                [(ngModel)]="inputModel.painT_21">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt 2 cạnh dài 2.2(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="painT_22"
+                                                [(ngModel)]="inputModel.painT_22">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt 3 - cạnh ngắn 3.1(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="painT_31"
+                                                [(ngModel)]="inputModel.painT_31">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>{{l("Mặt 3 - cạnh ngắn 3.2(M2)")}}</label>
+                                            <money-input-5
+                                                [disabled]='true'
+                                                [isDecimal_round5]="true" 
+                                                name="painT_32"
+                                                [(ngModel)]="inputModel.painT_32">
+                                            </money-input-5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!-- Chi tiết khung -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("Chi tiết khung")}}</label>
+                                <textarea class="form-control" type="text"
+                                    [disabled]='disableInput'
+                                    name="description"
+                                    [(ngModel)]="inputModel.description">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control" type="text"
+                                    [disabled]='disableInput'
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Import excel 
+                        <div *ngIf="editPageState != EditPageState.viewDetail || inputModel.autH_STATUS == 'A'" class="col-md-3">
+                            <div class="form-group">
+                                <label class='btn btn-primary' type="button"
+                                    for="file-upload"
+                                    style="margin-top: 6px;color:white!important">
+                                    {{this.l('Import danh sách mô tả chi tiết')}}
+                                    <import-excel [id]="'file-upload'"
+                                        [hidden]="true"
+                                        [startPosition]="'A2'"
+                                        [disable]="disableInput"
+                                        (toArrayObject)='onImportExcel($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>-->
+
+                        <!-- Tải mẫu import excel 
+                        <div class="col-md-3" *ngIf="editPageState != EditPageState.viewDetail">
+                            <div class="form-group">
+                                <label class='btn btn-primary'
+                                    (click)="exportExcelTemplate()"
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('DownloadTemplate')}}
+                                </label>
+                            </div>
+                        </div>-->
+                    </div>
+                    <!-- Vật tư nguyên liệu -->
+                    <product-product-detail-material-edittable #productProductDetailMaterialEdittable
+                        [inputModel]="inputModel"
+                        [title]="'Danh sách vật tư'"
+                        [disableInput]='disableInput'>
+                    </product-product-detail-material-edittable>
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

@@ -1,0 +1,134 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin nhà cung cấp")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+                <!-- Begin Excel -->
+                <div class="col text-right mt-3 mt-md-0">
+                    <div class="btn-group dropdown mr-2">
+                        <button class=" btn btn-outline-success" (click)="exportExcel()">
+                            <i class="far fa-file-excel"></i>
+                            {{l("Xuất Excel")}}
+                        </button>
+                    </div>
+                </div>
+                <!-- End Excel -->
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Mã nhà cung cấp -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Mã nhà cung cấp")}}</label>
+                                        <input  type="text"
+                                            class="form-control m-input" 
+                                            name="suP_CODE"
+                                            [(ngModel)]="filterInput.suP_CODE">
+                                    </div>
+                                </div>
+
+                                <!-- Tên nhà cung cấp -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Tên nhà cung cấp")}}</label>
+                                        <input type="text"
+                                            class="form-control m-input"
+                                            name="suP_NAME"
+                                            [(ngModel)]="filterInput.suP_NAME" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã nhà cung cấp -->
+                                        <th sortField="suP_CODE">
+                                            <span>{{l("Mã nhà cung cấp")}}</span>
+                                        </th>
+                                        <!-- Tên nhà cung cấp-->
+                                        <th sortField="suP_NAME">
+                                            <span>{{l("Tên nhà cung cấp")}}</span>
+                                        </th>
+                                        <!-- Địa chỉ -->
+                                        <th sortField="addr">
+                                            <span>{{l("Địa chỉ")}}</span>
+                                        </th>
+                                        <!-- Người liên hệ -->
+                                        <th sortField="contacT_PERSON">
+                                            <span>{{l("Người liên hệ")}}</span>
+                                        </th>
+                                        <!-- Số điện thoại -->
+                                        <th sortField="tel">
+                                            <span>{{l("Số điện thoại")}}</span>
+                                        </th>
+                                        <!-- Email -->
+                                        <th sortField="email">
+                                            <span>{{l("Email")}}</span>
+                                        </th>
+                                        <!-- Trạng thái duyệt -->
+                                        <th sortField="AUTH_STATUS_NAME">
+                                            <span>{{l("Trạng thái duyệt")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.suP_CODE}}</td>
+                                        <td><span class="mo-header"></span>{{record.suP_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.addr}}</td>
+                                        <td><span class="mo-header"></span>{{record.contacT_PERSON}}</td>
+                                        <td><span class="mo-header"></span>{{record.tel}}</td>
+                                        <td><span class="mo-header"></span>{{record.email}}</td>
+                                        <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

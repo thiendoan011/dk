@@ -1,0 +1,374 @@
+<fieldset>
+    <legend style='font-weight: bold!important; font-size: 15px!important; text-decoration:  underline'>{{_title}}</legend>
+        <div class="row">
+        <!-- Begin Filter -->
+            <!-- Lệnh sản xuất -->
+            <div class="col-md-3">
+                <label>{{l('Lệnh sản xuất')}}</label>
+                <div class='user-group'>
+                    <input class='form-control'
+                        readonly
+                        name="r_CODE"
+                        [(ngModel)]="filterInput.r_CODE">
+                    <button type="button" class="btn btn-primary"
+                        (click)="showR()">{{l("...")}}
+                    </button>
+                </div>
+            </div>
+            <!-- PO -->
+            <div class="col-md-3">
+                <label>{{l('PO')}}</label>
+                <div class='user-group'>
+                    <input class='form-control'
+                        readonly
+                        name="pO_CODE"
+                        [(ngModel)]="filterInput.pO_CODE">
+                    <button type="button" class="btn btn-primary"
+                        (click)="showPO()">{{l("...")}}
+                    </button>
+                </div>
+            </div>
+            <!-- Hệ hàng -->
+            <div class="col-md-3">
+                <label>{{l('Hệ hàng')}}</label>
+                <div class='user-group'>
+                    <input class='form-control'
+                        readonly
+                        name="grouP_PRODUCT_CODE"
+                        [(ngModel)]="filterInput.grouP_PRODUCT_CODE">
+                    <button type="button" class="btn btn-primary"
+                        (click)="showGroupProduct()">{{l("...")}}
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12"></div>
+        
+            <!-- Sản phẩm -->
+            <div class="col-md-3">
+                <label>{{l('Sản phẩm')}}</label>
+                <div class='user-group'>
+                    <input class='form-control'
+                        readonly
+                        name="producT_CODE"
+                        [(ngModel)]="filterInput.producT_CODE">
+                    <button type="button" class="btn btn-primary"
+                        (click)="showProduct()">{{l("...")}}
+                    </button>
+                </div>
+            </div>
+            <!-- Cụm chi tiết -->
+            <div class="col-md-3">
+                <label>{{l('Cụm chi tiết')}}</label>
+                <div class='user-group'>
+                    <input class='form-control'
+                        readonly
+                        name="producT_GROUP_DETAIL_CODE"
+                        [(ngModel)]="filterInput.producT_GROUP_DETAIL_CODE">
+                    <button type="button" class="btn btn-primary"
+                        (click)="showProductGroupDetail()">{{l("...")}}
+                    </button>
+                </div>
+            </div>
+            <!-- Mô tả chi tiết -->
+            <div class="col-md-3">
+                <label>{{l('Mô tả chi tiết')}}</label>
+                <div class='user-group'>
+                    <input class='form-control'
+                        readonly
+                        name="producT_DETAIL_CODE"
+                        [(ngModel)]="filterInput.producT_DETAIL_CODE">
+                    <button type="button" class="btn btn-primary"
+                        (click)="showProductDetail()">{{l("...")}}
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-12"></div>
+        
+            <!-- Mã vật tư -->
+            <div class="col-md-3 required">
+                <label>{{l('Mã vật tư')}}</label>
+                <div class='user-group'>
+                    <input class='form-control'
+                        readonly
+                        name="materiaL_CODE"
+                        [(ngModel)]="filterInput.materiaL_CODE">
+                    <button type="button" class="btn btn-primary"
+                        (click)="showMaterial()">{{l("...")}}
+                    </button>
+                </div>
+            </div>
+        
+            <!-- Ngày cập nhật -->
+            <div class="col-md-3 required">
+                <label>{{l('Ngày cập nhật')}}</label>
+                <date-control
+                    [disabled]='disableInput'
+                    name="updatE_DT"
+                    [(ngModel)]="filterInput.updatE_DT">
+                </date-control>
+            </div>
+            <!-- Xóa điều kiện tìm kiếm -->
+            <div class="col-md-6">
+                <div class="row" style="margin-left: 0px;">
+                    <!-- Tìm kiếm -->
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-search"
+                            (click)="onSearch()">{{l("Tìm kiếm")}}
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-danger btn-search"
+                            (click)="onResetSearch()">{{l('Xóa điều kiện tìm kiếm')}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="editable-title-group">
+            <h5 class="popup-title col-md-12">{{l("Danh sách biên nhận import")}}</h5>
+            <div class="action-button">
+                <button [hidden]="disableInput" type="button" (click)='onRemove()'
+                    [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+                </button>
+            </div>
+        </div>
+        
+        <div class="primeng-datatable-container">
+            <editable-table #editTable class="custom-table ui-table" >
+                <thead>
+                    <tr>
+                        <!-- Checkbox -->
+                        <th>
+                            <span style="white-space: nowrap;">
+                                <checkbox-control [disabled]="disableInput"
+                                    (onchange)="editTable.checkAll($event.target.checked)"
+                                    [checked]="editTable.isCheckAll">
+                                </checkbox-control>
+                            </span>
+                        </th>
+                        <!-- Begin Table Column -->
+                        <!-- STT -->
+                        <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                        <!-- Lệnh sản xuất -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Lệnh sản xuất")}}</span>
+                        </th>
+                        <!-- PO -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("PO")}}</span>
+                        </th>
+                        <!-- Hệ hàng -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Hệ hàng")}}</span>
+                        </th>
+                        <!-- Sản phẩm -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Sản phẩm")}}</span>
+                        </th>
+                        <!-- Cụm chi tiết -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Cụm chi tiết")}}</span>
+                        </th>
+                        <!-- Mô tả chi tiết -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Mô tả chi tiết")}}</span>
+                        </th>
+                        <!-- Công đoạn -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Công đoạn")}}</span>
+                        </th>
+                        <!-- Bộ phận -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Bộ phận")}}</span>
+                        </th>
+                        <!-- Mã vật tư -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Mã vật tư")}}</span>
+                        </th>
+                        <!-- SL yêu cầu -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("SL yêu cầu")}}</span>
+                        </th>
+                        <!-- SL đã bàn giao -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("SL đã bàn giao")}}</span>
+                        </th>
+                        <!-- SL còn lại -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("SL còn lại")}}</span>
+                        </th>
+                        <!-- SL bàn giao -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("SL bàn giao")}}</span>
+                        </th>
+                        <!-- Ghi chú -->
+                        <th>
+                            <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                        </th>
+                        <!-- End Table Column -->
+        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                        class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                        [hidden]="item['page'] != editTable.currentPage"
+                        (click)="editTable.selectRow($event,item);updateView();">
+                        <!-- Checkbox -->
+                        <td class='center'>
+                            <span class="mo-header"></span>
+                            <checkbox-control [disabled]="disableInput"
+                                (onchange)="item.isChecked= $event.target.checked"
+                                [checked]="item['isChecked']">
+                            </checkbox-control>
+                        </td>
+                        <!-- STT -->
+                        <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                        <!-- Lệnh sản xuất -->
+                        <td>
+                            <input class="form-control transparent" 
+                                readonly
+                                name="{{editTable.name('r_CODE',in)}}" 
+                                [(ngModel)]="item.r_CODE"/>
+                        </td>
+                        <!-- PO -->
+                        <td>
+                            <input class="form-control transparent" 
+                                readonly
+                                name="{{editTable.name('pO_CODE',in)}}" 
+                                [(ngModel)]="item.pO_CODE"/>
+                        </td>
+                        <!-- Hệ hàng -->
+                        <td>
+                            <input class="form-control transparent" 
+                                readonly
+                                name="{{editTable.name('grouP_PRODUCT_CODE',in)}}" 
+                                [(ngModel)]="item.grouP_PRODUCT_CODE"/>
+                        </td>
+                        <!-- Sản phẩm -->
+                        <td>
+                            <input class="form-control transparent" 
+                                readonly
+                                name="{{editTable.name('producT_CODE',in)}}" 
+                                [(ngModel)]="item.producT_CODE"/>
+                        </td>
+                        <!-- Cụm chi tiết -->
+                        <td>
+                            <input class="form-control transparent" 
+                                readonly
+                                name="{{editTable.name('producT_GROUP_DETAIL_CODE',in)}}" 
+                                [(ngModel)]="item.producT_GROUP_DETAIL_CODE"/>
+                        </td>
+                        <!-- Mô tả chi tiết -->
+                        <td>
+                            <input class="form-control transparent" 
+                                readonly
+                                name="{{editTable.name('producT_DETAIL_CODE',in)}}" 
+                                [(ngModel)]="item.producT_DETAIL_CODE"/>
+                        </td>
+                        <!-- Công đoạn -->
+                        <td>
+                            <all-code-select 
+                                [disabled]="true"
+                                [cdName]="'PO_PRODUCT_HARDWAREVT-PART'"
+                                [cdType]="'PO'"
+                                name="{{editTable.name('producteD_PART_CODE',in)}}" 
+                                [(ngModel)]="item.producteD_PART_CODE">
+                            </all-code-select>
+                        </td>
+                        <!-- Bộ phận -->
+                        <td>
+                            <all-code-select 
+                                [disabled]="true"
+                                [cdName]="'PART'"
+                                [cdType]="'CM'"
+                                name="{{editTable.name('part',in)}}" 
+                                [(ngModel)]="item.part">
+                            </all-code-select>
+                        </td>
+                        <!-- Mã vật tư -->
+                        <td>
+                            <input class="form-control transparent" 
+                                readonly
+                                name="{{editTable.name('materiaL_CODE',in)}}" 
+                                [(ngModel)]="item.materiaL_CODE"/>
+                        </td>
+                        <!-- SL yêu cầu -->
+                        <td>
+                            <money-input-5
+                                [disabled]="true"
+                                [isDecimal_round5]="true"
+                                name="{{editTable.name('quantitY_ORDER',in)}}"
+                                [(ngModel)]="item.quantitY_ORDER">
+                            </money-input-5>
+                        </td>
+                        <!-- SL đã bàn giao -->
+                        <td>
+                            <money-input-5
+                                [disabled]="true"
+                                [isDecimal_round5]="true"
+                                name="{{editTable.name('quantitY_RECEIVED',in)}}"
+                                [(ngModel)]="item.quantitY_RECEIVED">
+                            </money-input-5>
+                        </td>
+                        <!-- SL còn lại -->
+                        <td>
+                            <money-input-5
+                                [disabled]="true"
+                                [isDecimal_round5]="true"
+                                name="{{editTable.name('quantitY_REMAIN',in)}}"
+                                [(ngModel)]="item.quantitY_REMAIN">
+                            </money-input-5>
+                        </td>
+                        <!-- SL bàn giao -->
+                        <td>
+                            <money-input-5
+                                [disabled]="disableInput"
+                                [isDecimal_round5]="true"
+                                (focusout)="onChangeQuantity()"
+                                name="{{editTable.name('quantitY_INVENTORY_RECEIVED',in)}}"
+                                [(ngModel)]="item.quantitY_INVENTORY_RECEIVED">
+                            </money-input-5>
+                        </td>
+                        <!-- Ghi chú -->
+                        <td>
+                            <input class="form-control transparent" 
+                                [disabled]="disableInput"
+                                name="{{editTable.name('notes',in)}}" 
+                                [(ngModel)]="item.notes"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </editable-table>
+        </div>
+
+        <div class='text-right'>
+            <label style="font-weight: 500; margin-top: 10px; font-size: 13px;">
+                {{l('Tổng SL bàn giao')+': '}}
+                {{totalInventoryReceived | moneyFormatPipe}}
+            </label>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row" style="margin-left: 0px;">
+                    <!-- Thêm biên nhận -->
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-search"
+                            (click)="onUpdMulti()">{{l("Thêm biên nhận")}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</fieldset>
+
+<pur-r-modal [title]="'Tìm kiếm lệnh sản xuất của phiếu yêu cầu mua hàng'" (onSelect)='onSelectR($event)' #rModal [multiple]="false"></pur-r-modal>
+<pur-po-modal [title]="'Tìm kiếm PO của phiếu yêu cầu mua hàng'" (onSelect)='onSelectPO($event)' #poModal [multiple]="false"></pur-po-modal>
+<pur-group-product-modal [title]="'Tìm kiếm hệ hàng của phiếu yêu cầu mua hàng'" (onSelect)='onSelectGroupProduct($event)' #groupProductModal [multiple]="false"></pur-group-product-modal>
+<pur-product-modal [title]="'Tìm kiếm sản phẩm của phiếu yêu cầu mua hàng'" (onSelect)='onSelectProduct($event)' #productModal [multiple]="false"></pur-product-modal>
+<pur-product-group-detail-modal [title]="'Tìm kiếm cụm chi tiết của phiếu yêu cầu mua hàng'" (onSelect)='onSelectProductGroupDetail($event)' #productGroupDetailModal [multiple]="false"></pur-product-group-detail-modal>
+<pur-product-detail-modal [title]="'Tìm kiếm mô tả chi tiết của phiếu yêu cầu mua hàng'" (onSelect)='onSelectProductDetail($event)' #productDetailModal [multiple]="false"></pur-product-detail-modal>
+<pur-material-modal [title]="'Tìm kiếm vật tư của phiếu yêu cầu mua hàng'" (onSelect)='onSelectMaterial($event)' #materialModal [multiple]="false"></pur-material-modal>
+<pur-unit-price-of-material-modal [title]="'Tìm kiếm đơn giá vật tư'" (onSelect)='onSelectUnitPriceOfMaterial($event)' #unitPriceOfMaterialModal [multiple]="false"></pur-unit-price-of-material-modal>

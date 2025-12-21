@@ -1,0 +1,182 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button [hidden]="_disableInput || _disableUpdate" type="button" (click)='onAdd()'
+            [disabled]="_disableInput || _disableUpdate" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="_disableInput || _disableUpdate" type="button" (click)='onRemove()'
+            [disabled]="_disableInput || _disableUpdate" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="_disableInput || _disableUpdate"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- ID -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("ID")}}</span>
+                </th>
+                <!-- Mã lệnh sản xuất -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã lệnh sản xuất")}}</span>
+                </th>
+                <!-- Tên lệnh sản xuất -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Tên lệnh sản xuất")}}</span>
+                </th>
+                <!-- Vật tư nguyên liệu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Vật tư nguyên liệu")}}</span>
+                </th>
+                <!-- Vật tư định hình -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Vật tư định hình")}}</span>
+                </th>
+                <!-- Vật tư lắp ráp -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Vật tư lắp ráp")}}</span>
+                </th>
+                <!-- Vật tư sơn -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Vật tư sơn")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="_disableInput || _disableUpdate"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- ID -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('puR_REQUISITION_R_ID',in)}}" 
+                        [(ngModel)]="item.puR_REQUISITION_R_ID"/>
+                </td>
+                <!-- Mã lệnh sản xuất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('r_CODE',in)}}" 
+                        [(ngModel)]="item.r_CODE"/>
+                </td>
+                <!-- Tên lệnh sản xuất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('r_NAME',in)}}" 
+                        [(ngModel)]="item.r_NAME"/>
+                </td>
+                <!-- Vật tư nguyên liệu -->
+                <td>
+                    <all-code-select
+                        [disabled]="true"
+                        [cdName]="'OPTION_YN_3'"
+                        [cdType]="'CM'"
+                        name="{{editTable.name('warehousE_MATERIAL_STATUS',in)}}"
+                        [(ngModel)]="item.warehousE_MATERIAL_STATUS">
+                    </all-code-select>
+                </td>
+                <!-- Vật tư định hình -->
+                <td>
+                    <all-code-select
+                        [disabled]="true"
+                        [cdName]="'OPTION_YN_3'"
+                        [cdType]="'CM'"
+                        name="{{editTable.name('warehousE_STRUCTURE_STATUS',in)}}"
+                        [(ngModel)]="item.warehousE_STRUCTURE_STATUS">
+                    </all-code-select>
+                </td>
+                <!-- Vật tư lắp ráp -->
+                <td>
+                    <all-code-select
+                        [disabled]="true"
+                        [cdName]="'OPTION_YN_3'"
+                        [cdType]="'CM'"
+                        name="{{editTable.name('warehousE_ASSEMBLY_STATUS',in)}}"
+                        [(ngModel)]="item.warehousE_ASSEMBLY_STATUS">
+                    </all-code-select>
+                </td>
+                <!-- Vật tư sơn -->
+                <td>
+                    <all-code-select
+                        [disabled]="true"
+                        [cdName]="'OPTION_YN_3'"
+                        [cdType]="'CM'"
+                        name="{{editTable.name('warehousE_PAINT_STATUS',in)}}"
+                        [(ngModel)]="item.warehousE_PAINT_STATUS">
+                    </all-code-select>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <input class="form-control transparent" 
+                        [disabled]="_disableInput || _disableUpdate"
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes"/>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<div class="row">
+    <div class="col-md-3" [hidden]="_disableInput || _disableUpdate">
+        <div class="form-group">
+            <label (click)="onUpd()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu')}}
+            </label>
+        </div>
+    </div>
+    <div class="col-md-3" [hidden]="_disableInput || !_disableUpdate">
+        <div class="form-group">
+            <label (click)="onUnLock()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Mở khóa')}}
+            </label>
+        </div>
+    </div>
+    <div class="col-md-3" [hidden]="_disableInput || _disableUpdate">
+        <div class="form-group">
+            <label (click)="onSaveAndLock()"
+                class='btn btn-danger' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu & Khóa')}}
+            </label>
+        </div>
+    </div>
+</div>
+
+<pur-requisition-r-modal (onSelect)='onSelectPopup($event)' #popupModal [multiple]="true"></pur-requisition-r-modal>

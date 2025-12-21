@@ -1,0 +1,55 @@
+<div id="content" class="m-content">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <div class="m-form m-form--label-align-right">
+                <div class="row">
+                    <!-- Begin -->
+                    <div class="col-md-12">
+                        <fieldset>
+                            <legend style='font-weight: bold!important; font-size: 15px; text-decoration:  underline'>{{_title}}</legend>
+                            <div class="row">
+                                <!-- Begin Filter -->
+                                <!-- Danh sách cụm chi tiết cách nhau bởi dấu phẩy -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Danh sách cụm chi tiết cách nhau bởi dấu phẩy")}}</label>
+                                        <input class="form-control"
+                                            name="PRODUCT_GROUP_DETAILS"
+                                            [(ngModel)]="filterInput.PRODUCT_GROUP_DETAILS" />
+                                    </div>
+                                </div>
+                                <!-- End Filter -->
+                                <div class="row col-md-12">
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <label (click)="onExportTemplate()" class='btn btn-primary' 
+                                            style="margin-top: 6px; color:white!important">
+                                            {{this.l('In Template')}}
+                                        </label>
+                                    </div>
+                                    <!-- Import template -->
+                                    <div class="form-group" style="padding-left: 15px">
+                                        <label class='btn btn-primary' type="button"
+                                            for="file-upload"
+                                            style="margin-top: 6px;color:white!important">
+                                            {{this.l('Import template')}}
+                                            <import-excel [id]="'file-upload'"
+                                                [hidden]="true"
+                                                [startPosition]="'A2'"
+                                                (toArrayObject)='onImportTemplate($event)'>
+                                            </import-excel>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <!-- End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

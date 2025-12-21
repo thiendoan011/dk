@@ -1,0 +1,171 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Loại vật liệu")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+
+                        <!-- Nhóm vật liệu -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Nhóm vật liệu")}}</label>
+                                <select2-custom 
+                                    [disabled]='disableInput'
+                                    [(list)]="mw_groups"
+                                    name="mW_GROUP_ID"
+                                    [(ngModel)]="inputModel.mW_GROUP_ID"
+                                    [valueMember]="'mW_GROUP_ID'"
+                                    [displayMember]="'mW_GROUP_CODE|mW_GROUP_NAME'"
+                                    (onChangeSelect2)='onSelectMWGroup($event)'>
+                                </select2-custom>
+                            </div>
+                        </div>
+
+                        <!-- Mã loại vật liệu -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Mã loại vật liệu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="mW_TYPE_CODE"
+                                    [(ngModel)]="inputModel.mW_TYPE_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên loại vật liệu -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Tên loại vật liệu")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]='disableInput'
+                                    appTextareaAutoresize
+                                    name="mW_TYPE_NAME"
+                                    [(ngModel)]="inputModel.mW_TYPE_NAME">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Mã loại vật liệu PKT -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã loại vật liệu PKT")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="mW_TYPE_PKT_CODE"
+                                    [(ngModel)]="inputModel.mW_TYPE_PKT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên loại vật liệu PKT -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên loại vật liệu PKT")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]='disableInput'
+                                    appTextareaAutoresize
+                                    name="mW_TYPE_PKT_NAME"
+                                    [(ngModel)]="inputModel.mW_TYPE_PKT_NAME">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Vật tư quan trọng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Vật tư quan trọng")}}</label>
+                                <all-code-select 
+                                    [disabled]='disableInput'
+                                    [cdName]="'OPTION_YN'"
+                                    [cdType]="'CM'"
+                                    name="iS_IMPORTANT" 
+                                    [(ngModel)]="inputModel.iS_IMPORTANT">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Đơn vị tính -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Đơn vị tính")}}</label>
+                                <select2-custom 
+                                    [disabled]='disableInput'
+                                    [(list)]="units"
+                                    name="uniT_ID"
+                                    [(ngModel)]="inputModel.uniT_ID"
+                                    [valueMember]="'uniT_ID'"
+                                    [displayMember]="'uniT_CODE|uniT_NAME'"
+                                    (onChangeSelect2)='onSelectMWGroup($event)'>
+                                </select2-custom>
+                            </div>
+                        </div>
+                        
+                        <!-- Đơn giá 
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Đơn giá")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="uniT_PRICE"
+                                    [(ngModel)]="inputModel.uniT_PRICE">
+                                </money-input-5>
+                            </div>
+                        </div>-->
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control" type="text"
+                                    [disabled]='disableInput'
+                                    appTextareaAutoresize
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+                    </div>
+                    <mw-type-supplier-price-edittable #mwTypeSupplierPriceEditTable
+                        [inputModel]="inputModel"
+                        [disableInput]='disableInput'>
+                    </mw-type-supplier-price-edittable>
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

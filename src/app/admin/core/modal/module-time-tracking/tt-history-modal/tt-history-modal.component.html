@@ -1,0 +1,93 @@
+<!-- Xem lịch sử xử lý -->
+<div>
+    <div id="accordionFilter" class="accordion md-accordion form-group" role="tablist">
+        <div class="card">
+            <div class="card-header black lighten-3 z-depth-1" style="padding: 1px 5px !important" role="tab">
+                <a class="white-text font-weight-bold" data-toggle="collapse" aria-expanded="true"
+                    href="#viewProcess"  
+                    aria-controls="viewProcess">
+                    <h6 class="mb-0 py-1">
+                        <i class="fas fa-angle-right" style="padding-right: 5px"></i>
+                        {{ this.l(title) }}
+                    </h6>
+                </a>
+            </div>
+            <div id="viewProcess"  class="collapse" role="tabpanel" aria-labelledby="heading" 
+                data-parent="#accordionFilter">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="editable-title-group mt-1" style="width: 100%">
+                            <h5 class="popup-title col-md-12 pl-3 ml-1" style="text-transform: initial" >
+                                {{ this.l("Lịch sử xử lý") }}
+                            </h5>
+                        </div>
+
+                        <div class="primeng-datatable-container col-md-12">
+                            <editable-table #tableProcessLog class="custom-table ui-table" >
+                                <thead>
+                                    <tr>
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{ l("No") }}</span>
+                                        </th>
+                                        <!-- Người tạo -->
+                                        <th class="center" style="width: 21%" sortField="makeR_ID" >
+                                            <span style="width: 150px">{{ l("Người tạo") }}</span>
+                                        </th>
+                                        <!-- Ngày tạo -->
+                                        <th class="center" style="width: 21%" sortField="creatE_DT" >
+                                            <span style="width: 155px">{{ l("Ngày tạo") }}</span>
+                                        </th>
+                                        <!-- Bước xử lý -->
+                                        <th class="center" style="width: 21%" sortField="procesS_DESC" >
+                                            <span style="width: 250px">{{ l("Bước xử lý") }}</span>
+                                        </th>
+                                        <!-- Nội dung -->
+                                        <th class="center" style="width: 35%" sortField="reason" >
+                                            <span style="width: 250px">{{ l("Nội dung") }}</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor=" let item of tableProcessLog.dataInPage; 
+                                        let in = index; trackBy: trackByFn">
+                                        <!-- STT -->
+                                        <td style="width: 40px" class="center"><span class="mo-header"></span > 
+                                            {{ item["no"] }} 
+                                        </td>
+                                        <!-- Người tạo -->
+                                        <td> <span class="mo-header"></span> 
+                                            {{ item.makeR_ID }} 
+                                        </td>
+                                        <!-- Ngày tạo -->
+                                        <td> <span class="mo-header"></span> 
+                                            {{ item.creatE_DT | dateTimeFormatPipe }} 
+                                        </td>
+                                        <!-- Bước xử lý -->
+                                        <td> <span class="mo-header"></span > 
+                                            {{ item.procesS_DESC }} 
+                                        </td>
+                                        <!-- Nội dung -->
+                                        <td> <span class="mo-header"></span> 
+                                            {{ item.reason }} 
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </editable-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .collapse:not(.in) {
+        display: none !important;
+    }
+
+    .collapse:not(.show) {
+        display: initial;
+    }
+</style>

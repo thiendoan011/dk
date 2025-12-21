@@ -1,0 +1,277 @@
+
+<div class="col-lg-4 col-md-4 col-sm-12 bg-white pt-4 pr-0">
+    <div class="shadow pt-3 br-color" style="display: block; cursor: pointer">
+        <canvas
+            baseChart
+            [data]="pieChartData1"
+            [labels]="pieChartLabels1"
+            [chartType]="pieChartType1"
+            [legend]="pieChartLegend1"
+            [colors]="pieChartColors1"
+            [options]="pieChartOptions1"
+            [plugins]="pieChartPlugins1"
+            (chartClick)="onClickChart1($event)"
+            height="280">
+        </canvas>
+    </div>
+    <form class="mt-4 row br-color">
+        <div class="text-left form-group ml-1">
+            <label>{{l("Từ ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="frM_DATE_CHART_1"
+                [(ngModel)]="filterInput.frM_DATE_CHART_1">
+            </date-control>
+        </div>
+        <div class="text-left form-group ml-1">
+            <label>{{l("Từ ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="tO_DATE_CHART_1"
+                [(ngModel)]="filterInput.tO_DATE_CHART_1">
+            </date-control>
+        </div>
+        <div class="col-md-12"></div>
+        <div class="text-left form-group row ml-1">
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onSearchChart01()">
+                <i class="fas fa-search search-btn"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="col-lg-4 col-md-4 col-sm-12 bg-white pt-4 pr-0">
+    <div class="shadow pt-3 br-color" style="display: block; cursor: pointer">
+        <canvas
+            baseChart
+            [data]="pieChartData2"
+            [labels]="pieChartLabels2"
+            [chartType]="pieChartType2"
+            [legend]="pieChartLegend2"
+            [colors]="pieChartColors2"
+            [options]="pieChartOptions2"
+            [plugins]="pieChartPlugins2"
+            (chartClick)="onClickChart2($event)"
+            height="280">
+        </canvas>
+    </div>
+    <form class="mt-4 row br-color">
+        <div class="text-left form-group ml-1">
+            <label>{{l("Từ ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="frM_DATE_CHART_2"
+                [(ngModel)]="filterInput.frM_DATE_CHART_2">
+            </date-control>
+        </div>
+        <div class="text-left form-group ml-1">
+            <label>{{l("Đến ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="tO_DATE_CHART_2"
+                [(ngModel)]="filterInput.tO_DATE_CHART_2">
+            </date-control>
+        </div>
+        <div class="col-md-12"></div>
+        <div class="text-left form-group row ml-1">
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onSearchChart02()">
+                <i class="fas fa-search search-btn"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="col-lg-4 col-md-4 col-sm-12 bg-white pt-4 pr-0">
+    <div class="shadow pt-3 br-color" style="display: block; cursor: pointer">
+        <canvas
+            baseChart
+            [data]="pieChartData3"
+            [labels]="pieChartLabels3"
+            [chartType]="pieChartType3"
+            [legend]="pieChartLegend3"
+            [colors]="pieChartColors3"
+            [options]="pieChartOptions3"
+            [plugins]="pieChartPlugins3"
+            (chartClick)="onClickChart3($event)"
+            height="280">
+        </canvas>
+    </div>
+    <form class="mt-4 row br-color">
+        <div class="text-left form-group ml-1">
+            <label>{{l("Từ ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="frM_DATE_CHART_3"
+                [(ngModel)]="filterInput.frM_DATE_CHART_3">
+            </date-control>
+        </div>
+        <div class="text-left form-group ml-1">
+            <label>{{l("Đến ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="tO_DATE_CHART_3"
+                [(ngModel)]="filterInput.tO_DATE_CHART_3">
+            </date-control>
+        </div>
+        <div class="col-md-12"></div>
+        <div class="text-left form-group row ml-1">
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onSearchChart03()">
+                <i class="fas fa-search search-btn"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="col-lg-4 col-md-4 col-sm-12 bg-white pt-4 pr-0">
+    <div class="shadow pt-3 br-color" style="display: block; cursor: pointer">
+        <canvas
+            baseChart
+            [data]="pieChartData4"
+            [labels]="pieChartLabels4"
+            [chartType]="pieChartType4"
+            [legend]="pieChartLegend4"
+            [colors]="pieChartColors4"
+            [options]="pieChartOptions4"
+            [plugins]="pieChartPlugins4"
+            (chartClick)="onClickChart4($event)"
+            height="280">
+        </canvas>
+    </div>
+    <form class="mt-4 row br-color">
+        <div class="text-left form-group ml-1">
+            <label>{{l("Từ ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="frM_DATE_CHART_4"
+                [(ngModel)]="filterInput.frM_DATE_CHART_4">
+            </date-control>
+        </div>
+        <div class="text-left form-group ml-1">
+            <label>{{l("Đến ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="tO_DATE_CHART_4"
+                [(ngModel)]="filterInput.tO_DATE_CHART_4">
+            </date-control>
+        </div>
+        <div class="col-md-12"></div>
+        <div class="text-left form-group row ml-1">
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onSearchChart04()">
+                <i class="fas fa-search search-btn"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="col-lg-4 col-md-4 col-sm-12 bg-white pt-4 pr-0">
+    <div class="shadow pt-3 br-color" style="display: block; cursor: pointer">
+        <canvas
+            baseChart
+            [data]="pieChartData5"
+            [labels]="pieChartLabels5"
+            [chartType]="pieChartType5"
+            [legend]="pieChartLegend5"
+            [colors]="pieChartColors5"
+            [options]="pieChartOptions5"
+            [plugins]="pieChartPlugins5"
+            (chartClick)="onClickChart5($event)"
+            height="280">
+        </canvas>
+    </div>
+    <form class="mt-4 row br-color">
+        <div class="text-left form-group ml-1">
+            <label>{{l("Từ ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="frM_DATE_CHART_5"
+                [(ngModel)]="filterInput.frM_DATE_CHART_5">
+            </date-control>
+        </div>
+        <div class="text-left form-group ml-1">
+            <label>{{l("Đến ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="tO_DATE_CHART_5"
+                [(ngModel)]="filterInput.tO_DATE_CHART_5">
+            </date-control>
+        </div>
+        <div class="col-md-12"></div>
+        <div class="text-left form-group row ml-1">
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onSearchChart05()">
+                <i class="fas fa-search search-btn"></i>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Biểu đồ Phiếu yêu cầu chung -->
+<div class="col-lg-4 col-md-4 col-sm-12 bg-white pt-4 pr-0">
+    <div class="shadow pt-3 br-color" style="display: block; cursor: pointer">
+        <canvas
+            baseChart
+            [data]="pieChartData6"
+            [labels]="pieChartLabels6"
+            [chartType]="pieChartType6"
+            [legend]="pieChartLegend6"
+            [colors]="pieChartColors6"
+            [options]="pieChartOptions6"
+            [plugins]="pieChartPlugins6"
+            (chartClick)="onClickChart6($event)"
+            height="280">
+        </canvas>
+    </div>
+    <form class="mt-4 row br-color">
+        <div class="text-left form-group ml-1">
+            <label>{{l("Từ ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="frM_DATE_CHART_6"
+                [(ngModel)]="filterInput.frM_DATE_CHART_6">
+            </date-control>
+        </div>
+        <div class="text-left form-group ml-1">
+            <label>{{l("Đến ngày")}}</label>
+            <div class="col-md-12"></div>
+            <date-control
+                [inpCss]="'form-control'"
+                name="tO_DATE_CHART_6"
+                [(ngModel)]="filterInput.tO_DATE_CHART_6">
+            </date-control>
+        </div>
+        <div class="col-md-12"></div>
+        <div class="text-left form-group row ml-1">
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="onSearchChart06()">
+                <i class="fas fa-search search-btn"></i>
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,210 @@
+<div [@routerTransition]>
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Cân đối năng lực")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Begin Filter -->
+                                <!-- Năm -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Năm")}}</label>
+                                        <input class="form-control" type="number"
+                                            name="YEAR_RATE"
+                                            [(ngModel)]="filterInput.YEAR_RATE" />
+                                    </div>
+                                </div>
+                                <!-- Hàng trắng DK -->
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Hàng trắng Dũng Khanh")}}</legend>
+                                        <div class='row'>
+                                            <!-- BQ. N.Sự hiện diện -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("BQ. N.Sự hiện diện")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="NUMBER_OF_EMPLOYEE_HT_DK"
+                                                        [(ngModel)]="filterInput.NUMBER_OF_EMPLOYEE_HT_DK" />
+                                                </div>
+                                            </div>
+
+                                            <!-- M3 hàng tháng cho 1 cont/ tháng -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("M3 hàng tháng cho 1 cont/ tháng")}}</label>
+                                                    <money-input-5
+                                                        [isDecimal_round5]="true" 
+                                                        name="M3_PER_CONT_HT_DK"
+                                                        [(ngModel)]="filterInput.M3_PER_CONT_HT_DK">
+                                                    </money-input-5>
+                                                </div>
+                                            </div>
+
+                                            <!-- % cần đạt -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("% cần đạt")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="PERCENT_NEED_HT_DK"
+                                                        [(ngModel)]="filterInput.PERCENT_NEED_HT_DK" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <!-- Sơn DK -->
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Sơn Dũng Khanh")}}</legend>
+                                        <div class='row'>
+                                            <!-- BQ. N.Sự hiện diện -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("BQ. N.Sự hiện diện")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="NUMBER_OF_EMPLOYEE_PAINT_DK"
+                                                        [(ngModel)]="filterInput.NUMBER_OF_EMPLOYEE_PAINT_DK" />
+                                                </div>
+                                            </div>
+
+                                            <!-- M3 hàng tháng cho 1 cont/ tháng -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("M3 hàng tháng cho 1 cont/ tháng")}}</label>
+                                                    <money-input-5
+                                                        [isDecimal_round5]="true" 
+                                                        name="M3_PER_CONT_PAINT_DK"
+                                                        [(ngModel)]="filterInput.M3_PER_CONT_PAINT_DK">
+                                                    </money-input-5>
+                                                </div>
+                                            </div>
+
+                                            <!-- % cần đạt -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("% cần đạt")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="PERCENT_NEED_PAINT_DK"
+                                                        [(ngModel)]="filterInput.PERCENT_NEED_PAINT_DK" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <!-- Hàng trắng HDP -->
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Hàng trắng Hưng Dũng Phát")}}</legend>
+                                        <div class='row'>
+                                            <!-- BQ. N.Sự hiện diện -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("BQ. N.Sự hiện diện")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="NUMBER_OF_EMPLOYEE_HT_HDP"
+                                                        [(ngModel)]="filterInput.NUMBER_OF_EMPLOYEE_HT_HDP" />
+                                                </div>
+                                            </div>
+
+                                            <!-- M3 hàng tháng cho 1 cont/ tháng -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("M3 hàng tháng cho 1 cont/ tháng")}}</label>
+                                                    <money-input-5
+                                                        [isDecimal_round5]="true" 
+                                                        name="M3_PER_CONT_HT_HDP"
+                                                        [(ngModel)]="filterInput.M3_PER_CONT_HT_HDP">
+                                                    </money-input-5>
+                                                </div>
+                                            </div>
+
+                                            <!-- % cần đạt -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("% cần đạt")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="PERCENT_NEED_HT_HDP"
+                                                        [(ngModel)]="filterInput.PERCENT_NEED_HT_HDP" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+
+                                <!-- Sơn HDP -->
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Sơn Hưng Dũng Phát")}}</legend>
+                                        <div class='row'>
+                                            <!-- BQ. N.Sự hiện diện -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("BQ. N.Sự hiện diện")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="NUMBER_OF_EMPLOYEE_PAINT_HDP"
+                                                        [(ngModel)]="filterInput.NUMBER_OF_EMPLOYEE_PAINT_HDP" />
+                                                </div>
+                                            </div>
+
+                                            <!-- M3 hàng tháng cho 1 cont/ tháng -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("M3 hàng tháng cho 1 cont/ tháng")}}</label>
+                                                    <money-input-5
+                                                        [isDecimal_round5]="true" 
+                                                        name="M3_PER_CONT_PAINT_HDP"
+                                                        [(ngModel)]="filterInput.M3_PER_CONT_PAINT_HDP">
+                                                    </money-input-5>
+                                                </div>
+                                            </div>
+
+                                            <!-- % cần đạt -->
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>{{l("% cần đạt")}}</label>
+                                                    <input class="form-control" type="number"
+                                                        name="PERCENT_NEED_PAINT_HDP"
+                                                        [(ngModel)]="filterInput.PERCENT_NEED_PAINT_HDP" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                
+                                <!-- End Filter -->
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-search"
+                                            (click)="exportToExcel()">{{l('In báo cáo')}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

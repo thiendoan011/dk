@@ -1,0 +1,234 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Phiếu yêu cầu làm mẫu")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <history-2-modal
+                                #history_modal
+                                [id]="inputModel.grouP_PRODUCT_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'"
+                                [trN_TYPE]="'TEMPLATE'"
+                                [stage]="'mau'">
+                            </history-2-modal>
+                        </div>
+
+                        <!-- Mã hệ hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã hệ hàng")}}</label>
+                                <input class="form-control" type="text"
+                                    readonly
+                                    style="color: blue; cursor: pointer;"
+                                    (click)="onViewDetailGroupProduct()"
+                                    name="grouP_PRODUCT_CODE"
+                                    [(ngModel)]="inputModel.grouP_PRODUCT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Người gửi yêu cầu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Người gửi yêu cầu")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="reQ_TEMPLATE_REQ_REQUESTER_NAME"
+                                    [(ngModel)]="inputModel.reQ_TEMPLATE_REQ_REQUESTER_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Phòng ban nhận triển khai -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Phòng ban nhận triển khai")}}</label>
+                                <input class="form-control" type="text"
+                                    [disabled]="true"
+                                    name="reQ_TEMPLATE_REQ_DEP_ID"
+                                    [(ngModel)]="inputModel.reQ_TEMPLATE_REQ_DEP_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu làm mẫu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu làm mẫu")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="reQ_TEMPLATE_REQ_DT"
+                                    [(ngModel)]="inputModel.reQ_TEMPLATE_REQ_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày khách xem mẫu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày khách xem mẫu")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="cuS_VIEW_TEMPLATE_DT"
+                                    [(ngModel)]="inputModel.cuS_VIEW_TEMPLATE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày yêu cầu hoàn thành làm mẫu -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ngày yêu cầu hoàn thành làm mẫu")}}</label>
+                                <date-control
+                                    [disabled]="true"
+                                    name="reQ_TEMPLATE_REQ_COMPLETE_DT"
+                                    [(ngModel)]="inputModel.reQ_TEMPLATE_REQ_COMPLETE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái tiếp nhận -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái tiếp nhận")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    name="reQ_TEMPLATE_REQ_STATUS" 
+                                    [(ngModel)]="inputModel.reQ_TEMPLATE_REQ_STATUS"
+                                    [cdName]="'PDE_REQ_TEMPLATE'"
+                                    [cdType]="'PDE'">
+                                </all-code-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12 modal-body">
+                        <!-- Tiếp nhận  -->
+                        <div class="col-md-2" *ngIf="showAcceptButton">
+                            <label></label>
+                            <div class="form-group">
+                                <label (click)="onAccept()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Tiếp nhận')}}
+                                </label>
+                            </div>
+                        </div>
+    
+                        <!-- Không tiếp nhận  -->
+                        <div class="col-md-2" *ngIf="showAcceptButton">
+                            <label></label>
+                            <div class="form-group">
+                                <label (click)="onShowNotAccept()" class='btn btn-danger' style="color:white!important">
+                                    {{this.l('Không tiếp nhận')}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Người đảm nhận -->
+                        <div class="col-md-4" >
+                            <div class="form-group">
+                                <label>{{l("Người đảm nhận")}}</label>
+                                <select2-custom
+                                    [disabled]="!showButtonSendProgressTemplate"
+                                    [(list)]="users"
+                                    [emptyText]="l('SelectAll')"
+                                    name="reQ_TEMPLATE_PROGRESS_EXACT_MAKER_ID"
+                                    [(ngModel)]="inputModel.reQ_TEMPLATE_PROGRESS_EXACT_MAKER_ID"
+                                    [valueMember]="'tlnanme'"
+                                    [displayMember]="'tlnanme|tlFullName'">
+                                </select2-custom>
+                            </div>
+                        </div>
+                        <!-- Gửi yêu cầu  -->
+                        <div class="col-md-2" *ngIf="showButtonSendProgressTemplate">
+                            <label></label>
+                            <div class="form-group">
+                                <label  (click)="onSendProgressTemplate()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Gửi yêu cầu')}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Export Phiếu yêu cầu làm mẫu -->
+                        <div class="col-md-3" *ngIf="showExportPYC">
+                            <label></label>
+                            <div class="form-group">
+                                <label (click)="onExportPYC()" class='btn btn-primary' style="color:white!important">
+                                    {{this.l('Export Phiếu yêu cầu làm mẫu')}}
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Thông tin yêu cầu từ khách -->
+                    <pde-infor-request-cus-attach-file
+                        #pdeInforRequestCusAttachFile
+                        [disableInput]='true'>
+                    </pde-infor-request-cus-attach-file>
+                    <!-- Bản vẽ kỹ thuật từ khách -->
+                    <pde-tech-request-cus-attach-file
+                        #pdeTechRequestCusAttachFile
+                        [disableInput]='true'>
+                    </pde-tech-request-cus-attach-file>
+                    <!-- Danh sách sản phẩm chọn làm mẫu -->
+                    <pde-req-template-product-template-edittable
+                        #pdeProductTemplateEditTable
+                        [inputModel]="inputModel"
+                        [title]="'Danh sách sản phẩm chọn làm mẫu'"
+                        [is_hidden_progress]="true"
+                        [disableInput]='true'>
+                    </pde-req-template-product-template-edittable>
+                    <!-- Thông tin làm mẫu từ bên bộ phận dự án mẫu gửi -->
+                    <pde-req-template-attach-file
+                        #pdeReqTemplateAttachFileEdittable
+                        [disableInput]='true'>
+                    </pde-req-template-attach-file>
+                    <!-- Thông tin chi tiết báo cáo cho từng công đoạn làm mẫu 
+                    <pde-progress-template-part-edittable
+                        #pdeProgressTemplatePartEdittable
+                        [disableInput]='true'>
+                    </pde-progress-template-part-edittable>-->
+                    <!-- Thông tin chi tiết báo cáo cho từng công đoạn làm mẫu -->
+                    <pde-req-template-product-template-edittable
+                        #pdeProductTemplate2EditTable
+                        [inputModel]="inputModel"
+                        [title]="'Thông tin chi tiết báo cáo cho từng công đoạn làm mẫu'"
+                        [is_hidden_progress]="false"
+                        [disableInput]='true'>
+                    </pde-req-template-product-template-edittable>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<cm-reject-modal #cmRejectModal [title]="'Nhập lý do từ chối tiếp nhận'" (onSelect)="onSelectNotAccept()" (onAcceptEvent)="getRecommendReject()"> </cm-reject-modal>

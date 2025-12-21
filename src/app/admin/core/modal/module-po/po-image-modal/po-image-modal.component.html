@@ -1,0 +1,88 @@
+<popup-frame [title]="title" (onSearchEvent)="buttonSearch()" (onSelectEvent)="accept()" #popupFrame>
+    <div class="horizontal-form filter-form" autocomplete="off">
+        <div class="m-form m-form--label-align-right">
+            <div class="row m--margin-bottom-30">
+                <!-- Begin Filter -->
+                <div class="col-md-4">
+                    <div class="form-group m-form__group align-items-center">
+                        <div class="form-group">
+                            <label>{{l("Mã hình ảnh")}}</label>
+                            <input [(ngModel)]="filterInput.reF_CODE" [ngModelOptions]="{standalone: true}" class="form-control m-input" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group m-form__group align-items-center">
+                        <div class="form-group">
+                            <label>{{l("Tên hình ảnh")}}</label>
+                            <input [(ngModel)]="filterInput.reF_NAME" [ngModelOptions]="{standalone: true}" class="form-control m-input" type="text">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- End Filter -->
+                <button hidden (click)="search()"></button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div isLoading="dataTable.isLoading" class="primeng-datatable-container">
+            <h5 class="popup-title col-md-12">{{l("Branch_Title")}}</h5>
+
+            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                <thead>
+                    <tr>
+                        <!-- Begin Table Column -->
+                        <th class="center" *ngIf="multiple">
+                            <checkbox-control #checkAllElement (change)="onCheckAll(checkAllElement.inputRef.nativeElement)" [checked]="checkAll">
+                            </checkbox-control>
+                        </th>
+                        <th class="center">
+                            <span style="width: 40px">{{l("No")}}</span>
+                        </th>
+                        <th sortField="urls">
+                            <span>{{l("Hình ảnh")}}</span>
+                        </th>
+                        <th sortField="reF_CODE">
+                            <span>{{l("Mã hình ảnh")}}</span>
+                        </th>
+                        <th sortField="reF_NAME">
+                            <span>{{l("Tên hình ảnh")}}</span>
+                        </th>
+                        <th sortField="descriptions">
+                            <span>{{l("Mô tả")}}</span>
+                        </th>
+                        <th sortField="notes">
+                            <span>{{l("Ghi chú")}}</span>
+                        </th>
+                        <!-- End Table Column -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let record of dataTable.records" class="selectable" (click)="selectRow($event,record)" (dblclick)="onDoubleClick(record)">
+                        <!-- Begin Table Value -->
+                        <td class="center" *ngIf="multiple">
+                            <span class="mo-header"></span>
+                            <checkbox-control (onchange)="setChecked($event.target.checked, record)" [checked]="record['isChecked']"></checkbox-control>
+                        </td>
+                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                        </td>
+                        <td>
+                            <span class="mo-header"></span>
+                            <a style="cursor: pointer;"  (click)="onViewDetailImage(record)">
+                                <img height="150" src="{{remoteServiceBaseUrl + record.urls}}"/>
+                            </a>
+                        </td>
+                        <td><span class="mo-header"></span>{{record.reF_CODE}}</td>
+                        <td><span class="mo-header"></span>{{record.reF_NAME}}</td>
+                        <td><span class="mo-header"></span>{{record.descriptions}}</td>
+                        <td><span class="mo-header"></span>{{record.notes}}</td>
+                        <!-- End Table Value -->
+                    </tr>
+                </tbody>
+            </core-table>
+        </div>
+    </div>
+</popup-frame>

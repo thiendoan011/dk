@@ -1,0 +1,364 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Phiếu nhập")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+
+                    <div class="row col-md-12 modal-body">
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-modal #history_modal
+                                [id]="inputModel.purchasE_ID"
+                                [process_id]="'PO_PURCHASE'"
+                                [trN_TYPE]="'PO_MASTER'" 
+                                [stage] = "'HC'">
+                            </po-history-modal>
+                        </div>
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã phiếu nhập -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã Phiếu nhập")}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="purchasE_CODE"
+                                    [(ngModel)]="inputModel.purchasE_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên Phiếu nhập -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên Phiếu nhập")}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="purchasE_NAME"
+                                    [(ngModel)]="inputModel.purchasE_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+
+                        <!-- Lệnh sản xuất -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Lệnh sản xuất')}}</label>
+                                <div class='file-input-group'>
+                                    <input type="text"
+                                        [disabled]="true"
+                                        class="form-control" 
+                                        name="r_CODE"
+                                        [(ngModel)]="inputModel.r_CODE" />
+                                    <button type="button" class="btn btn-primary"
+                                        style="margin-left:0px;"
+                                        [disabled]='true'
+                                        (click)="rModal()">{{l("...")}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái")}}</label>
+                                <all-code-select 
+                                    [disabled]="disableInput"
+                                    name="purchasE_IMPORT_PROCESS" 
+                                    [(ngModel)]="inputModel.purchasE_IMPORT_PROCESS"
+                                    [emptyText]="l('SelectAll')" 
+                                    [cdName]="'PURCHASE_IMPORT_PROCESS'"
+                                    [cdType]="'PO'">
+                                </all-code-select>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ngày dự kiến về -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày dự kiến về')}}</label>
+                                <date-control
+                                    [inpCss]="'form-control'"
+                                    name="expecteD_DT"
+                                    [disabled]="disableInput"
+                                    [(ngModel)]="inputModel.expecteD_DT">
+                                </date-control>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="notes"
+                                    [disabled]='true'
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                    <div class="col-md-12"></div>
+
+                </div>
+
+                <!-- Danh sách các file đính kèm -->
+                <po-attach-file #attachFile
+                    [disableInput]="false">
+                </po-attach-file>
+
+<!-- Begin Danh sách đặt hàng -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách đặt hàng")}}</h5>
+    <div class="action-button">
+        <button type="button" [disabled]="disableInput"
+            class="btn btn-primary"
+            (click)="editTablePurchaseState.addNewItem()"><i class="pi pi-plus"></i>{{l("Add")}}</button>
+        <button type="button" [disabled]="disableInput"
+            class="btn btn-danger"
+            (click)="editTablePurchaseState.removeAllCheckedItem()"><i
+                class="pi pi-times"></i>{{l("Delete")}}</button>
+    </div>
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]="" #editTablePurchaseState class="custom-table ui-table">
+        <thead>
+            <tr>
+                <th class="center">
+                    <span style="width: 40px">
+                        <checkbox-control
+                            (onchange)="editTablePurchaseState.checkAll($event.target.checked)"
+                            [checked]="editTablePurchaseState.isCheckAll">
+                        </checkbox-control>
+
+                    </span>
+                </th>
+
+                <th class="center">
+                    <span style="width: 40px">{{l("No")}}</span>
+                </th>
+
+                <!-- Tên vật tư -->
+                <th sortField="hardwarE_NAME" >
+                    <span style="width: 150px">{{l('Tên vật tư')}}</span>
+                </th>
+                <!-- Đơn vị tính -->
+                <th sortField="uniT_NAME">
+                    <span style="white-space: nowrap;">{{l('Đơn vị tính')}}</span>
+                </th>
+                <!-- SL đặt -->
+                <th sortField="quantitY_ORDER">
+                    <span style="white-space: nowrap;">{{l('SL đặt')}}</span>
+                </th>
+                <!-- SL nhập -->
+                <th sortField="quantitY_PURCHASED">
+                    <span style="white-space: nowrap;">{{l('SL nhập')}}</span>
+                </th>
+                <!-- SL xuất -->
+                <th sortField="quantitY_PURCHASED">
+                    <span style="white-space: nowrap;">{{l('SL xuất')}}</span>
+                </th>
+                <!-- SL hư hỏng -->
+                <th sortField="quantitY_PURCHASED">
+                    <span style="white-space: nowrap;">{{l('SL hư hỏng')}}</span>
+                </th>
+                <!-- SL còn lại -->
+                <th sortField="quantitY_REMAIN">
+                    <span style="white-space: nowrap;">{{l('SL còn lại')}}</span>
+                </th>
+                <!-- Số đơn đặt hàng -->
+                <th sortField="purchasE_NUMBER">
+                    <span style="white-space: nowrap;">{{l('Số đơn đặt hàng')}}</span>
+                </th>
+                <!-- Ghi chú nhập kho -->
+                <th sortField="noteS_IMPORT_WAREHOUSE">
+                    <span style="white-space: nowrap;">{{l('Ghi chú')}}</span>
+                </th>
+                <!-- Ghi chú xuất kho -->
+                <th sortField="noteS_IMPORT_WAREHOUSE">
+                    <span style="white-space: nowrap;">{{l('Ghi chú xuất kho')}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTablePurchaseState.dataInPage; let in= index"
+                [hidden]="item['page'] != editTablePurchaseState.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTablePurchaseState.selectRow($event,item);updateView()'>
+                <!-- Checkbox -->
+                <td [attr.dataindex]="in" class="center">
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        [disabled]="disableInput"
+                        name="{{editTablePurchaseState.name('isChecked',in)}}"
+                        [(ngModel)]="editTablePurchaseState.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        [disabled]="true"
+                        name="{{editTablePurchaseState.name('no',in)}}"
+                        [(ngModel)]="editTablePurchaseState.dataInPage[in]['no']">
+                </td>
+                <!-- Tên vật tư -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class='form-control'
+                        [disabled]="true"
+                        name="{{editTablePurchaseState.name('hardwarE_NAME',in)}}"
+                        [(ngModel)]="item.hardwarE_NAME">
+                </td>
+                <!-- Đơn vị tính -->
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            [disabled]="true"
+                            name="{{editTablePurchaseState.name('uniT_NAME',in)}}"
+                            class="form-control transparent" type="text"
+                            [(ngModel)]="item.uniT_NAME"/>
+                    </div>
+                </td>
+                <!-- SL đặt -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [disabled]="true"
+                            [isDecimal_round3]="true"
+                            class="transparent"
+                            name="{{editTablePurchaseState.name('quantitY_ORDER',in)}}"
+                            [(ngModel)]="item.quantitY_ORDER">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- SL nhập -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            id="quantitY_PURCHASED_{{in}}"
+                            (keydown.enter)="editTablePurchaseState.onEnterMoveDown($event, 'quantitY_PURCHASED', in)"
+                            [disabled]="disableInput"
+                            [isDecimal_round3]="true"
+                            class="transparent"
+                            (focusout)='onChangeAMT(item)'
+                            name="{{editTablePurchaseState.name('quantitY_PURCHASED',in)}}" 
+                            [(ngModel)]="item.quantitY_PURCHASED">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- SL xuất -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            id="quantitY_EXPORT_{{in}}"
+                            (keydown.enter)="editTablePurchaseState.onEnterMoveDown($event, 'quantitY_EXPORT', in)"
+                            [disabled]="disableInput"
+                            [isDecimal_round3]="true"
+                            class="transparent"
+                            (focusout)='onChangeAMT(item)'
+                            name="{{editTablePurchaseState.name('quantitY_EXPORT',in)}}" 
+                            [(ngModel)]="item.quantitY_EXPORT">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- SL hư hỏng -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            id="quantitY_WRONG_{{in}}"
+                            (keydown.enter)="editTablePurchaseState.onEnterMoveDown($event, 'quantitY_WRONG', in)"
+                            [disabled]="disableInput"
+                            [isDecimal_round3]="true"
+                            class="transparent"
+                            (focusout)='onChangeAMT(item)'
+                            name="{{editTablePurchaseState.name('quantitY_WRONG',in)}}" 
+                            [(ngModel)]="item.quantitY_WRONG">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- SL còn lại -->
+                <td>
+                    <div class="right"><span class="mo-header"></span>
+                        <money-input
+                            [disabled]="true"
+                            [isDecimal_round3]="true"
+                            class="transparent"
+                            name="{{editTablePurchaseState.name('quantitY_REMAIN',in)}}"
+                            [(ngModel)]="item.quantitY_REMAIN">
+                        </money-input>
+                    </div>
+                </td>
+                <!-- Số đơn đặt hàng -->
+                <td>
+                    <div class='file-input-group'>
+                        <input
+                            [disabled]="true"
+                            class="form-control transparent" type="text"
+                            name="{{editTablePurchaseState.name('purchasE_NUMBER',in)}}"
+                            [(ngModel)]="item.purchasE_NUMBER"/>
+                    </div>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea [disabled]="disableInput"
+                        id="noteS_IMPORT_WAREHOUSE_{{in}}"
+                        (keydown.enter)="editTablePurchaseState.onEnterMoveDown($event, 'noteS_IMPORT_WAREHOUSE', in)"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTablePurchaseState.name('noteS_IMPORT_WAREHOUSE',in)}}"
+                        [(ngModel)]="item.noteS_IMPORT_WAREHOUSE">
+                    </textarea>
+                </td>
+                <!-- Ghi chú xuất kho -->
+                <td>
+                    <textarea [disabled]="true"
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTablePurchaseState.name('noteS_EXPORT_WAREHOUSE',in)}}"
+                        [(ngModel)]="item.noteS_EXPORT_WAREHOUSE">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+<!-- Begin Danh sách đặt hàng -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<r-modal (onSelect)='onSelectR($event)' #rRModal [multiple]="false"></r-modal>

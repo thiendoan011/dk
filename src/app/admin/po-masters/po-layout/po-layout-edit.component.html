@@ -1,0 +1,142 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Layout")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+
+                    <div class="row col-md-12 modal-body">
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+
+                        <!-- Lịch sử trả về -->
+                        <div class="col-md-12">
+                            <history-modal
+                                [id]="inputModel.layouT_ID"
+                                #history_modal
+                                [showEnterRejectLog]="inputModel.autH_STATUS == 'U' && editPageState == EditPageState.viewDetail"
+                                [showProcessLog]="true"
+                                [showRejectLog]="true"
+                                [trN_TYPE]="'PO_LAYOUT'" 
+                                [buttonRejectKT]="false"
+                                [stage] = "'HC'"
+                                (reject_out)="onReject($event)">
+                            </history-modal>
+                        </div>
+
+                        <!-- Tên hệ hàng -->
+                        <div class="col-md-4">
+                            <input-select
+                                [labelTitle]="'Tên hệ hàng'"
+                                [disableInput]="disableInput || isCreated"
+                                [displayText]="inputModel.grouP_PRODUCT_NAME"
+                                (showModal)="showGroupProduct()"
+                                (deleteDisplayText)="deleteGroupProduct($event)"
+                                name="grouP_PRODUCT_NAME">
+                            </input-select>
+                        </div>
+                        <div class="col-md-8"></div>
+
+                        <!-- Mã layout -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Mã layout")}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="layouT_CODE"
+                                    [(ngModel)]="inputModel.layouT_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên layout -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Tên layout")}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="layouT_NAME"
+                                    [(ngModel)]="inputModel.layouT_NAME" />
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+
+                        <!-- Ghi chú layout -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú layout")}}</label>
+                                <textarea type="text"
+                                    class="form-control"
+                                    name="notes"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                        <!-- Gửi phê duyệt -->
+                        <div class='col-md-3' *ngIf="getButtonSendAppr">
+                            <div class='form-group'>
+                                <label class='btn btn-primary' 
+                                    (click)="onSendAppr()"
+                                    style="margin-top: 6px; color:white!important;">
+                                    {{l("Gửi phê duyệt")}}
+                                </label>
+                            </div>        
+                        </div>
+
+                        <!-- Trả về chọn Layout mới -->
+                        <div class='col-md-3' *ngIf="getButtonRejectChooseNewLayout">
+                            <div class='form-group'>
+                                <label class='btn btn-primary' 
+                                    (click)="onClickRejectToChooseNewLayout()"
+                                    style="margin-top: 6px; color:white!important;">
+                                    {{l("Trả về chọn Layout mới")}}
+                                </label>
+                            </div>        
+                        </div>
+                        
+                    <div class="col-md-12"></div>
+                </div>
+
+                <!-- Danh sách các file đính kèm -->
+                <po-layout-dt #polayoutdt
+                    [disableInput]='disableInput'>
+                </po-layout-dt>
+                <!-- Danh sách các file đính kèm -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<po-group-product-modal (onSelect)='onSelectGroupProduct($event)'
+    [multiple]='false' #poGroupProductModal></po-group-product-modal>

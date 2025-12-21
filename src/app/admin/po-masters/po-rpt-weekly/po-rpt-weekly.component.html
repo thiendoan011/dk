@@ -1,0 +1,475 @@
+<div [@routerTransition]>
+    <!-- <appToolbar #appToolbar></appToolbar> -->
+    <div id="page-list-area">
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l('Báo cáo tuần')}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Begin Thông tin PO -->
+        <page-po
+            [list_branch]="branches"
+            [title]="'Thông tin PO'">
+        </page-po>
+        <!-- End Thông tin PO -->
+
+        <!-- Begin Năng suất tuần -->
+        <page-dailykpi
+            [list_branch]="branches"
+            [title]="'Năng suất tuần'">
+        </page-dailykpi>
+        <!-- End Năng suất tuần -->
+
+        <!-- Begin Lịch sử cập nhật tiến độ sản xuất 
+        <po-rpt-weekly-page-2
+            [list_branch]="branches"
+            [title]="'Lịch sử cập nhật tiến độ sản xuất'">
+        </po-rpt-weekly-page-2>-->
+        <!-- End Lịch sử cập nhật tiến độ sản xuất -->
+        
+    </div>
+</div>
+
+
+<div id="content" class="m-content">
+    <div class="m-portlet m-portlet--mobile">
+        <div class="m-portlet__body">
+            <form class="horizontal-form filter-form" autocomplete="off">
+                <div class="m-form m-form--label-align-right">
+                    <div class="row m--margin-bottom-30">
+                        <!-- Số PO -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Số PO')}}</label>
+                                <input [(ngModel)]="filterInput.pO_CODE" name="pO_CODE"
+                                    (focusout)="onchangeFilterPO()"
+                                    class="form-control m-input" type="text">
+                            </div>
+                        </div>
+                        <!-- Tên PO -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Tên PO')}}</label>
+                                <input [(ngModel)]="filterInput.pO_NAME" name="pO_NAME"
+                                    (focusout)="onchangeFilterPO()"
+                                    class="form-control m-input" type="text">
+                            </div>
+                        </div>
+                        
+                        <!-- Đơn vị quản lý PO -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Đơn vị quản lý PO')}}</label>
+                                <select2-custom 
+                                    name="brancH_ID" 
+                                    [(ngModel)]="filterInput.brancH_ID" 
+                                    [(list)]="branches" 
+                                    [emptyText]="l('SelectAll')"
+                                    [valueMember]="'brancH_ID'" 
+                                    [displayMember]="'brancH_CODE|brancH_NAME'">
+                                </select2-custom>
+                            </div>
+                        </div>
+
+                        <!-- Ngày xuất của PO-->
+                        <div class="col-md-8">
+                            <fieldset>
+                                <legend style='font-weight: bold;
+                                    text-decoration: underline'>{{l("Ngày xuất của PO")}}</legend>
+                                <div class='row'>
+                                    <!-- Từ ngày -->
+                                    <div class='col-sm-4'>
+                                        <div class='form-group'>
+                                            <label>{{l('Từ ngày')}}</label>
+                                            <date-control
+                                                [inpCss]="'form-control'"
+                                                name="frmdate"
+                                                [(ngModel)]="filterInput.frmdate">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                    <!-- Đến ngày -->
+                                    <div class='col-sm-4'>
+                                        <div class='form-group'>
+                                            <label>{{l('Đến ngày')}}</label>
+                                            <date-control
+                                                [inpCss]="'form-control'"
+                                                name="todate"
+                                                [(ngModel)]="filterInput.todate">
+                                            </date-control>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class='col-md-12'></div>
+                        
+                        <!-- Tìm kiếm -->
+                        <div class='col-md-3'>
+                            <div class='form-group'>
+                                <label class='btn btn-primary' 
+                                        (click)="onSearch()"
+                                        style="margin-top: 6px; color:white!important;">
+                                    {{this.l('Tìm kiếm')}}
+                                </label>
+                            </div>        
+                        </div>
+                        <!-- Xuất báo cáo -->
+                        <div class='col-md-3'>
+                            <div class='form-group'>
+                                <label class='btn btn-primary' 
+                                        (click)="exportToExcel()"
+                                        style="margin-top: 6px; color:white!important;">
+                                    {{this.l('Xuất báo cáo')}}
+                                </label>
+                            </div>        
+                        </div>
+                        <div class='col-md-12'></div>        
+                    </div>
+                </div>
+            </form>
+
+            <div class="row">
+                <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                    <div class="spinner-border m-5" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                        <thead>
+                            <tr>
+                                <!-- Begin Table Column -->
+                                <th class="center">
+                                    <span style="width: 40px">{{l("No")}}</span>
+                                </th>
+                                <!-- Tên khách hàng -->
+                                <th sortField="customeR_NAME">
+                                    <span style="width: 100px">{{l("Tên khách hàng")}}</span>
+                                </th>
+                                <!-- Hệ hàng -->
+                                <th sortField="grouP_PRODUCT_NAME">
+                                    <span style="width: 100px">{{l("Hệ hàng")}}</span>
+                                </th>
+                                <!-- số PO# -->
+                                <th sortField="pO_CODE">
+                                    <span style="width: 250px">{{l("số PO#")}}</span>
+                                </th>
+                                <!-- Ghi chú -->
+                                <th sortField="notes">
+                                    <span style="width: 150px">{{l("Ghi chú")}}</span>
+                                </th>
+                                <!-- Mã lệnh sản xuất -->
+                                <th sortField="r_CODE">
+                                    <span style="width: 150px">{{l("Mã lệnh sản xuất")}}</span>
+                                </th>
+                                <!-- Ngày xuất theo khách hàng -->
+                                <th sortField="exporT_DATE">
+                                    <span style="width: 150px">{{l("Ngày xuất theo khách hàng")}}</span>
+                                </th>
+                                <!-- Tuần xuất thực tế 
+                                <th sortField="exporT_WEEK">
+                                    <span style="width: 150px">{{l("Tuần xuất thực tế")}}</span>
+                                </th>-->
+                                <!-- Năm xuất thực tế 
+                                <th sortField="exporT_YEAR">
+                                    <span style="width: 150px">{{l("Năm xuất thực tế")}}</span>
+                                </th>-->
+                                <!-- Ngày booking 
+                                <th sortField="bookingdt">
+                                    <span style="width: 150px">{{l("Ngày booking")}}</span>
+                                </th>-->
+                                <!-- Ngày cắt máng -->
+                                <th sortField="etD_DT">
+                                    <span style="width: 150px">{{l("Ngày cắt máng")}}</span>
+                                </th>
+                                <!-- Ngày ETD 
+                                <th sortField="etD_DT">
+                                    <span style="width: 150px">{{l("Ngày ETD")}}</span>
+                                </th>-->
+                                <!-- Ngày ETA 
+                                <th sortField="etA_DT">
+                                    <span style="width: 150px">{{l("Ngày ETA")}}</span>
+                                </th>-->
+                                <!-- Số vận đơn 
+                                <th sortField="waybilL_CODE">
+                                    <span style="width: 150px">{{l("Số vận đơn")}}</span>
+                                </th>-->
+                                <!-- Số sill 
+                                <th sortField="silL_CODE">
+                                    <span style="width: 150px">{{l("Số sill")}}</span>
+                                </th>-->
+                                <!-- Số cont -->
+                                <th sortField="conT_CODE">
+                                    <span style="width: 150px">{{l("Số cont")}}</span>
+                                </th>
+                                <!-- Số lượng cont -->
+                                <th sortField="qtY_CONT">
+                                    <span style="width: 150px">{{l("Số lượng cont")}}</span>
+                                </th>
+                                <!-- Phôi -->
+                                <th sortField="processinG1">
+                                    <span style="width: 150px">{{l("Phôi")}}</span>
+                                </th>
+                                <!-- Ngày dự kiến hoàn thành phôi -->
+                                <th sortField="expecteD_DT_PROCESS1">
+                                    <span style="width: 150px">{{l("Ngày dự kiến hoàn thành phôi")}}</span>
+                                </th>
+                                <!-- Lắp ráp hoàn thiện -->
+                                <th sortField="processinG2">
+                                    <span style="width: 150px">{{l("Lắp ráp hoàn thiện")}}</span>
+                                </th>
+                                <!-- Ngày dự kiến hoàn thành lắp ráp hoàn thiện -->
+                                <th sortField="expecteD_DT_PROCESS2">
+                                    <span style="width: 150px">{{l("Ngày dự kiến hoàn thành lắp ráp hoàn thiện")}}</span>
+                                </th>
+                                <!-- Sơn 1 -->
+                                <th sortField="processinG3">
+                                    <span style="width: 150px">{{l("Sơn 1")}}</span>
+                                </th>
+                                <!-- Sơn 2 -->
+                                <th sortField="processinG4">
+                                    <span style="width: 150px">{{l("Sơn 2")}}</span>
+                                </th>
+                                <!-- Sơn 3 -->
+                                <th sortField="processinG5">
+                                    <span style="width: 150px">{{l("Sơn 3")}}</span>
+                                </th>
+                                <!-- Đóng gói -->
+                                <th sortField="processinG6">
+                                    <span style="width: 150px">{{l("Đóng gói")}}</span>
+                                </th>
+                                <!-- Ngày dự kiến hoàn thành sơn và đóng gói -->
+                                <th sortField="expecteD_DT_PROCESS6">
+                                    <span style="width: 150px">{{l("Ngày dự kiến hoàn thành sơn và đóng gói")}}</span>
+                                </th>
+                                <!-- Vật tư hardware -->
+                                <th sortField="purchasE1">
+                                    <span style="width: 150px">{{l("Vật tư hardware")}}</span>
+                                </th>
+                                <!-- Ngày dự kiến vật tư hardware về -->
+                                <th sortField="expecteD_DT_PURCHASE2">
+                                    <span style="width: 150px">{{l("Ngày dự kiến vật tư hardware về")}}</span>
+                                </th>
+                                <!-- Vật tư bao bì -->
+                                <th sortField="purchasE2">
+                                    <span style="width: 150px">{{l("Vật tư bao bì")}}</span>
+                                </th>
+                                <!-- Ngày dự kiến vật tư bao bì về -->
+                                <th sortField="expecteD_DT_PURCHASE1">
+                                    <span style="width: 150px">{{l("Ngày dự kiến vật tư bao bì về")}}</span>
+                                </th>
+                                <!-- Đơn hàng khác(nếu có) -->
+                                <th>
+                                    <span style="width: 150px">{{l("Đơn hàng khác(nếu có)")}}</span>
+                                </th>
+                                <!-- Tất cả đơn hàng -->
+                                <th>
+                                    <span style="width: 150px">{{l("Tất cả đơn hàng")}}</span>
+                                </th>
+                                <!-- End Table Column -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let record of dataTable.records" class="selectable"
+                                (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                <!-- Begin Table Value -->
+                                <td class="center"><span
+                                        class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}}
+                                </td>
+                                <!-- Tên khách hàng -->
+                                <td><span class="mo-header"></span>{{record.customeR_NAME}}</td>
+                                <!-- Hệ hàng -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailGroupProduct(record)">
+                                        {{record.grouP_PRODUCT_NAME}}
+                                    </a>
+                                </td>
+                                <!-- số PO# -->
+                                <td><span class="mo-header"></span>{{record.pO_CODE}}</td>
+                                <!-- Ghi chú -->
+                                <td><span class="mo-header"></span>{{record.notes}}</td>
+                                <!-- Mã lệnh sản xuất -->
+                                <td><span class="mo-header"></span>{{record.r_CODE}}</td>
+                                <!-- Ngày xuất theo khách hàng -->
+                                <td><span class="mo-header"></span>{{record.exporT_DATE | dateFormatPipe}}</td>
+                                <!-- Tuần xuất thực tế 
+                                <td><span class="mo-header"></span>{{record.exporT_WEEK}}</td>-->
+                                <!-- Năm xuất thực tế 
+                                <td><span class="mo-header"></span>{{record.exporT_YEAR}}</td>-->
+                                <!-- Ngày booking 
+                                <td><span class="mo-header"></span>{{record.bookingdt}}</td>-->
+                                <!-- Ngày cắt máng -->
+                                <td><span class="mo-header"></span>{{record.trougH_CUTTING_DT | dateFormatPipe}}</td>
+                                <!-- Ngày ETD 
+                                <td><span class="mo-header"></span>{{record.etD_DT | dateFormatPipe}}</td>-->
+                                <!-- Ngày ETA 
+                                <td><span class="mo-header"></span>{{record.etA_DT | dateFormatPipe}}</td>-->
+                                <!-- Số vận đơn 
+                                <td><span class="mo-header"></span>{{record.waybilL_CODE}}</td>-->
+                                <!-- Số sill 
+                                <td><span class="mo-header"></span>{{record.silL_CODE}}</td>-->
+                                <!-- Số cont -->
+                                <td><span class="mo-header"></span>{{record.conT_CODE}}</td>
+                                <!-- Số lượng cont -->
+                                <td><span class="mo-header"></span>{{record.qtY_CONT}}</td>
+                                <!-- Phôi -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailProcessinG1(record)">
+                                        {{record.processinG1}}
+                                    </a>
+                                </td>
+                                <!-- Ngày dự kiến hoàn thành phôi -->
+                                <td><span class="mo-header"></span>{{record.expecteD_DT_PROCESS1 | dateFormatPipe}}</td>
+                                <!-- Lắp ráp hoàn thiện -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailProcessinG2(record)">
+                                        {{record.processinG2}}
+                                    </a>
+                                </td>
+                                <!-- Ngày dự kiến hoàn thành lắp ráp hoàn thiện -->
+                                <td><span class="mo-header"></span>{{record.expecteD_DT_PROCESS2 | dateFormatPipe}}</td>
+                                <!-- Sơn 1 -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailProcessinG3(record)">
+                                        {{record.processinG3}}
+                                    </a>
+                                </td>
+                                <!-- Sơn 2 -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailProcessinG4(record)">
+                                        {{record.processinG4}}
+                                    </a>
+                                </td>
+                                <!-- Sơn 3 -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailProcessinG5(record)">
+                                        {{record.processinG5}}
+                                    </a>
+                                </td>
+                                <!-- Đóng gói -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailProcessinG6(record)">
+                                        {{record.processinG6}}
+                                    </a>
+                                </td>
+                                <!-- Ngày dự kiến hoàn thành sơn và đóng gói -->
+                                <td><span class="mo-header"></span>{{record.expecteD_DT_PROCESS6 | dateFormatPipe}}</td>
+                                <!-- Vật tư hardware -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailPurchase21(record)">
+                                        {{record.purchasE21}}
+                                    </a>
+                                    {{l(" - ")}}
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailPurchase22(record)">
+                                        {{record.purchasE22}}
+                                    </a>
+                                </td>
+                                <!-- Ngày dự kiến vật tư hardware về -->
+                                <td><span class="mo-header"></span>{{record.expecteD_DT_PURCHASE2 | dateFormatPipe}}</td>
+                                <!-- Vật tư bao bì -->
+                                <td>
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailPurchase11(record)">
+                                        {{record.purchasE11}}
+                                    </a>
+                                    {{l(" - ")}}
+                                    <a style="color:blue; cursor: pointer;" (click)="onViewDetailPurchase12(record)">
+                                        {{record.purchasE12}}
+                                    </a>
+                                </td>
+                                <!-- Ngày dự kiến vật tư bao bì về -->
+                                <td><span class="mo-header"></span>{{record.expecteD_DT_PURCHASE1 | dateFormatPipe}}</td>
+                                <!-- Đơn hàng khác(nếu có) -->
+                                <td><span class="mo-header"></span>
+                                    <textarea
+                                        readonly
+                                        class="form-control transparent"
+                                        type="text"
+                                        [(ngModel)]="record.noteS_PURCHASE_OTHER">
+                                    </textarea>
+                                </td>
+                                <!-- Tất cả đơn hàng -->
+                                <td><span class="mo-header"></span>
+                                    <button class="btn btn-primary" type='button'
+                                        (click)="onShowAllPurchase(record)">
+                                        {{l('ClickHere').charAt(0).toUpperCase()+ l('ClickHere').slice(1)}}
+                                    </button>
+                                </td>
+                                <!-- End Table Value -->
+                            </tr>
+                        </tbody>
+                    </core-table>
+
+                    <!-- group-product -->
+                    <group-product #group_product 
+                        [hidden]="isHiddenGroupProduct">
+                    </group-product>
+                    <!-- group-product -->
+
+                    <!-- Part 1 -->
+                    <part-embryo #part_embryo 
+                        [hidden]="isHiddenPartEmbryo">
+                    </part-embryo>
+                    <!-- Part 1 -->
+
+                    <!-- Part 2 -->
+                    <part-2 #part_2 
+                        [hidden]="isHiddenPart2">
+                    </part-2>
+                    <!-- Part 2 -->
+
+                    <!-- Part 3 -->
+                    <part-3 #part_3 
+                        [hidden]="isHiddenPart3">
+                    </part-3>
+                    <!-- Part 3 -->
+
+                    <!-- Part 4 -->
+                    <part-4 #part_4 
+                        [hidden]="isHiddenPart4">
+                    </part-4>
+                    <!-- Part 4 -->
+
+                    <!-- Part 5 -->
+                    <part-5 #part_5 
+                        [hidden]="isHiddenPart5">
+                    </part-5>
+                    <!-- Part 5 -->
+
+                    <!-- Part 6 -->
+                    <part-6 #part_6 
+                        [hidden]="isHiddenPart6">
+                    </part-6>
+                    <!-- Part 6 -->
+
+                    <!-- purchase1 -->
+                    <purchase-1 #purchase1 
+                        [hidden]="isHiddenPurchase1">
+                    </purchase-1>
+                    <!-- purchase1 -->
+
+                    <!-- purchase2 -->
+                    <purchase-2 #purchase2 
+                        [hidden]="isHiddenPurchase2">
+                    </purchase-2>
+                    <!-- purchase2 -->
+
+                    <!-- allpurchase -->
+                    <all-purchase #allpurchase 
+                        [hidden]="isHiddenAllPurchase">
+                    </all-purchase>
+                    <!-- allpurchase -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

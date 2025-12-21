@@ -1,0 +1,580 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <!-- Begin Title -->
+                <a [routerLink]="rootPage()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title
+                    m-subheader__title--separator link-to-list-page">
+                    <span>{{l("Tiến độ Veneer")}}</span>
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+                <!-- End Title -->
+            </div>
+            <div class="col text-right mt-3 mt-md-0">
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Form -->
+                <form #editForm="ngForm" id="editForm" novalidate
+                    (ngSubmit)="saveInput()" autocomplete="off">
+
+                    <div class="row col-md-12 modal-body">
+
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <history-modal
+                                [id]="inputModel.pO_PRODUCTED_PART_VENEER_ID"
+                                #history_modal
+                                [showEnterRejectLog]="false"
+                                [showProcessLog]="true"
+                                [showRejectLog]="false"
+                                [trN_TYPE]="'PO_PRODUCTED_PART_VENEER'" 
+                                [buttonRejectKT]="false"
+                                [stage] = "'PURCHASE'"
+                                (reject_out)="onReject($event)">
+                            </history-modal>
+                        </div>
+                        
+                        <!-- Mã tiến độ -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Mã tiến độ')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="pO_PRODUCTED_PART_VENEER_CODE"
+                                    [(ngModel)]="inputModel.pO_PRODUCTED_PART_VENEER_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên tiến độ -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Tên tiến độ')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="pO_PRODUCTED_PART_VENEER_NAME"
+                                    [(ngModel)]="inputModel.pO_PRODUCTED_PART_VENEER_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Khách hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group required">
+                                <label>{{l("Khách hàng")}}</label>
+                                <div class='file-input-group'>
+                                    <input [disabled]="true"
+                                        class="form-control" type="text"
+                                        #customeR_NAME="ngModel" name="customeR_NAME"
+                                        [(ngModel)]="inputModel.customeR_NAME">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mã PO -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Mã PO')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="pO_CODE"
+                                    [(ngModel)]="inputModel.pO_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Tên PO -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Tên PO')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="pO_NAME"
+                                    [(ngModel)]="inputModel.pO_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- R -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('R')}}</label>
+                                <input [disabled]="true"
+                                    class="form-control" type="text"
+                                    name="r_CODE"
+                                    [(ngModel)]="inputModel.r_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Số lượng cont -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Số lượng cont")}}</label>
+                                <money-input 
+                                    [disabled]="true"
+                                    [isDecimal_round3]="true" 
+                                    name="qtY_CONT"
+                                    [(ngModel)]="inputModel.qtY_CONT">
+                                </money-input>
+                            </div>
+                        </div>
+
+                        <!-- Ngày dự kiến về -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày dự kiến về')}}</label>
+                                <date-control
+                                    [inpCss]="'form-control'"
+                                    name="expecteD_DT"
+                                    [disabled]="true"
+                                    [(ngModel)]="inputModel.expecteD_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Ngày gửi yêu cầu đến phong KH-VT -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l('Ngày gửi yêu cầu đến phong KH-VT')}}</label>
+                                <date-control
+                                    [inpCss]="'form-control'"
+                                    name="senD_APPROVE_DT"
+                                    [disabled]="true"
+                                    [(ngModel)]="inputModel.senD_APPROVE_DT">
+                                </date-control>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái tiến độ -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái tiến độ")}}</label>
+                                <all-code-select 
+                                    name="autH_STATUS" 
+                                    [disabled]="true"
+                                    [(ngModel)]="inputModel.autH_STATUS"
+                                    [cdName]="'PO_PRODUCTED_PART_VENEER--AUTH_STATUS'"
+                                    [cdType]="'PO'">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái đơn hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái đơn hàng")}}</label>
+                                <all-code-select 
+                                    name="purchasE_AUTH_STATUS" 
+                                    [disabled]="true"
+                                    [(ngModel)]="inputModel.purchasE_AUTH_STATUS"
+                                    [cdName]="'PO_PRODUCTED_PART_VENEER--PURCHASE_AUTH_STATUS'"
+                                    [cdType]="'PO'">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái nhập kho -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái nhập kho")}}</label>
+                                <all-code-select 
+                                    name="purchasE_STATE_AUTH_STATUS" 
+                                    [disabled]="true"
+                                    [(ngModel)]="inputModel.purchasE_STATE_AUTH_STATUS"
+                                    [cdName]="'PO_PRODUCTED_PART_VENEER--PURCHASE_STATE_AUTH_STATUS'"
+                                    [cdType]="'PO'">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú tiến độ -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú tiến độ")}}</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="notes"
+                                    [disabled]='disableInput'
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú đơn hàng -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú đơn hàng")}}</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="purchasE_NOTES"
+                                    [disabled]='true'
+                                    [(ngModel)]="inputModel.purchasE_NOTES">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú nhập kho -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú nhập kho")}}</label>
+                                <textarea
+                                    class="form-control" type="text"
+                                    name="purchasE_STATE_NOTES"
+                                    [disabled]='true'
+                                    [(ngModel)]="inputModel.purchasE_STATE_NOTES">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Gửi yêu cầu đến phòng KH-VT -->
+                        <div class="col-md-3" *ngIf="disableInputSendAppr">
+                            <div class="form-group">
+                                <label  (click)="sendApprove()" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi yêu cầu đến phòng KH-VT')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Import excel -->
+                        <div class="col-md-3" [hidden]="disableInputImportExcel">
+                            <div class="form-group">
+                                <label  for="file-upload" type="button" class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                    {{this.l('Import excel')}}
+                                    <import-excel [id]="'file-upload'"
+                                        [hidden]="true"
+                                        [startPosition]="'A2'"
+                                        [disable]="disableInput"
+                                        (toArrayObject)='onImportExcel($event)'>
+                                    </import-excel>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Tải mẫu import excel -->
+                        <div class="col-md-3" [hidden]="disableInputImportExcel">
+                            <div class="form-group">
+                                <label (click)="exportExcelTemplate()"
+                                    class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                    {{this.l('Tải mẫu import excel')}}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Xuất file excel tiến độ -->
+                        <div class="col-md-3" [hidden]="disableInputImportExcel">
+                            <div class="form-group">
+                                <label (click)="exportExcelProductedPart()"
+                                    class='btn btn-primary' style="margin-top: 6px; color:white!important">
+                                    {{this.l('Xuất file excel tiến độ')}}
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+<!-- Begin Danh sách công đoạn -->
+                    <div class="editable-title-group">
+                        <h5 class="popup-title col-md-12">{{l('Thông tin quy cách dán VENEER')}}</h5>
+                        <div class="action-button">
+                            <button type="button" [disabled]="disableInput"
+                                class="btn btn-primary"
+                                (click)="onAddProductedPartVeneerSpecification()">
+                                <i class="pi pi-plus"></i>{{l("Add")}}
+                            </button>
+                            <button type="button" [disabled]="disableInput"
+                                class="btn btn-danger"
+                                (click)="onRemoveProductedPartVeneerSpecification()">
+                                <i class="pi pi-times"></i>{{l("Delete")}}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="primeng-datatable-container">
+                        <editable-table
+                            [requiredFields]=""
+                            #editTableProductedPartVeneerSpecification class="custom-table ui-table">
+                            <thead>
+                                <tr>
+                                    <!-- Checkbox -->
+                                    <th>
+                                        <span style="width: 40px">
+                                            <checkbox-control
+                                                (onchange)="editTableProductedPartVeneerSpecification.checkAll($event.target.checked)"
+                                                [checked]="editTableProductedPartVeneerSpecification.isCheckAll">
+                                            </checkbox-control>
+                                        </span>
+                                    </th>
+
+                                    <!-- STT -->
+                                    <th><span style="width: 40px">{{l("No")}}</span></th>
+                                    <!-- Tên hệ hàng -->
+                                    <th  sortField="grouP_PRODUCT_NAME">
+                                        <span style="white-space: nowrap">{{l('Tên hệ hàng')}}</span>
+                                    </th>
+                                    <!-- Mã sản phẩm -->
+                                    <th  sortField="producT_CODE">
+                                        <span style="white-space: nowrap">{{l('Mã sản phẩm ')}}</span>
+                                    </th>
+                                    <!-- Tên sản phẩm -->
+                                    <th  sortField="producT_NAME">
+                                        <span style="white-space: nowrap">{{l('Tên sản phẩm')}}</span>
+                                    </th>
+                                    <!-- Cụm chi tiết -->
+                                    <th  sortField="buncH_DETAIL">
+                                        <span style="white-space: nowrap">{{l('Cụm chi tiết')}}</span>
+                                    </th>
+                                    <!-- Số lượng yêu cầu -->
+                                    <th  sortField="quantitY_REQUEST">
+                                        <span style="white-space: nowrap">{{l('Số lượng yêu cầu')}}</span>
+                                    </th>
+                                    <!-- Mô tả chi tiết -->
+                                    <th  sortField="desC_DETAIL">
+                                        <span style="white-space: nowrap">{{l('Mô tả chi tiết')}}</span>
+                                    </th>
+                                    <!-- Mã quy cách -->
+                                    <th  sortField="pO_PRODUCTED_PART_VENEER_SPECIFICATION_CODE">
+                                        <span style="white-space: nowrap">{{l('Mã quy cách')}}</span>
+                                    </th>
+                                    <!-- Loại ván -->
+                                    <th  sortField="planK_TYPE">
+                                        <span style="white-space: nowrap">{{l('Loại ván')}}</span>
+                                    </th>
+                                    <!-- Chiều dày tinh chế -->
+                                    <th  sortField="planK_REFINED_HEIGHT">
+                                        <span style="white-space: nowrap">{{l('Chiều dày tinh chế')}}</span>
+                                    </th>
+                                    <!-- Chiều rộng tinh chế -->
+                                    <th  sortField="planK_REFINED_WIDTH">
+                                        <span style="white-space: nowrap">{{l('Chiều rộng tinh chế')}}</span>
+                                    </th>
+                                    <!-- Chiều dài tinh chế -->
+                                    <th  sortField="planK_REFINED_LENGTH">
+                                        <span style="white-space: nowrap">{{l('Chiều dài tinh chế')}}</span>
+                                    </th>
+                                    <!-- Chiều dày cắt ván -->
+                                    <th  sortField="planK_CUT_HEIGHT">
+                                        <span style="white-space: nowrap">{{l('Chiều dày cắt ván')}}</span>
+                                    </th>
+                                    <!-- Chiều rộng cắt ván -->
+                                    <th  sortField="planK_CUT_WIDTH">
+                                        <span style="white-space: nowrap">{{l('Chiều rộng cắt ván')}}</span>
+                                    </th>
+                                    <!-- Chiều dài cắt ván -->
+                                    <th  sortField="planK_CUT_LENGTH">
+                                        <span style="white-space: nowrap">{{l('Chiều dài cắt ván')}}</span>
+                                    </th>
+                                    <!-- Mặt chính dán lần một -->
+                                    <th  sortField="planK_MAIN_1">
+                                        <span style="white-space: nowrap">{{l('Mặt chính dán lần một')}}</span>
+                                    </th>
+                                    <!-- Mặt chính dán lần hai -->
+                                    <th  sortField="planK_MAIN_2">
+                                        <span style="white-space: nowrap">{{l('Mặt chính dán lần hai')}}</span>
+                                    </th>
+                                    <!-- Mặt phụ dán lần một -->
+                                    <th  sortField="planK_SUB_1">
+                                        <span style="white-space: nowrap">{{l('Mặt phụ dán lần một')}}</span>
+                                    </th>
+                                    <!-- Mặt phụ dán lần hai -->
+                                    <th  sortField="planK_SUB_2">
+                                        <span style="white-space: nowrap">{{l('Mặt phụ dán lần hai')}}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editTableProductedPartVeneerSpecification.dataInPage; let in= index"
+                                    [hidden]="item['page'] != editTableProductedPartVeneerSpecification.currentPage"
+                                    class="selectable {{item['editableSelected']? 'selected' :''}}"
+                                    (click)='editTableProductedPartVeneerSpecification.selectRow($event,item);updateView()'>
+                                    <!-- Checkbox -->
+                                    <td [attr.dataindex]="in">
+                                        <span class="mo-header"></span>
+                                        <checkbox-control
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('isChecked',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['isChecked']">
+                                        </checkbox-control>
+                                    </td>
+
+                                    <!-- STT -->
+                                    <td><span class="mo-header"></span>
+                                        <input class="label"
+                                            [disabled]="true"
+                                            name="{{editTableProductedPartVeneerSpecification.name('no',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['no']">
+                                    </td>
+                                    <!-- Tên hệ hàng -->
+                                    <td><span class="mo-header"></span>
+                                        <div class="user-group">
+                                            <input class="form-control transparent"
+                                                [disabled]='true'
+                                                #grouP_PRODUCT_NAME='ngModel'
+                                                name="{{editTableProductedPartVeneerSpecification.name('grouP_PRODUCT_NAME', in)}}"
+                                                [(ngModel)]="item.grouP_PRODUCT_NAME">
+                                            <span *ngIf="!disableInput" class="input-group-btn">
+                                                <button class="btn btn-primary" 
+                                                    type='button' [disabled]="disableInput"
+                                                    (click)="onShowPoGroupProductOfPOModal(item)">{{l("...")}}
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <!-- Mã sản phẩm -->
+                                    <td><span class="mo-header"></span>
+                                        <div class="user-group">
+                                            <input class="form-control transparent"
+                                                [disabled]='true'
+                                                name="{{editTableProductedPartVeneerSpecification.name('producT_CODE', in)}}"
+                                                [(ngModel)]="item.producT_CODE">
+                                            <span *ngIf="!disableInput" class="input-group-btn">
+                                                <button class="btn btn-primary" 
+                                                    type='button' [disabled]="disableInput"
+                                                    (click)="onShowPoProductOfGroupProductModal(item)">{{l("...")}}
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <!-- Tên sản phẩm -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="true"
+                                            name="{{editTableProductedPartVeneerSpecification.name('producT_NAME',in)}}"
+                                            [(ngModel)]="item.producT_NAME">
+                                    </td>
+                                    <!-- Cụm chi tiết -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('buncH_DETAIL',in)}}"
+                                            [(ngModel)]="item.buncH_DETAIL">
+                                    </td>
+                                    <!-- Số lượng yêu cầu -->
+                                    <td>
+                                        <money-input [inputCss]="'form-control'"
+                                            [disabled]='disableInput'
+                                            name="{{editTableProductedPartVeneerSpecification.name('quantitY_REQUEST',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['quantitY_REQUEST']">
+                                        </money-input>
+                                    </td>
+                                    <!-- Mô tả chi tiết -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('desC_DETAIL',in)}}"
+                                            [(ngModel)]="item.desC_DETAIL">
+                                    </td>
+                                    <!-- Mã quy cách -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('pO_PRODUCTED_PART_VENEER_SPECIFICATION_CODE',in)}}"
+                                            [(ngModel)]="item.pO_PRODUCTED_PART_VENEER_SPECIFICATION_CODE">
+                                    </td>
+                                    <!-- Loại ván -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_TYPE',in)}}"
+                                            [(ngModel)]="item.planK_TYPE">
+                                    </td>
+                                    <!-- Chiều dày tinh chế -->
+                                    <td>
+                                        <money-input [inputCss]="'form-control'"
+                                            [disabled]='disableInput'
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_REFINED_HEIGHT',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['planK_REFINED_HEIGHT']">
+                                        </money-input>
+                                    </td>
+                                    <!-- Chiều rộng tinh chế -->
+                                    <td>
+                                        <money-input [inputCss]="'form-control'"
+                                            [disabled]='disableInput'
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_REFINED_WIDTH',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['planK_REFINED_WIDTH']">
+                                        </money-input>
+                                    </td>
+                                    <!-- Chiều dài tinh chế -->
+                                    <td>
+                                        <money-input [inputCss]="'form-control'"
+                                            [disabled]='disableInput'
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_REFINED_LENGTH',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['planK_REFINED_LENGTH']">
+                                        </money-input>
+                                    </td>
+                                    <!-- Chiều dày cắt ván -->
+                                    <td>
+                                        <money-input [inputCss]="'form-control'"
+                                            [disabled]='disableInput'
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_CUT_HEIGHT',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['planK_CUT_HEIGHT']">
+                                        </money-input>
+                                    </td>
+                                    <!-- Chiều rộng cắt ván -->
+                                    <td>
+                                        <money-input [inputCss]="'form-control'"
+                                            [disabled]='disableInput'
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_CUT_WIDTH',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['planK_CUT_WIDTH']">
+                                        </money-input>
+                                    </td>
+                                    <!-- Chiều dài cắt ván -->
+                                    <td>
+                                        <money-input [inputCss]="'form-control'"
+                                            [disabled]='disableInput'
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_CUT_LENGTH',in)}}"
+                                            [(ngModel)]="editTableProductedPartVeneerSpecification.dataInPage[in]['planK_CUT_LENGTH']">
+                                        </money-input>
+                                    </td>
+                                    <!-- Mặt chính dán lần một -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_MAIN_1',in)}}"
+                                            [(ngModel)]="item.planK_MAIN_1">
+                                    </td>
+                                    <!-- Mặt chính dán lần hai -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_MAIN_2',in)}}"
+                                            [(ngModel)]="item.planK_MAIN_2">
+                                    </td>
+                                    <!-- Mặt phụ dán lần một -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_SUB_1',in)}}"
+                                            [(ngModel)]="item.planK_SUB_1">
+                                    </td>
+                                    <!-- Mặt phụ dán lần hai -->
+                                    <td>
+                                        <input class='form-control'
+                                            [disabled]="disableInput"
+                                            name="{{editTableProductedPartVeneerSpecification.name('planK_SUB_2',in)}}"
+                                            [(ngModel)]="item.planK_SUB_2">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </editable-table>
+                    </div>
+<!-- End Danh sách công đoạn -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<po-product-of-group-product-modal (onSelect)='onSelectProductOfGroupProduct($event)' #poProductOfGroupProductModal
+    [multiple]="false"></po-product-of-group-product-modal>
+<po-group-product-of-po-modal (onSelect)='onSelectGroupProductOfPO($event)' #poGroupProductOfPOModal
+    [multiple]="false"></po-group-product-of-po-modal>

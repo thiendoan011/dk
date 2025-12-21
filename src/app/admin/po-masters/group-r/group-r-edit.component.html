@@ -1,0 +1,188 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("R")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate (ngSubmit)="saveInput()" autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Nhập nội dung xử lý -->
+                        <div class="col-md-12">
+                            <po-history-create-modal
+                                #history_create_modal
+                                [type]="'GROUP_R'"
+                                [id]="inputModel.grouP_R_ID"
+                                [page]="'GROUP_R'"
+                                [stage]="'HC'"
+                                [process]="'INF'"
+                                [process_desc]="'Người tạo thêm nội dung xử lý phiếu'"
+                                [title]="'Bấm vào đây để nhập nội dung xử lý'"
+                                (complete)="getDataPages()">
+                            </po-history-create-modal>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <po-history-2-modal
+                                #history_modal
+                                [id]="inputModel.grouP_R_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </po-history-2-modal>
+                        </div>
+                        <!-- Trạng thái duyệt -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Mã R -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Mã R")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput && disableEditColumn"
+                                    name="grouP_R_CODE"
+                                    [(ngModel)]="inputModel.grouP_R_CODE" />
+                            </div>
+                        </div>
+                        <!-- Tên R -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Tên R")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput && disableEditColumn"
+                                    name="grouP_R_NAME"
+                                    [(ngModel)]="inputModel.grouP_R_NAME" />
+                            </div>
+                        </div>
+                        <!-- Năm -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Năm")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput && disableEditColumn"
+                                    type="number"
+                                    name="grouP_R_YEAR"
+                                    [(ngModel)]="inputModel.grouP_R_YEAR" />
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Người duyệt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="checkeR_NAME"
+                                    [(ngModel)]="inputModel.checkeR_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'AUTH_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="autH_STATUS" 
+                                    [(ngModel)]="inputModel.autH_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]='disableInput && disableEditColumn'
+                                    appTextareaAutoresize
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Mở chỉnh sửa -->
+                        <div class="col-md-3" [hidden]="isHiddenEditButton">
+                            <div class="form-group">
+                                <label (click)="onOpenEdit()"
+                                    class='btn btn-danger' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Mở chỉnh sửa')}}
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Lưu thay đổi -->
+                        <div class="col-md-3" [hidden]="isHiddenEditButton">
+                            <div class="form-group">
+                                <label (click)="onEdit()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Lưu thay đổi')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <group-r-lsx-edittable
+                        #groupRLSXEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [disableEditColumn]="disableEditColumn"
+                        (onEditSucess)="getDataPages()"
+                        [title]="'Triển khai R'">
+                    </group-r-lsx-edittable>
+                    <group-r-group-product-edittable
+                        #groupRGroupProductEdittable
+                        [inputModel]="inputModel"
+                        [disableInput]="disableInput"
+                        [title]="'Danh sách thông tin triển khai lệnh sản xuất theo R'">
+                    </group-r-group-product-edittable>
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

@@ -1,0 +1,178 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <!-- Begin Header -->
+    <div class="m-subheader">
+        <div class="row">
+            <div class="mr-auto col-auto">
+                <a [routerLink]="rootPage()" class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                    <span>{{l("HomePage")}}</span>
+                </a>
+                <h3 (click)="goBack()" class="m-subheader__title m-subheader__title--separator link-to-list-page">
+                    <!-- Begin Title -->
+                    <span>{{l("Xe")}}</span>
+                    <!-- End Title -->
+                </h3>
+                <span [ngSwitch]="editPageState" class="m-section__sub">
+                    <span *ngSwitchCase="EditPageState.add">{{l("Create")}}</span>
+                    <span *ngSwitchCase="EditPageState.edit">{{l("Edit")}}</span>
+                    <span *ngSwitchCase="EditPageState.viewDetail">{{l("View")}}</span>
+                </span>
+            </div>
+            <div class="col text-right mt-3 mt-md-0"></div>
+        </div>
+    </div>
+    <!-- End Header -->
+
+    <!-- Begin Body -->
+    <div id="content" class="m-content">
+        <div class="m-portlet m-portlet--mobile">
+            <div class="m-portlet__body">
+                <!-- Begin Master -->
+                <form #editForm="ngForm" id="editForm" novalidate autocomplete="off">
+                    <div class="row col-md-12 modal-body">
+                        <!-- Status -->
+                        <div class="col-md-12 align-right">
+                            <div class="form-group">
+                                <auth-status-input-page [authStatus]="inputModel.autH_STATUS"></auth-status-input-page>
+                            </div>
+                        </div>
+                        <!-- Lịch sử trả về -->
+                        <div class="col-md-12">
+                            <vhe-reject-modal
+                                [id]="inputModel.vhE_VEHICLE_ID"
+                                #reject_modal
+                                [page]="'VEHICLE'"
+                                [stage]="'HC'"
+                                [process]="'REJECT'"
+                                [showEnterRejectLog]="rejectInput"
+                                [showRejectLog]="true"
+                                (reject_out)="onReject($event)">
+                            </vhe-reject-modal>
+                        </div>
+                        <!-- Lịch sử xử lý -->
+                        <div class="col-md-12">
+                            <vhe-history-modal
+                                #history_modal
+                                [id]="inputModel.vhE_VEHICLE_ID"
+                                [title]="'Bấm vào đây để xem lịch sử xử lý'">
+                            </vhe-history-modal>
+                        </div>
+
+                        <!-- Biển số -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Biển số")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="vhE_VEHICLE_CODE"
+                                    [(ngModel)]="inputModel.vhE_VEHICLE_CODE" />
+                            </div>
+                        </div>
+
+                        <!-- Người tạo -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người tạo")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="makeR_NAME"
+                                    [(ngModel)]="inputModel.makeR_NAME" />
+                            </div>
+                        </div>
+                        
+                        <!-- Người duyệt -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Người duyệt")}}</label>
+                                <input class="form-control"
+                                    readonly
+                                    name="checkeR_NAME"
+                                    [(ngModel)]="inputModel.checkeR_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái phiếu -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trạng thái phiếu")}}</label>
+                                <all-code-select 
+                                    [disabled]="true"
+                                    [cdName]="'AUTH_STATUS'"
+                                    [cdType]="'CM'"
+                                    name="autH_STATUS" 
+                                    [(ngModel)]="inputModel.autH_STATUS">
+                                </all-code-select>
+                            </div>
+                        </div>
+
+                        <!-- Tên xe -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Tên xe")}}</label>
+                                <input class="form-control"
+                                    [disabled]="disableInput"
+                                    name="vhE_VEHICLE_NAME"
+                                    [(ngModel)]="inputModel.vhE_VEHICLE_NAME" />
+                            </div>
+                        </div>
+
+                        <!-- Trọng tải -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Trọng tải")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="vhE_VEHICLE_PAYLOAD"
+                                    [(ngModel)]="inputModel.vhE_VEHICLE_PAYLOAD">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <!-- Số khối xe -->
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>{{l("Số khối xe")}}</label>
+                                <money-input-5
+                                    [disabled]='disableInput'
+                                    [isDecimal_round5]="true" 
+                                    name="vhE_VEHICLE_FREIGHT_CAPCITY"
+                                    [(ngModel)]="inputModel.vhE_VEHICLE_FREIGHT_CAPCITY">
+                                </money-input-5>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>{{l("Ghi chú")}}</label>
+                                <textarea class="form-control"
+                                    [disabled]="disableInput"
+                                    name="notes"
+                                    [(ngModel)]="inputModel.notes">
+                                </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"></div>
+
+                        <!-- Gửi phê duyệt -->
+                        <div class="col-md-3" [hidden]="disableSendAppr">
+                            <div class="form-group">
+                                <label (click)="onSendAppr()"
+                                    class='btn btn-primary' 
+                                    style="margin-top: 6px; color:white!important">
+                                    {{this.l('Gửi phê duyệt')}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Begin Edittable -->
+                    <!-- End Edittable -->
+                </form>
+                <!-- End Master -->
+            </div>
+        </div>
+    </div>
+    <!-- End Body -->
+</div>

@@ -1,0 +1,136 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Thông tin yêu cầu xử lý")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- ID yêu cầu xử lý -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("ID yêu cầu xử lý")}}</label>
+                                        <input  type="text"
+                                            class="form-control m-input" 
+                                            name="coststatemenT_HISTORY_ID"
+                                            [(ngModel)]="filterInput.coststatemenT_HISTORY_ID">
+                                    </div>
+                                </div>
+
+                                <!-- Mã chiết tính -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Mã chiết tính")}}</label>
+                                        <input  type="text"
+                                            class="form-control m-input" 
+                                            name="coststatemenT_CODE"
+                                            [(ngModel)]="filterInput.coststatemenT_CODE">
+                                    </div>
+                                </div>
+
+                                <!-- Trạng thái yêu cầu -->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái yêu cầu")}}</label>
+                                        <all-code-select
+                                            [emptyText]="l('SelectAll')"
+                                            name="autH_STATUS"
+                                            [(ngModel)]="filterInput.autH_STATUS"
+                                            [cdName]="'REQUEST_STATUS'"
+                                            [cdType]="'CM'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center" style="width: 40px">
+                                            <span>{{l("No")}}</span>
+                                        </th>
+                                        <!-- ID -->
+                                        <th style="width: 140px">
+                                            <span>{{l("ID")}}</span>
+                                        </th>
+                                        <!-- Mã chiết tính -->
+                                        <th>
+                                            <span>{{l("Mã chiết tính")}}</span>
+                                        </th>
+                                        <!-- Trạng thái yêu cầu -->
+                                        <th>
+                                            <span>{{l("Trạng thái yêu cầu")}}</span>
+                                        </th>
+                                        <!-- Người phụ trách phiếu -->
+                                        <th>
+                                            <span>{{l("Người phụ trách phiếu")}}</span>
+                                        </th>
+                                        <!-- Ngày nhận phiếu -->
+                                        <th>
+                                            <span>{{l("Ngày nhận phiếu")}}</span>
+                                        </th>
+                                        <!-- Ngày xử lý phiếu -->
+                                        <th>
+                                            <span>{{l("Ngày xử lý phiếu")}}</span>
+                                        </th>
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center">{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td>{{record.coststatemenT_HISTORY_ID}}</td>
+                                        <td>{{record.coststatemenT_CODE}}</td>
+                                        <td>{{record.autH_STATUS_NAME}}</td>
+                                        <!-- Người phụ trách phiếu -->
+                                        <td>{{record.checkeR_NAME}}</td>
+                                        <!-- Ngày nhận phiếu -->
+                                        <td>{{record.receivE_DT | dateTimeFormatPipe}}</td>
+                                        <!-- Ngày xử lý phiếu -->
+                                        <td>{{record.approvE_LATEST_DT | dateTimeFormatPipe}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

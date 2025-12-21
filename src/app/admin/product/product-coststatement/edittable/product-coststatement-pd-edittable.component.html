@@ -1,0 +1,92 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l("Danh sách mô tả chi tiết")}}</h5>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã cụm chi tiết -->
+                <th sortField="producT_GROUP_DETAIL_CODE">
+                    <span style="white-space: nowrap;">{{l("Mã cụm chi tiết")}}</span>
+                </th> 
+                <!-- Mã mô tả chi tiết -->
+                <th sortField="producT_DETAIL_CODE">
+                    <span style="white-space: nowrap;">{{l("Mã mô tả chi tiết")}}</span>
+                </th> 
+                <!-- Tên mô tả chi tiết -->
+                <th sortField="producT_DETAIL_NAME">
+                    <span style="white-space: nowrap;">{{l("Tên mô tả chi tiết")}}</span>
+                </th>
+                <!-- Ghi chú 
+                <th sortField="notes">
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>-->
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã cụm chi tiết -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('producT_GROUP_DETAIL_CODE',in)}}" 
+                        [(ngModel)]="item.producT_GROUP_DETAIL_CODE"/>
+                </td>
+                <!-- Mã mô tả chi tiết -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('producT_DETAIL_CODE',in)}}" 
+                        [(ngModel)]="item.producT_DETAIL_CODE"/>
+                </td>
+                <!-- Tên mô tả chi tiết -->
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="true"
+                        name="{{editTable.name('producT_DETAIL_NAME',in)}}" 
+                        [(ngModel)]="item.producT_DETAIL_NAME"/>
+                </td>
+                <!-- Ghi chú 
+                <td>
+                    <input class="form-control transparent" 
+                        type="text"
+                        [disabled]="disableInput"
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes"/>
+                </td>-->
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<product-detail-modal (onSelect)='onSelectPopup($event)' #popupModal [multiple]="true"></product-detail-modal>

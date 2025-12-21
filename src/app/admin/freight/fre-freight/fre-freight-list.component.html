@@ -1,0 +1,177 @@
+<div [@routerTransition]>
+    <appToolbar #appToolbar></appToolbar>
+    <div id="page-list-area">
+        <!-- Begin Header -->
+        <div class="m-subheader">
+            <div class="row">
+                <div class="mr-auto col-auto">
+                    <a [routerLink]="rootPage()"
+                        class="m-subheader__title m-subheader__title--separator link-to-list-page home-page">
+                        <span>{{l("HomePage")}}</span>
+                    </a>
+                    <h3 class="m-subheader__title m-subheader__title--separator">
+                        <!-- Begin Title -->
+                        <span>{{l("Phiếu vận chuyển hàng hóa")}}</span>
+                        <!-- End Title -->
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <!-- End Header -->
+
+        <!-- Begin Body -->
+        <div id="content" class="m-content">
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__body">
+                    <!-- Begin Filter -->
+                    <form class="horizontal-form filter-form" autocomplete="off">
+                        <div class="m-form m-form--label-align-right">
+                            <div class="row m--margin-bottom-30">
+                                <!-- Mã phiếu -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Mã phiếu")}}</label>
+                                        <input class="form-control" 
+                                            name="frE_FREIGHT_CODE"
+                                            [(ngModel)]="filterInput.frE_FREIGHT_CODE">
+                                    </div>
+                                </div>
+                                
+                                <!-- Đơn vị quản lý -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l('Đơn vị quản lý')}}</label>
+                                        <select2-custom 
+                                            name="brancH_ID" 
+                                            [(ngModel)]="filterInput.brancH_ID" 
+                                            [(list)]="branches" 
+                                            [emptyText]="l('SelectAll')"
+                                            [valueMember]="'brancH_ID'" 
+                                            [displayMember]="'brancH_CODE|brancH_NAME'">
+                                        </select2-custom>
+                                    </div>
+                                </div>
+                                <div class="col-md-12"></div>
+
+                                <!-- Trạng thái phiếu -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{l("Trạng thái phiếu")}}</label>
+                                        <all-code-select 
+                                            name="autH_STATUS" 
+                                            [(ngModel)]="filterInput.autH_STATUS"
+                                            [emptyText]="l('SelectAll')" 
+                                            [cdName]="'AUTH_STATUS'"
+                                            [cdType]="'CM'">
+                                        </all-code-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12"></div>
+
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend style='font-weight: bold; text-decoration:  underline'>{{l("Ngày tạo phiếu vận chuyển hàng hóa")}}</legend>
+                                        <div class='row'>
+                                            <!-- Từ ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Từ ngày')}}</label>
+                                                    <date-control
+                                                        name="froM_DT"
+                                                        [(ngModel)]="filterInput.froM_DT">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                            <!-- Đến ngày -->
+                                            <div class='col-sm-6'>
+                                                <div class='form-group'>
+                                                    <label>{{l('Đến ngày')}}</label>
+                                                    <date-control
+                                                        name="tO_DT"
+                                                        [(ngModel)]="filterInput.tO_DT">
+                                                    </date-control>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- End Filter -->
+
+                    <!-- Begin Table -->
+                    <div class="row">
+                        <div class="primeng-datatable-container {{dataTable.isLoading}}">
+                            <div class="spinner-border m-5" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <core-table #coreTable class="custom-table ui-table" (reloadPage)="search()">
+                                <thead>
+                                    <tr>
+                                        <!-- Begin Table Column -->
+                                        <!-- STT -->
+                                        <th class="center">
+                                            <span style="width: 40px">{{l("No")}}</span>
+                                        </th>
+                                        <!-- Mã phiếu -->
+                                        <th sortField="frE_FREIGHT_CODE">
+                                            <span>{{l("Mã phiếu")}}</span>
+                                        </th>
+                                        <!-- Người tạo -->
+                                        <th>
+                                            <span>{{l("Người tạo")}}</span>
+                                        </th>
+                                        <!-- Người yêu cầu -->
+                                        <th>
+                                            <span>{{l("Người yêu cầu")}}</span>
+                                        </th>
+                                        <!-- Người duyệt -->
+                                        <th>
+                                            <span>{{l("Người duyệt")}}</span>
+                                        </th>
+                                        <!-- Độ ưu tiên -->
+                                        <th>
+                                            <span>{{l("Độ ưu tiên")}}</span>
+                                        </th>
+                                        <!-- Trạng thái phiếu -->
+                                        <th>
+                                            <span>{{l("Trạng thái phiếu")}}</span>
+                                        </th>
+                                        <!-- Tổng số khối hàng hóa đi -->
+                                        <th>
+                                            <span>{{l("Tổng số khối hàng hóa đi")}}</span>
+                                        </th>
+                                        <!-- Ghi chú -->
+                                        <th>
+                                            <span>{{l("Ghi chú")}}</span>
+                                        </th>
+                                        
+                                        <!-- End Table Column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let record of dataTable.records" class="selectable" (dblclick)="onDblclick(record)" (click)="selectRow($event,record)">
+                                        <!-- Begin Table Value -->
+                                        <td class="center"><span class="mo-header"></span>{{(filterInputSearch.skipCount + dataTable.records.indexOf(record)) + 1}} </td>
+                                        <td><span class="mo-header"></span>{{record.frE_FREIGHT_CODE}}</td>
+                                        <td><span class="mo-header"></span>{{record.makeR_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.useR_REQUEST_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.checkeR_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.frE_FREIGHT_PRIORITY_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.autH_STATUS_NAME}}</td>
+                                        <td><span class="mo-header"></span>{{record.frE_FREIGHT_TOTAL_VOLUME}}</td>
+                                        <td><span class="mo-header"></span>{{record.notes}}</td>
+                                        <!-- End Table Value -->
+                                    </tr>
+                                </tbody>
+                            </core-table>
+                        </div>
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+        <!-- End Body -->
+    </div>
+</div>

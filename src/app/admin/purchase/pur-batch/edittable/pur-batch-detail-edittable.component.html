@@ -1,0 +1,224 @@
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l(title)}}</h5>
+    <div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+    </div>
+</div>
+<div class="primeng-datatable-container">
+    <editable-table #editTable class="custom-table ui-table" >
+        <thead>
+            <tr>
+                <!-- Checkbox -->
+                <th>
+                    <span style="white-space: nowrap;">
+                        <checkbox-control [disabled]="disableInput"
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- Begin Table Column -->
+                <!-- STT -->
+                <th><span style="white-space: nowrap;">{{l("No")}}</span></th>
+                <!-- Mã vật tư -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Mã vật tư")}}</span>
+                </th>
+                <!-- SL yêu cầu -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL yêu cầu")}}</span>
+                </th>
+                <!-- SL đã đặt ở đợt mua hàng khác -->
+                <th>
+                    <span style="width: 100px;">{{l("SL đã đặt ở đợt mua hàng khác")}}</span>
+                </th>
+                <!-- SL đặt -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL đặt")}}</span>
+                </th>
+                <!-- SL đã về -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("SL đã về")}}</span>
+                </th>
+                <!-- NCC tốt nhất -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("NCC tốt nhất")}}</span>
+                </th>
+                <!-- đơn giá tốt nhất -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("đơn giá tốt nhất")}}</span>
+                </th>
+                <!-- NCC thực tế -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("NCC thực tế")}}</span>
+                </th>
+                <!-- đơn giá thực tế -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("đơn giá thực tế")}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Ghi chú")}}</span>
+                </th>
+                <!-- ID đơn hàng -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("ID đơn hàng")}}</span>
+                </th>
+                <!-- Xóa -->
+                <th>
+                    <span style="white-space: nowrap;">{{l("Xóa")}}</span>
+                </th>
+                <!-- End Table Column -->
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index" 
+                class="selectable {{item['editableIsSelected']? 'selected' : ''}}" 
+                [hidden]="item['page'] != editTable.currentPage"
+                (click)="editTable.selectRow($event,item);updateView();">
+                <!-- Checkbox -->
+                <td class='center'>
+                    <span class="mo-header"></span>
+                    <checkbox-control [disabled]="disableInput"
+                        (onchange)="item.isChecked= $event.target.checked"
+                        [checked]="item['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>{{item['no']}}</td>
+                <!-- Mã vật tư -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('materiaL_CODE',in)}}" 
+                        [(ngModel)]="item.materiaL_CODE"/>
+                </td>
+                <!-- SL yêu cầu -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_REQUEST',in)}}"
+                        [(ngModel)]="item.quantitY_REQUEST">
+                    </money-input-5>
+                </td>
+                <!-- SL đã đặt ở đợt mua hàng khác -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_ORDERED',in)}}"
+                        [(ngModel)]="item.quantitY_ORDERED">
+                    </money-input-5>
+                </td>
+                <!-- SL đặt -->
+                <td>
+                    <money-input-5
+                        [disabled]="disableInput"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_ORDER',in)}}"
+                        [(ngModel)]="item.quantitY_ORDER">
+                    </money-input-5>
+                </td>
+                <!-- SL đã về -->
+                <td>
+                    <money-input-5
+                        [disabled]="true"
+                        [isDecimal_round5]="true"
+                        name="{{editTable.name('quantitY_RECEIVED',in)}}"
+                        [(ngModel)]="item.quantitY_RECEIVED">
+                    </money-input-5>
+                </td>
+                <!-- NCC tốt nhất -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('besT_SUP_CODE',in)}}" 
+                        [(ngModel)]="item.besT_SUP_CODE"/>
+                </td>
+                <!-- Đơn giá tốt nhất -->
+                <td>
+                    <money-input
+                        [disabled]="true"
+                        name="{{editTable.name('besT_UNIT_PRICE',in)}}"
+                        [(ngModel)]="item.besT_UNIT_PRICE">
+                    </money-input>
+                </td>
+                <!-- NCC thực tế -->
+                <td><span class="mo-header"></span>
+                    <div class='file-input-group'>
+                        <input class="form-control transparent"
+                            [disabled]="true"  
+                            name="{{editTable.name('suP_CODE',in)}}" 
+                            [(ngModel)]="item.suP_CODE"/>
+                        <button class="btn btn-primary ng-star-inserted" type='button' 
+                            [disabled]='disableInput' 
+                            (click)="showMaterialSupplierModal(item)">{{l("...")}}
+                        </button>
+                    </div>
+                </td>
+                <!-- Đơn giá thực tế -->
+                <td>
+                    <money-input
+                        [disabled]="true"
+                        name="{{editTable.name('uniT_PRICE',in)}}"
+                        [(ngModel)]="item.uniT_PRICE">
+                    </money-input>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <input class="form-control transparent" 
+                        [disabled]="disableInput"  
+                        name="{{editTable.name('notes',in)}}" 
+                        [(ngModel)]="item.notes"/>
+                </td>
+                <!-- ID đơn hàng -->
+                <td>
+                    <input class="form-control transparent" 
+                        readonly
+                        name="{{editTable.name('puR_ORDER_ID',in)}}" 
+                        [(ngModel)]="item.puR_ORDER_ID"/>
+                </td>
+                <td>
+                    <button type="button" 
+                        [hidden]="inputModel.makeR_ID != appSession.user.userName  || inputModel.autH_STATUS != 'A'"
+                        [disabled]="inputModel.makeR_ID != appSession.user.userName || inputModel.autH_STATUS != 'A'"
+                        (click)="onDelOrderDetail(item)" 
+                        class="btn btn-danger">
+                        <i class="pi pi-times"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<div class="row">
+    <div class="col-md-3" [hidden]="disableInput || inputModel.puR_BATCH_ID">
+        <div class="form-group">
+            <label (click)="onUpd()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu')}}
+            </label>
+        </div>
+    </div>
+    <div class="col-md-3" [hidden]="disableInput || !inputModel.puR_BATCH_ID">
+        <div class="form-group">
+            <label (click)="onUpdAndCreateOrder()"
+                class='btn btn-primary' 
+                style="margin-top: 6px; color:white!important">
+                {{this.l('Lưu & Tạo đơn hàng')}}
+            </label>
+        </div>
+    </div>
+</div>
+
+<pur-material-summary-modal (onSelect)='onSelectPopup($event)' #popupModal [multiple]="true"></pur-material-summary-modal>
+<mw-type-supplier-modal (onSelect)='onSelectMaterialSupplier($event)' #materialSupplierModal [multiple]="false"></mw-type-supplier-modal>

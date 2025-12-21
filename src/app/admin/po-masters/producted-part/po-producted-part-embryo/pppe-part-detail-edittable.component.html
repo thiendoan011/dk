@@ -1,0 +1,139 @@
+<!-- Begin -->
+<div class="editable-title-group">
+    <h5 class="popup-title col-md-12">{{l('Chi tiết tiến độ hệ hàng')}}</h5>
+    <!--<div class="action-button">
+        <button [hidden]="disableInput" type="button" (click)='onRemove()'
+            [disabled]="disableInput" class="btn btn-danger"><i class="pi pi-times"></i>{{l("Delete")}}
+        </button>
+        <button [hidden]="disableInput" type="button" (click)='onAdd()'
+            [disabled]="disableInput" class="btn btn-primary"><i class="pi pi-plus"></i>{{l('Add')}}
+        </button>
+    </div>-->
+</div>
+
+<div class="primeng-datatable-container">
+    <editable-table [requiredFields]=""  #editTable class="custom-table ui-table">
+        <thead>
+            <tr>
+                <th  style="width: 40px">
+                    <span>
+                        <checkbox-control
+                            (onchange)="editTable.checkAll($event.target.checked)"
+                            [checked]="editTable.isCheckAll">
+                        </checkbox-control>
+                    </span>
+                </th>
+                <!-- STT -->
+                <th style="width: 40px"><span >{{l("No")}}</span></th>
+                <!-- Mã hệ hàng -->
+                <th sortField="grouP_PRODUCT_CODE">
+                    <span style="width: 120px">{{l('Mã hệ hàng')}}</span>
+                </th>
+                <!-- Tên công đoạn -->
+                <th sortField="producteD_PART_NAME">
+                    <span style="width: 150px">{{l('Tên công đoạn')}}</span>
+                </th>
+                <!-- Ngày cập nhật -->
+                <th sortField="updatE_DT">
+                    <span style="width: 150px">{{l('Ngày cập nhật')}}</span>
+                </th>
+                <!-- Phần trăm hoàn thành -->
+                <th>
+                    <span style="white-space: nowrap;">{{l('Phần trăm hoàn thành')}}</span>
+                </th>
+                <!-- Ghi chú -->
+                <th>
+                    <span style="width: 150px">{{l('Ghi chú')}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of editTable.dataInPage; let in= index"
+                [hidden]="item['page'] != editTable.currentPage"
+                class="selectable {{item['editableSelected']? 'selected' :''}}"
+                (click)='editTable.selectRow($event,item);updateView()'>
+                <!-- Checkbox -->
+                <td>
+                    <span class="mo-header"></span>
+                    <checkbox-control
+                        [disabled]="disableInput"
+                        name="{{editTable.name('isChecked',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['isChecked']">
+                    </checkbox-control>
+                </td>
+                <!-- STT -->
+                <td class="center"><span class="mo-header"></span>
+                    <input class="label"
+                        [disabled]="true"
+                        name="{{editTable.name('no',in)}}"
+                        [(ngModel)]="editTable.dataInPage[in]['no']">
+                </td>
+                <!-- Mã hệ hàng -->
+                <td>
+                    <div class='user-group'>
+                        <input class='form-control'
+                            readonly
+                            style="color: blue; cursor: pointer;"
+                            (click)="onViewDetailGroupProduct(item)"
+                            name="{{editTable.name('grouP_PRODUCT_CODE',in)}}"
+                            [(ngModel)]="item.grouP_PRODUCT_CODE">
+                        <button type="button" class="btn btn-primary"
+                            [disabled]='disableInput'
+                            (click)="showGroupProduct()">{{l("...")}}
+                        </button>
+                    </div>
+                </td>
+                <!-- Tên công đoạn -->
+                <td>
+                    <input
+                        readonly
+                        class="form-control transparent" type="text"
+                        name="{{editTable.name('producteD_PART_NAME',in)}}"
+                        [(ngModel)]="item.producteD_PART_NAME"/>
+                </td>
+                <!-- Ngày cập nhật -->
+                <td class="center"><span class="mo-header"></span>
+                    <date-control
+                        [disabled]='disableInput'
+                        name="{{editTable.name('updatE_DT',in)}}"
+                        [(ngModel)]="item.updatE_DT">
+                    </date-control>
+                </td>
+                <!-- Phần trăm hoàn thành -->
+                <td>
+                    <input
+                        [disabled]='disableInput'
+                        class="form-control transparent" type="text"
+                        name="{{editTable.name('percenT_COMPLETED',in)}}"
+                        [(ngModel)]="item.percenT_COMPLETED"/>
+                </td>
+                <!-- Ghi chú -->
+                <td>
+                    <textarea [disabled]='disableInput'
+                        class="form-control transparent"
+                        type="text"
+                        name="{{editTable.name('notes',in)}}"
+                        [(ngModel)]="item.notes">
+                    </textarea>
+                </td>
+            </tr>
+        </tbody>
+    </editable-table>
+</div>
+
+<!-- Lưu thay đổi 
+<div class="col-md-3" [hidden]="disableInput">
+    <div class="form-group">
+        <label (click)="pO_PRODUCTED_PART_GROUP_PRODUCT_Edit()"
+            class='btn btn-primary' 
+            style="margin-top: 6px; color:white!important">
+            {{this.l('Lưu thay đổi')}}
+        </label>
+    </div>
+</div>-->
+
+<!-- End -->
+
+<po-group-product-of-po-modal (onSelect)='onSelectGroupProduct($event)' #poGroupProductOfPOModal
+[multiple]="false"></po-group-product-of-po-modal>
+

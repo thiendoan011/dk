@@ -1,0 +1,11 @@
+<!-- Không có thay đổi -->
+<div *ngIf="authStatus == 'N'" class="auth-status-input-page">
+    <i class="pi pi-check no-change-text"></i>
+    <span>{{l('Không có thay đổi')}}</span>
+</div>
+
+<!-- Có thay đổi -->
+<div *ngIf="authStatus == 'Y'" class="auth-status-input-page">
+    <i class="pi pi-times change-text"></i>
+    <span>{{l('Có thay đổi')}}</span>
+</div>
